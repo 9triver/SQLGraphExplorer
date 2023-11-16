@@ -18,7 +18,7 @@ public class YGB_Test {
     }
     @Test
     public void test_EAST51_YGB_GL() throws IOException, URISyntaxException {
-        test("EAST51_YGB");
+        test("EAST51_YGB_GL");
     }
     @Test
     public void test_PE5_YGB() throws IOException, URISyntaxException {
@@ -31,6 +31,10 @@ public class YGB_Test {
     @Test
     public void test_PROC_GET_BL_YGB() throws IOException, URISyntaxException {
         test("PROC_GET_BL_YGB");
+    }
+    @Test
+    public void test_CREATE() throws IOException, URISyntaxException {
+        test("CREATE");
     }
 
     private void test(String name) throws IOException, URISyntaxException {

@@ -1,4 +1,4 @@
-// Generated from D:/antlr-sql/src/main/java/grammar/PlSqlParser.g4 by ANTLR 4.13.1
+// Generated from D:/Antlr-SQLGraphExplorer/SQLGraphExplorer/src/main/java/grammar/PlSqlParser.g4 by ANTLR 4.13.1
 package grammar;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 

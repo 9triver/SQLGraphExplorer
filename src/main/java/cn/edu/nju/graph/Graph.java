@@ -1,5 +1,6 @@
 package cn.edu.nju.graph;
 
+import cn.edu.nju.PlSqlVisitor;
 import org.antlr.v4.runtime.misc.MultiMap;
 
 import java.util.*;
@@ -73,15 +74,23 @@ public class Graph {
     private void checkNode(Node node) {
         node.name = node.name.toUpperCase();
         switch (node.nodeType) {
-            case TABLE -> createTable(node.name);
-            case COLUMN -> addColumn(node.name.split(":")[0], node.name.split(":")[1]);
+            case TABLE -> {
+                node.name = PlSqlVisitor.getRealTableName(node.name);
+                createTable(node.name);
+            }
+            case COLUMN -> {
+                String tableName = PlSqlVisitor.getRealTableName(node.name.split(":")[0]);
+                String columnName = node.name.split(":")[1];
+                node.name = tableName + ":" + columnName;
+                addColumn(tableName, columnName);
+            }
         }
     }
 
     public boolean addColumn(String tableName, String columnName) {
         if(tableName == null || tableName.isEmpty() || columnName == null || columnName.isEmpty())
             return false;
-        tableName = tableName.toUpperCase();
+        tableName = PlSqlVisitor.getRealTableName(tableName.toUpperCase());
         columnName = columnName.toUpperCase();
         createTable(tableName);
         if (existColumn(tableName, columnName))
@@ -157,7 +166,7 @@ public class Graph {
     public boolean createTable(String tableName) {
         if(tableName == null || tableName.isEmpty())
             return false;
-        tableName = tableName.toUpperCase();
+        tableName =  PlSqlVisitor.getRealTableName(tableName.toUpperCase());
         if (existTable(tableName))
             return false;
 

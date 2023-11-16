@@ -20,7 +20,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     private static final Logger log = Logger.getLogger(PlSqlVisitor.class);
     private String curDstTableName = "";
     private final Graph graph;
-    private final Map<String, String> realTableNameMapper = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static final Map<String, String> realTableNameMapper = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public PlSqlVisitor() {
         graph = new Graph();
@@ -68,7 +68,8 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             visitWhere_clause(ctx.where_clause());
             tableSrcNormalPop(); // where -> dstTable/union;
         }
-        this.curDstTableName = tableSrc.peek().name;
+        if(tableSrc.peek().nodeType == NodeType.TABLE)
+            this.curDstTableName = tableSrc.peek().name;
         if (ctx.selected_list() != null)
             visitSelected_list(ctx.selected_list());
 
@@ -85,13 +86,20 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             visitExpression(ctx.expression());
 
         // expression -> column_alias
-        if (ctx.column_alias() != null && ctx.expression()!=null)
+        // case -> label
+        if(ctx.expression() != null && ctx.column_alias() != null)
             columnSrcNormalPop();
+//        columnSrc.pop();
+
         return ctx.getText();
     }
 
     @Override
     public String visitSearched_case_statement(PlSqlParser.Searched_case_statementContext ctx) {
+        if(ctx.ln2 != null)
+            columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + ctx.ln2.getText()));
+
+
         String caseContext = ctx.getText();
         Node caseNode = graph.addCase(caseContext);
         columnSrc.add(caseNode);
@@ -279,6 +287,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             return ctx.getText();
         }
 
+        // TODO : insert...values...
         visitInsert_into_clause(ctx.insert_into_clause());
 
         if (ctx.select_statement() != null)
@@ -588,6 +597,55 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         return ctx.getText();
     }
 
+    @Override
+    public String visitCreate_table(PlSqlParser.Create_tableContext ctx) {
+        if(ctx.schema_name() != null)
+            visitSchema_name(ctx.schema_name());
+
+        String tableName = visitTable_name(ctx.table_name());
+        this.graph.createTable(tableName);
+
+        if(ctx.relational_table() != null) {
+            String[] columnNames = visitRelational_table(ctx.relational_table()).split(",");
+            for(String columnName : columnNames)
+                this.graph.addColumn(tableName, columnName);
+        }
+
+
+        return ctx.getText();
+    }
+    @Override
+    public String visitRelational_table(PlSqlParser.Relational_tableContext ctx) {
+        if(ctx.relational_property() != null && ctx.relational_property().isEmpty()) // 没有列
+            return "";
+
+        StringBuilder ret= new StringBuilder();
+        for(PlSqlParser.Relational_propertyContext rpCtx : ctx.relational_property())
+            ret.append(visitRelational_property(rpCtx)).append(",");
+        ret.deleteCharAt(ret.length()-1);
+
+        return ret.toString();
+    }
+    @Override
+    public String visitColumn_definition(PlSqlParser.Column_definitionContext ctx) {
+        return visitColumn_name(ctx.column_name());
+    }
+    @Override
+    public String visitTable_name(PlSqlParser.Table_nameContext ctx) {
+        return ctx.getText();
+    }
+
+    @Override
+    public String visitAlter_table(PlSqlParser.Alter_tableContext ctx) {
+        return ctx.getText();
+    }
+
+    @Override
+    public String visitTruncate_table(PlSqlParser.Truncate_tableContext ctx) {
+        return ctx.getText();
+    }
+
+
     private boolean columnSrcNormalPop() {
         if (columnSrc.size() < 2)
             return false;
@@ -612,7 +670,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         return graph.toDOT();
     }
 
-    private String getRealTableName(String tableName) {
+    public static String getRealTableName(String tableName) {
         if (tableName == null)
             return null;
 
@@ -628,38 +686,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         return realTableName;
     }
 
-    /*private void addEdge(Node src, Node dst) {
-        String srcTableName = "", srcColumnName = "", dstTableName = "", dstColumnName = "";
-        if (src.nodeType == NodeType.COLUMN) {
-            srcTableName = getRealTableName(src.name.split(":")[0]);
-            srcColumnName = src.name.split(":")[1];
-        }
-        if (dst.nodeType == NodeType.COLUMN) {
-            dstTableName = getRealTableName(dst.name.split(":")[0]);
-            dstColumnName = dst.name.split(":")[1];
-        }
-
-        if (src.isNode()) {
-            if (dst.isNode())
-                graph.addEdgeNode2Node(src.name, dst.name);
-            else if (dst.nodeType == NodeType.TABLE)
-                graph.addEdgeNode2Table(src.name, dst.name);
-            else if (dst.nodeType == NodeType.COLUMN)
-                graph.addEdgeNode2Col(src.name, dstTableName, dstColumnName);
-        } else if (src.nodeType == NodeType.TABLE) {
-            if (dst.isNode())
-                graph.addEdgeTable2Node(src.name, dst.name);
-            else if (dst.nodeType == NodeType.TABLE)
-                graph.addEdgeTable2Table(src, dst);
-        } else if (src.nodeType == NodeType.COLUMN) {
-            if (dst.isNode())
-                graph.addEdgeCol2Node(srcTableName, srcColumnName, dst.name);
-            else if (dst.nodeType == NodeType.COLUMN)
-                graph.addEdgeCol2Col(srcTableName, srcColumnName, dstTableName, dstColumnName);
-        }
-    }*/
-
-    private void updateAliasTableName(String tableName, String aliasTableName) {
+    private static void updateAliasTableName(String tableName, String aliasTableName) {
         tableName = tableName.toUpperCase();
         aliasTableName = aliasTableName.toUpperCase();
         realTableNameMapper.put(aliasTableName, tableName);

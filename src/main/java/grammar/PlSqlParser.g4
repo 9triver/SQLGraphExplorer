@@ -6198,7 +6198,7 @@ simple_case_when_part
     ;
 
 searched_case_statement
-    : label_name? ck1=CASE searched_case_when_part+ case_else_part? END CASE? label_name?
+    : ln1=label_name? ck1=CASE searched_case_when_part+ case_else_part? END CASE? ln2=label_name?
     ;
 
 searched_case_when_part

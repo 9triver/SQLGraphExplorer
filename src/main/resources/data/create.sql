@@ -1,4 +1,3 @@
-???prompt Creating EAST51_YGB...
 create table EAST51_YGB
 (
   jrxkzh VARCHAR2(255),
@@ -71,7 +70,7 @@ comment on column EAST51_YGB.bbz
 comment on column EAST51_YGB.cjrq
   is '采集日期';
 
-prompt Creating EAST51_YGB_GL...
+
 create table EAST51_YGB_GL
 (
   jgmc   VARCHAR2(255),
@@ -114,7 +113,7 @@ comment on column EAST51_YGB_GL.ygh
 comment on column EAST51_YGB_GL.cjrq
   is '采集日期';
 
-prompt Creating EAST5_JGXXB...
+
 create table EAST5_JGXXB
 (
   yhjgdm  VARCHAR2(255),
@@ -175,7 +174,7 @@ comment on column EAST5_JGXXB.fzrlxdh
 comment on column EAST5_JGXXB.cjrq
   is '采集日期';
 
-prompt Creating EAST5_YGB...
+
 create table EAST5_YGB
 (
   jrxkzh VARCHAR2(255),
@@ -248,7 +247,7 @@ comment on column EAST5_YGB.bbz
 comment on column EAST5_YGB.cjrq
   is '采集日期';
 
-prompt Creating GZYH_CBJG_ZH...
+
 create table GZYH_CBJG_ZH
 (
   oldnbjgh VARCHAR2(255),
@@ -270,27 +269,27 @@ comment on column GZYH_CBJG_ZH.oldnbjgh
 comment on column GZYH_CBJG_ZH.newnbjgh
   is '新内部机构号';
 
-prompt Disabling triggers for EAST51_YGB...
+
 alter table EAST51_YGB disable all triggers;
-prompt Disabling triggers for EAST51_YGB_GL...
+
 alter table EAST51_YGB_GL disable all triggers;
-prompt Disabling triggers for EAST5_JGXXB...
+
 alter table EAST5_JGXXB disable all triggers;
-prompt Disabling triggers for EAST5_YGB...
+
 alter table EAST5_YGB disable all triggers;
-prompt Disabling triggers for GZYH_CBJG_ZH...
+
 alter table GZYH_CBJG_ZH disable all triggers;
-prompt Truncating GZYH_CBJG_ZH...
+
 truncate table GZYH_CBJG_ZH;
-prompt Truncating EAST5_YGB...
+
 truncate table EAST5_YGB;
-prompt Truncating EAST5_JGXXB...
+
 truncate table EAST5_JGXXB;
-prompt Truncating EAST51_YGB_GL...
+
 truncate table EAST51_YGB_GL;
-prompt Truncating EAST51_YGB...
+
 truncate table EAST51_YGB;
-prompt Loading EAST51_YGB...
+
 insert into EAST51_YGB (jrxkzh, nbjgh, yhjgmc, gh, xm, gj, zjlb, zjhm, lxdh, ssbm, gwbh, gwmc, sfgg, pfrq, rzrq, yglx, ygzt, bbz, cjrq)
 values (null, '0101', null, 'A001', '张三', null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 insert into EAST51_YGB (jrxkzh, nbjgh, yhjgmc, gh, xm, gj, zjlb, zjhm, lxdh, ssbm, gwbh, gwmc, sfgg, pfrq, rzrq, yglx, ygzt, bbz, cjrq)
@@ -300,8 +299,8 @@ values (null, '0102', null, 'B001', '张龙', null, null, null, null, null, null
 insert into EAST51_YGB (jrxkzh, nbjgh, yhjgmc, gh, xm, gj, zjlb, zjhm, lxdh, ssbm, gwbh, gwmc, sfgg, pfrq, rzrq, yglx, ygzt, bbz, cjrq)
 values (null, '0102', null, 'B002', '赵虎', null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 commit;
-prompt 4 records loaded
-prompt Loading EAST51_YGB_GL...
+
+
 insert into EAST51_YGB_GL (jgmc, jgjc, jgh, fzhmc, fzhjgh, bm, bmjgh, ygh, cjrq)
 values (null, null, null, null, null, null, 'BM001', 'A001', '20231031');
 insert into EAST51_YGB_GL (jgmc, jgjc, jgh, fzhmc, fzhjgh, bm, bmjgh, ygh, cjrq)
@@ -311,8 +310,8 @@ values (null, null, null, null, null, null, 'BM002', 'B001', '20231031');
 insert into EAST51_YGB_GL (jgmc, jgjc, jgh, fzhmc, fzhjgh, bm, bmjgh, ygh, cjrq)
 values (null, null, null, null, null, null, 'BM003', 'B002', '20231031');
 commit;
-prompt 4 records loaded
-prompt Loading EAST5_JGXXB...
+
+
 insert into EAST5_JGXXB (yhjgdm, nbjgh, jrxkzh, yyzzh, yhjgmc, jglb, xzqhdm, yyzt, clrq, jgdz, jglxdh, fzrxm, fzrzw, fzrlxdh, cjrq)
 values (null, 'BM001', null, null, null, null, null, null, null, null, null, null, null, null, '20231031');
 insert into EAST5_JGXXB (yhjgdm, nbjgh, jrxkzh, yyzzh, yhjgmc, jglb, xzqhdm, yyzt, clrq, jgdz, jglxdh, fzrxm, fzrzw, fzrlxdh, cjrq)
@@ -320,23 +319,23 @@ values (null, 'BM002', null, null, null, null, null, null, null, null, null, nul
 insert into EAST5_JGXXB (yhjgdm, nbjgh, jrxkzh, yyzzh, yhjgmc, jglb, xzqhdm, yyzt, clrq, jgdz, jglxdh, fzrxm, fzrzw, fzrlxdh, cjrq)
 values (null, 'BM003', null, null, null, null, null, null, null, null, null, null, null, null, '20231031');
 commit;
-prompt 3 records loaded
-prompt Loading EAST5_YGB...
-prompt Table is empty
-prompt Loading GZYH_CBJG_ZH...
+
+
+
+
 insert into GZYH_CBJG_ZH (oldnbjgh, newnbjgh)
 values ('0101', 'BM001');
 insert into GZYH_CBJG_ZH (oldnbjgh, newnbjgh)
 values ('0102', 'BM002');
 commit;
-prompt 2 records loaded
-prompt Enabling triggers for EAST51_YGB...
+
+
 alter table EAST51_YGB enable all triggers;
-prompt Enabling triggers for EAST51_YGB_GL...
+
 alter table EAST51_YGB_GL enable all triggers;
-prompt Enabling triggers for EAST5_JGXXB...
+
 alter table EAST5_JGXXB enable all triggers;
-prompt Enabling triggers for EAST5_YGB...
+
 alter table EAST5_YGB enable all triggers;
-prompt Enabling triggers for GZYH_CBJG_ZH...
+
 alter table GZYH_CBJG_ZH enable all triggers;
