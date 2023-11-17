@@ -326,20 +326,20 @@ public class Graph {
     }
 
     private void drawNodes(StringBuilder buf) {
-        String attribute = "[shape=\"%s\",color=\"%s\"]";
+        String attribute = "[shape=\"%s\", color=\"%s\", style=filled]";
         String certainAttribute;
         for(Node node:nodes){
             buf.append(QUOTE).append(node.name).append(QUOTE);
 
             certainAttribute = switch (node.nodeType){
-                case JOIN -> String.format(attribute, "parallelogram", "blue");
-                case WHERE -> String.format(attribute, "diamond", "blue");
-                case FUNCTION -> String.format(attribute, "cds", "red");
-                case UNION ->  String.format(attribute, "circle", "blue");
-                case CASE ->  String.format(attribute, "rectangle", "red");
-                case MERGE ->  String.format(attribute, "polygon", "blue");
-                case MERGE_UPDATE ->  String.format(attribute, "fivepoverhang", "blue");
-                case MERGE_INSERT ->  String.format(attribute, "primersite", "blue");
+                case JOIN -> String.format(attribute, "parallelogram", "lightblue2");
+                case WHERE -> String.format(attribute, "diamond", "lightblue2");
+                case FUNCTION -> String.format(attribute, "cds", "lightyellow2");
+                case UNION ->  String.format(attribute, "circle", "lightblue2");
+                case CASE ->  String.format(attribute, "rectangle", "lightyellow2");
+                case MERGE ->  String.format(attribute, "polygon", "lightblue2");
+                case MERGE_UPDATE ->  String.format(attribute, "fivepoverhang", "lightblue2");
+                case MERGE_INSERT ->  String.format(attribute, "primersite", "lightblue2");
                 default -> "";
             };
 

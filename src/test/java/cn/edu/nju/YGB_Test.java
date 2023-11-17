@@ -5,6 +5,7 @@ import grammar.PlSqlLexer;
 import grammar.PlSqlParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
