@@ -52,13 +52,22 @@ public class Graph {
     public boolean existTable(String tableName) {
         return tableNameMapper.containsKey(tableName);
     }
-
     public boolean existColumn(String tableName, String columnName) {
         if (!tableNameMapper.containsKey(tableName))
             return false;
         return tableNameMapper.get(tableName).columnNameMapper.containsKey(columnName);
     }
+    public List<String> getAllColumns(String tableName) {
+        tableName = PlSqlVisitor.getRealTableName(tableName);
+        if(!existTable(tableName)) return null;
 
+        Map<String, Column> targetCols = this.tableNameMapper.get(tableName).columnNameMapper;
+        List<String> ret = new ArrayList<>();
+        for(String colName: targetCols.keySet())
+            ret.add(colName);
+
+        return ret;
+    }
 
     public boolean addEdge(Node src, Node dst) {
         checkNode(src);

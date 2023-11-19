@@ -58,7 +58,9 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         return ctx.getText();
     }
 
-    Stack<String> tableRefs = new Stack<>();
+    private Stack<String> tableRefs = new Stack<>();
+    private Stack<Node> columnSrc = new Stack<>();
+    private Map<PlSqlParser.Query_blockContext, Integer> tableRefsSize = new HashMap<>();
     @Override
     public String visitQuery_block(PlSqlParser.Query_blockContext ctx) {
         int oldSize = tableRefs.size();
@@ -71,18 +73,45 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         }
         if(tableSrc.peek().nodeType == NodeType.TABLE)
             this.curDstTableName = tableSrc.peek().name;
-        if (ctx.selected_list() != null)
+        if (ctx.selected_list() != null) {
+            this.tableRefsSize.put(ctx, oldSize);
             visitSelected_list(ctx.selected_list());
+            this.tableRefsSize.remove(ctx);
+        }
 
         while(tableRefs.size() > oldSize) tableRefs.pop();
-
         return ctx.getText();
     }
-
-    Stack<Node> columnSrc = new Stack<>();
+    @Override
+    public String visitSelected_list(PlSqlParser.Selected_listContext ctx) {
+        if(ctx.select_list_elements() != null && !ctx.select_list_elements().isEmpty())
+            for(PlSqlParser.Select_list_elementsContext slCtx : ctx.select_list_elements())
+                visitSelect_list_elements(slCtx);
+        else { // '*'
+            int oldSize = this.tableRefsSize.get((PlSqlParser.Query_blockContext)(ctx.parent));
+            while(this.tableRefs.size() > oldSize) {
+                String srcTableName = this.tableRefs.pop();
+                List<String> allColNames = this.graph.getAllColumns(srcTableName);
+                for(String colName : allColNames) {
+                    columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + colName));
+                    columnSrc.add(new Node(NodeType.COLUMN, srcTableName + ":" + colName));
+                    columnSrcNormalPop();
+                }
+            }
+        }
+        return ctx.getText();
+    }
     @Override
     public String visitSelect_list_elements(PlSqlParser.Select_list_elementsContext ctx) {
-        if(ctx.tableview_name() != null) { return ctx.getText(); }
+        if(ctx.tableview_name() != null) {
+            String srcTableName = PlSqlVisitor.getRealTableName(ctx.tableview_name().getText());
+            List<String> allColNames = this.graph.getAllColumns(srcTableName);
+            for(String colName : allColNames) {
+                columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + colName));
+                columnSrc.add(new Node(NodeType.COLUMN, srcTableName + ":" + colName));
+                columnSrcNormalPop();
+            }
+        }
         else if(ctx.expression() != null) {
             visitExpression(ctx.expression());
             Node srcColumn = columnSrc.pop();
@@ -158,7 +187,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitQuoted_string(PlSqlParser.Quoted_stringContext ctx) {
         columnSrc.add(new Node(NodeType.QUOTED_STRING, ctx.getText()));
-        return visitChildren(ctx);
+        return ctx.getText();
     }
 
     @Override
@@ -327,7 +356,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         return ctx.getText();
     }
 
-
     @Override
     public String visitSubstr_function(PlSqlParser.Substr_functionContext ctx) {
         String functionName = PlSqlVisitor.getFullConext(ctx);
@@ -348,7 +376,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         return functionName;
     }
-
     @Override
     public String visitTo_char_function(PlSqlParser.To_char_functionContext ctx) {
         String functionName = PlSqlVisitor.getFullConext(ctx);
@@ -378,7 +405,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         return functionName;
     }
-
     @Override
     public String visitDecode_function(PlSqlParser.Decode_functionContext ctx) {
         String functionName = PlSqlVisitor.getFullConext(ctx);
@@ -393,7 +419,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         return functionName;
     }
-
     @Override
     public String visitChr_function(PlSqlParser.Chr_functionContext ctx) {
         String functionName = PlSqlVisitor.getFullConext(ctx);
@@ -406,7 +431,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         return functionName;
     }
-
     @Override
     public String visitNvl_function(PlSqlParser.Nvl_functionContext ctx) {
         String functionName = PlSqlVisitor.getFullConext(ctx);
@@ -421,7 +445,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         return functionName;
     }
-
     @Override
     public String visitTrim_function(PlSqlParser.Trim_functionContext ctx) {
         String functionName = PlSqlVisitor.getFullConext(ctx);
@@ -439,7 +462,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         return functionName;
     }
-
     @Override
     public String visitTo_date_function(PlSqlParser.To_date_functionContext ctx) {
         String functionName = PlSqlVisitor.getFullConext(ctx);
@@ -474,7 +496,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         return functionName;
     }
-
     @Override
     public String visitGeneral_element_part(PlSqlParser.General_element_partContext ctx) {
         if (ctx.function_argument() != null &&
@@ -487,7 +508,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         return visitChildren(ctx);
     }
-
     @Override
     public String visitFunction_argument(PlSqlParser.Function_argumentContext ctx) {
         if (ctx.argument() != null) {
@@ -500,6 +520,13 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             visitKeep_clause(ctx.keep_clause());
 
         return ctx.getText();
+    }
+
+    @Override
+    public String visitOther_function(PlSqlParser.Other_functionContext ctx) {
+        String ret = PlSqlVisitor.getFullConext(ctx);
+        columnSrc.add(this.graph.addFunction(ret));
+        return ret;
     }
 
     @Override

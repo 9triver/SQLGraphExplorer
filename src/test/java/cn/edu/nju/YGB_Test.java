@@ -37,6 +37,10 @@ public class YGB_Test {
     public void test_CREATE() throws IOException, URISyntaxException {
         test("CREATE");
     }
+    @Test
+    public void test_SelectStar() throws IOException, URISyntaxException {
+        test("select_star");
+    }
 
     private void test(String name) throws IOException, URISyntaxException {
         String filePath = YGB_Test.class.getClassLoader().

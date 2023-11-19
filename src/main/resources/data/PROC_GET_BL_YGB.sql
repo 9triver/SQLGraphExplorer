@@ -1,3 +1,47 @@
+create table EAST5_JGXXB (
+  yhjgdm VARCHAR2(255),
+  nbjgh VARCHAR2(255),
+  jrxkzh VARCHAR2(255),
+  yyzzh VARCHAR2(255),
+  yhjgmc VARCHAR2(255),
+  jglb VARCHAR2(255),
+  xzqhdm VARCHAR2(255),
+  yyzt VARCHAR2(255),
+  clrq VARCHAR2(255),
+  jgdz VARCHAR2(255),
+  jglxdh VARCHAR2(255),
+  fzrxm VARCHAR2(255),
+  fzrzw VARCHAR2(255),
+  fzrlxdh VARCHAR2(255),
+  cjrq VARCHAR2(255)
+) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
+  initial 64K next 1M minextents 1 maxextents unlimited
+);
+
+create table BL_YGB (
+  jrxkzh VARCHAR2(255),
+  nbjgh VARCHAR2(255),
+  yhjgmc VARCHAR2(255),
+  gh VARCHAR2(255),
+  xm VARCHAR2(255),
+  gj VARCHAR2(255),
+  zjlb VARCHAR2(255),
+  zjhm VARCHAR2(255),
+  lxdh VARCHAR2(255),
+  ssbm VARCHAR2(255),
+  gwbh VARCHAR2(255),
+  gwmc VARCHAR2(255),
+  sfgg VARCHAR2(255),
+  pfrq VARCHAR2(255),
+  rzrq VARCHAR2(255),
+  yglx VARCHAR2(255),
+  ygzt VARCHAR2(255),
+  bbz VARCHAR2(255),
+  cjrq VARCHAR2(255)
+) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
+  initial 64K next 1M minextents 1 maxextents unlimited
+);
+
 --每一段加工逻辑处理，打一个标签
 /*SQLSTART*/
 /*MERGE INTO E5_YGB a
@@ -22,7 +66,7 @@ MERGE INTO E5_YGB a USING (
         ) rn
       FROM
         BL_YGB m
-        LEFT JOIN IRS_MODEL.EAST5_JGXXB D ON D.NBJGH = m.NBJGH
+        LEFT JOIN EAST5_JGXXB D ON D.NBJGH = m.NBJGH
         AND D.CJRQ = V_DATE
       where
         to_char(m.cjrq, 'yyyymmdd') = V_DATE
