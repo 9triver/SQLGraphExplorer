@@ -62,11 +62,8 @@ public class Graph {
         if(!existTable(tableName)) return null;
 
         Map<String, Column> targetCols = this.tableNameMapper.get(tableName).columnNameMapper;
-        List<String> ret = new ArrayList<>();
-        for(String colName: targetCols.keySet())
-            ret.add(colName);
 
-        return ret;
+        return new ArrayList<>(targetCols.keySet());
     }
 
     public boolean addEdge(Node src, Node dst) {
@@ -120,6 +117,18 @@ public class Graph {
     public Node addWhere(String whereContext) {
         Node ret = addNode(NodeType.WHERE, "WHERE"+whereCount+NEWLINE+whereContext);
         whereCount++;
+        return ret;
+    }
+    int groupByCount = 0;
+    public Node addGroupBy(String groupByContext) {
+        Node ret = addNode(NodeType.GROUP_BY, "GROUP BY"+groupByCount+NEWLINE+groupByContext);
+        groupByCount++;
+        return ret;
+    }
+    int orderByCount = 0;
+    public Node addOrderBy(String orderByContext) {
+        Node ret = addNode(NodeType.ORDER_BY, "ORDER BY"+orderByCount+NEWLINE+orderByContext);
+        orderByCount++;
         return ret;
     }
     int unionCount = 0;
@@ -343,6 +352,8 @@ public class Graph {
             certainAttribute = switch (node.nodeType){
                 case JOIN -> String.format(attribute, "parallelogram", "lightblue2");
                 case WHERE -> String.format(attribute, "diamond", "lightblue2");
+                case GROUP_BY -> String.format(attribute, "trapezium", "lightblue2");
+                case ORDER_BY -> String.format(attribute, "house", "lightblue2");
                 case FUNCTION -> String.format(attribute, "cds", "lightyellow2");
                 case UNION ->  String.format(attribute, "circle", "lightblue2");
                 case CASE ->  String.format(attribute, "rectangle", "lightyellow2");
@@ -367,7 +378,7 @@ public class Graph {
                 buf.append(quote(dst));
 
                 certainAttribute = switch (src.nodeType) {
-                    case TABLE,JOIN,WHERE,UNION,MERGE,MERGE_UPDATE,MERGE_INSERT ->
+                    case TABLE,JOIN,WHERE,GROUP_BY,ORDER_BY,UNION,MERGE,MERGE_UPDATE,MERGE_INSERT ->
                             String.format(attribute, "dotted", "blue");
                     case COLUMN,QUOTED_STRING,FUNCTION,CASE ->
                             String.format(attribute, "bold", "black");

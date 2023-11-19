@@ -63,23 +63,41 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     private Map<PlSqlParser.Query_blockContext, Integer> tableRefsSize = new HashMap<>();
     @Override
     public String visitQuery_block(PlSqlParser.Query_blockContext ctx) {
-        int oldSize = tableRefs.size();
-        if (ctx.from_clause() != null)
-            visitFrom_clause(ctx.from_clause());
+        Node base = tableSrc.peek();
+        int tableRefsOldSize = tableRefs.size();
+        int tableSrcOldSize = tableSrc.size();
 
-        if (ctx.where_clause() != null) {
-            visitWhere_clause(ctx.where_clause());
-            tableSrcNormalPop(); // where -> dstTable/union;
+        // From -> Where -> GroupBy -> OrderBy -> dstTable/union
+        if(ctx.order_by_clause() != null) { // OrderBy -> dstTable/union
+            this.tableSrc.add(this.graph.addOrderBy(visitOrder_by_clause(ctx.order_by_clause())));
+            tableSrcPopDst();
         }
-        if(tableSrc.peek().nodeType == NodeType.TABLE)
+        if(ctx.group_by_clause() != null) { // GroupBy -> OrderBy
+            this.tableSrc.add(this.graph.addGroupBy(visitGroup_by_clause(ctx.group_by_clause())));
+            tableSrcPopDst();
+        }
+        if (ctx.where_clause() != null) { // Where -> GroupBy
+            this.tableSrc.add(this.graph.addWhere(visitWhere_clause(ctx.where_clause())));
+            tableSrcPopDst();
+        }
+        // From -> Where
+        Node dst = this.tableSrc.peek();
+        visitFrom_clause(ctx.from_clause());
+        while(this.tableSrc.size() > tableSrcOldSize)
+            this.graph.addEdge(this.tableSrc.pop(),dst);
+        // reverse base
+        this.tableSrc.pop();
+        this.tableSrc.add(base);
+        if(base.nodeType == NodeType.TABLE)
             this.curDstTableName = tableSrc.peek().name;
+
         if (ctx.selected_list() != null) {
-            this.tableRefsSize.put(ctx, oldSize);
+            this.tableRefsSize.put(ctx, tableRefsOldSize);
             visitSelected_list(ctx.selected_list());
             this.tableRefsSize.remove(ctx);
         }
 
-        while(tableRefs.size() > oldSize) tableRefs.pop();
+        while(tableRefs.size() > tableRefsOldSize) tableRefs.pop();
         return ctx.getText();
     }
     @Override
@@ -194,14 +212,20 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitGeneral_element(PlSqlParser.General_elementContext ctx) {
         if(ctx.general_element_part().size() == 2) { // Table.Column
             String fullColumnName = ctx.general_element_part(0).getText() + ":" + ctx.general_element_part(1).getText();
-            columnSrc.add(new Node(NodeType.COLUMN, fullColumnName));
+            this.columnSrc.add(new Node(NodeType.COLUMN, fullColumnName));
             return fullColumnName;
         }
-        else if(ctx.general_element_part().size() == 1) { // Column
-            String fullColumnName = ctx.general_element_part(0).getText();
-            fullColumnName = this.findSrcTable(fullColumnName) + ":" + fullColumnName;
-            columnSrc.add(new Node(NodeType.COLUMN, fullColumnName));
-            return fullColumnName;
+        else if(ctx.general_element_part().size() == 1) { // Column or Function
+            PlSqlParser.General_element_partContext generalElementPartContext = ctx.general_element_part(0);
+            String text = generalElementPartContext.getText();
+            if(generalElementPartContext.function_argument() == null) { // Column
+                text = this.findSrcTable(text) + ":" + text;
+                this.columnSrc.add(new Node(NodeType.COLUMN, text));
+            }
+            else // Function
+                this.columnSrc.add(this.graph.addFunction(text));
+
+            return text;
         }
         return visitChildren(ctx);
     }
@@ -220,23 +244,28 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     Stack<Node> tableSrc = new Stack<>();
     @Override
     public String visitFrom_clause(PlSqlParser.From_clauseContext ctx) {
-        String ret = visitChildren(ctx);
-
-        return ret;
+        return visitChildren(ctx);
     }
 
     @Override
     public String visitWhere_clause(PlSqlParser.Where_clauseContext ctx) {
-        if (ctx.expression() != null) {
-            String whereExpression = PlSqlVisitor.getFullConext(ctx.expression());
-            Node src = tableSrc.pop();
-            Node dst = graph.addWhere(whereExpression);
-            tableSrc.add(dst);
-            this.graph.addEdge(src, dst);
-        }
+        if(ctx.expression() == null)
+            return null;
 
-        // 不在继续向下访问，避免函数生成
-        return ctx.getText();
+        // 不再继续向下访问
+        return PlSqlVisitor.getFullConext(ctx.expression());
+    }
+
+    @Override
+    public String visitGroup_by_clause(PlSqlParser.Group_by_clauseContext ctx) {
+        // 不再继续向下访问
+        return PlSqlVisitor.getFullConext(ctx);
+    }
+
+    @Override
+    public String visitOrder_by_clause(PlSqlParser.Order_by_clauseContext ctx) {
+        // 不再继续向下访问
+        return PlSqlVisitor.getFullConext(ctx);
     }
 
     @Override
@@ -702,6 +731,15 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         Node src = tableSrc.pop();
         Node dst = tableSrc.pop();
         tableSrc.add(dst);
+        this.graph.addEdge(src, dst);
+        return true;
+    }
+    private boolean tableSrcPopDst() {
+        if (tableSrc.size() < 2)
+            return false;
+        Node src = tableSrc.pop();
+        Node dst = tableSrc.pop();
+        tableSrc.add(src);
         this.graph.addEdge(src, dst);
         return true;
     }

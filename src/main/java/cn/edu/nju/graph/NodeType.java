@@ -3,6 +3,8 @@ package cn.edu.nju.graph;
 public enum NodeType {
     JOIN,
     WHERE,
+    GROUP_BY,
+    ORDER_BY,
     FUNCTION,
     UNION,
     CASE,

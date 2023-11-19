@@ -42,6 +42,12 @@ public class YGB_Test {
         test("select_star");
     }
 
+    @Test
+    public void test_groupBy() throws IOException, URISyntaxException {
+        test("groupby06");
+    }
+
+
     private void test(String name) throws IOException, URISyntaxException {
         String filePath = YGB_Test.class.getClassLoader().
                 getResource("data/" + name + ".sql").toURI().getPath();
