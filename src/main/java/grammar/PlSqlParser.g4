@@ -6348,13 +6348,13 @@ numeric_function_wrapper
     ;
 
 numeric_function
-   : SUM '(' (DISTINCT | ALL)? expression ')'
-   | COUNT '(' ( ASTERISK | ((DISTINCT | UNIQUE | ALL)? concatenation)? ) ')' over_clause?
-   | ROUND '(' expression (',' UNSIGNED_INTEGER)?  ')'
-   | AVG '(' (DISTINCT | ALL)? expression ')'
-   | MAX '(' (DISTINCT | ALL)? expression ')'
-   | LEAST '(' expressions ')'
-   | GREATEST '(' expressions ')'
+   : SUM '(' (DISTINCT | ALL)? expression ')' #sum_function
+   | COUNT '(' ( ASTERISK | ((DISTINCT | UNIQUE | ALL)? concatenation)? ) ')' over_clause? #count_function
+   | ROUND '(' expression (',' UNSIGNED_INTEGER)?  ')' #round_function
+   | AVG '(' (DISTINCT | ALL)? expression ')' #avg_function
+   | MAX '(' (DISTINCT | ALL)? expression ')' #max_function
+   | LEAST '(' expressions ')' #least_function
+   | GREATEST '(' expressions ')' #greatest_function
    ;
 
 listagg_overflow_clause

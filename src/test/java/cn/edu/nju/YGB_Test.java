@@ -47,6 +47,11 @@ public class YGB_Test {
         test("groupby06");
     }
 
+    @Test
+    public void test_With() throws IOException, URISyntaxException {
+        test("with");
+    }
+
 
     private void test(String name) throws IOException, URISyntaxException {
         String filePath = YGB_Test.class.getClassLoader().

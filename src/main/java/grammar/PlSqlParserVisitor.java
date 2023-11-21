@@ -6393,11 +6393,54 @@ public interface PlSqlParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitNumeric_function_wrapper(PlSqlParser.Numeric_function_wrapperContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PlSqlParser#numeric_function}.
+	 * Visit a parse tree produced by the {@code sum_function}
+	 * labeled alternative in {@link PlSqlParser#numeric_function}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNumeric_function(PlSqlParser.Numeric_functionContext ctx);
+	T visitSum_function(PlSqlParser.Sum_functionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code count_function}
+	 * labeled alternative in {@link PlSqlParser#numeric_function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCount_function(PlSqlParser.Count_functionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code round_function}
+	 * labeled alternative in {@link PlSqlParser#numeric_function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRound_function(PlSqlParser.Round_functionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code avg_function}
+	 * labeled alternative in {@link PlSqlParser#numeric_function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAvg_function(PlSqlParser.Avg_functionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code max_function}
+	 * labeled alternative in {@link PlSqlParser#numeric_function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMax_function(PlSqlParser.Max_functionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code least_function}
+	 * labeled alternative in {@link PlSqlParser#numeric_function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLeast_function(PlSqlParser.Least_functionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code greatest_function}
+	 * labeled alternative in {@link PlSqlParser#numeric_function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGreatest_function(PlSqlParser.Greatest_functionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PlSqlParser#listagg_overflow_clause}.
 	 * @param ctx the parse tree

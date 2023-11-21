@@ -180,6 +180,10 @@ public class Graph {
         createTable(tableName);
         return new Node(NodeType.TABLE, tableName);
     }
+    public Node addTempTable(String tableName) {
+        createTable(tableName);
+        return new Node(NodeType.TABLE, tableName);
+    }
 
     public boolean createTable(String tableName) {
         if(tableName == null || tableName.isEmpty())
