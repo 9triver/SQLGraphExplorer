@@ -23,9 +23,9 @@ public class Graph {
     private final Map<String, Table> tableNameMapper = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private String graphName = "G";
 
-    class Table {
+    public class Table {
         public String tableName;
-        Map<String, Column> columnNameMapper;
+        public Map<String, Column> columnNameMapper;
 
         public Table(String tableName) {
             this.tableName = tableName;
@@ -33,7 +33,7 @@ public class Graph {
         }
     }
 
-    class Column {
+    public class Column {
         public Table table;
         public String columnName;
 
