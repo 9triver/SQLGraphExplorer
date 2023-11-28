@@ -1,6 +1,7 @@
 package cn.edu.nju.expression.tuple;
 
 import cn.edu.nju.graph.Graph;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -16,6 +17,12 @@ public class KTuple {
     }
     public Set<Graph.Column> scheme() {
         return columns;
+    }
+    public Set<Graph.Column> allScheme() {
+        Set<Graph.Column> ret = new HashSet<>();
+        for(Map.Entry<String, Graph.Column> entry : this.table.columnNameMapper.entrySet())
+            ret.add(entry.getValue());
+        return ret;
     }
 
     public Graph.Table getTable() {
