@@ -31,6 +31,13 @@ public class Graph {
             this.tableName = tableName;
             this.columnNameMapper = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         }
+
+        public Set<Graph.Column> allScheme() {
+            Set<Graph.Column> ret = new HashSet<>();
+            for (Map.Entry<String, Graph.Column> entry : this.columnNameMapper.entrySet())
+                ret.add(entry.getValue());
+            return ret;
+        }
     }
 
     public class Column {
@@ -43,7 +50,8 @@ public class Graph {
         }
     }
 
-    public Graph() { }
+    public Graph() {
+    }
 
     public Graph(String graphName) {
         this.graphName = graphName;
@@ -52,14 +60,17 @@ public class Graph {
     public boolean existTable(String tableName) {
         return tableNameMapper.containsKey(tableName);
     }
+
     public boolean existColumn(String tableName, String columnName) {
         if (!tableNameMapper.containsKey(tableName))
             return false;
         return tableNameMapper.get(tableName).columnNameMapper.containsKey(columnName);
     }
+
     public List<String> getAllColumns(String tableName) {
         tableName = PlSqlVisitor.getRealTableName(tableName);
-        if(!existTable(tableName)) return null;
+        if (!existTable(tableName))
+            return null;
 
         Map<String, Column> targetCols = this.tableNameMapper.get(tableName).columnNameMapper;
 
@@ -77,6 +88,7 @@ public class Graph {
         edges.map(src, dst);
         return true;
     }
+
     private void checkNode(Node node) {
         node.name = node.name.toUpperCase();
         switch (node.nodeType) {
@@ -94,7 +106,7 @@ public class Graph {
     }
 
     public boolean addColumn(String tableName, String columnName) {
-        if(tableName == null || tableName.isEmpty() || columnName == null || columnName.isEmpty())
+        if (tableName == null || tableName.isEmpty() || columnName == null || columnName.isEmpty())
             return false;
         tableName = PlSqlVisitor.getRealTableName(tableName.toUpperCase());
         columnName = columnName.toUpperCase();
@@ -107,88 +119,114 @@ public class Graph {
         columns.put(columnName, new Column(table, columnName));
         return true;
     }
-    int joinCount=0;
+
+    int joinCount = 0;
+
     public Node addJoin(String joinContext) {
-        Node ret=addNode(NodeType.JOIN, "JOIN"+joinCount+NEWLINE+joinContext);
+        Node ret = addNode(NodeType.JOIN, "JOIN" + joinCount + NEWLINE + joinContext);
         joinCount++;
         return ret;
     }
+
     int whereCount = 0;
+
     public Node addWhere(String whereContext) {
-        Node ret = addNode(NodeType.WHERE, "WHERE"+whereCount+NEWLINE+whereContext);
+        Node ret = addNode(NodeType.WHERE, "WHERE" + whereCount + NEWLINE + whereContext);
         whereCount++;
         return ret;
     }
+
     int groupByCount = 0;
+
     public Node addGroupBy(String groupByContext) {
-        Node ret = addNode(NodeType.GROUP_BY, "GROUP BY"+groupByCount+NEWLINE+groupByContext);
+        Node ret = addNode(NodeType.GROUP_BY, "GROUP BY" + groupByCount + NEWLINE + groupByContext);
         groupByCount++;
         return ret;
     }
+
     int orderByCount = 0;
+
     public Node addOrderBy(String orderByContext) {
-        Node ret = addNode(NodeType.ORDER_BY, "ORDER BY"+orderByCount+NEWLINE+orderByContext);
+        Node ret = addNode(NodeType.ORDER_BY, "ORDER BY" + orderByCount + NEWLINE + orderByContext);
         orderByCount++;
         return ret;
     }
+
     int unionCount = 0;
+
     public Node addUnion(String unionName) {
-        Node ret = addNode(NodeType.UNION, unionName+unionCount);
+        Node ret = addNode(NodeType.UNION, unionName + unionCount);
         unionCount++;
         return ret;
     }
+
     int mergeCount = 0;
+
     public Node addMerge(String MergeContext) {
         Node ret = addNode(NodeType.MERGE, "MERGE" + mergeCount + NEWLINE + MergeContext);
         mergeCount++;
         return ret;
     }
+
     int mergeUpdateCount = 0;
+
     public Node addMergeUpdate(String MergeUpdateContext) {
-        Node ret = addNode(NodeType.MERGE_UPDATE, "MATCHED -> UPDATE SET-" + mergeUpdateCount + NEWLINE + MergeUpdateContext);
+        Node ret = addNode(NodeType.MERGE_UPDATE,
+                "MATCHED -> UPDATE SET-" + mergeUpdateCount + NEWLINE + MergeUpdateContext);
         mergeUpdateCount++;
         return ret;
     }
+
     int mergeInsertCount = 0;
+
     public Node addMergeInsert(String MergeInsertContext) {
-        Node ret = addNode(NodeType.MERGE_INSERT, "NOT MATCHED -> INSERT-" + mergeInsertCount + NEWLINE + MergeInsertContext);
+        Node ret = addNode(NodeType.MERGE_INSERT,
+                "NOT MATCHED -> INSERT-" + mergeInsertCount + NEWLINE + MergeInsertContext);
         mergeInsertCount++;
         return ret;
     }
+
     int functionCount = 0;
+
     public Node addFunction(String functionName) {
-        Node ret = addNode(NodeType.FUNCTION, "FUNCTION"+functionCount+NEWLINE+functionName);
+        Node ret = addNode(NodeType.FUNCTION, "FUNCTION" + functionCount + NEWLINE + functionName);
         functionCount++;
         return ret;
     }
+
     int caseCount = 0;
+
     public Node addCase(String caseContext) {
-        Node ret = addNode(NodeType.CASE, "CASE"+caseCount+NEWLINE+caseContext);
+        Node ret = addNode(NodeType.CASE, "CASE" + caseCount + NEWLINE + caseContext);
         caseCount++;
         return ret;
     }
+
     private Node addNode(NodeType nodeType, String name) {
         name = name.toUpperCase();
         Node ret = new Node(nodeType, name);
         nodes.add(ret);
         return ret;
     }
+
     int tempTableCount = 0;
+
     public Node addTempTable() {
         String tableName = "Temp-Table-" + tempTableCount;
         tempTableCount++;
         createTable(tableName);
         return new Node(NodeType.TABLE, tableName);
     }
+
     public Node addTempTable(String tableName) {
         createTable(tableName);
         return new Node(NodeType.TABLE, tableName);
     }
 
     public boolean createTable(String tableName) {
-        if(tableName == null || tableName.isEmpty())
+        if (tableName == null || tableName.isEmpty())
             return false;
-        tableName =  PlSqlVisitor.getRealTableName(tableName.toUpperCase());
+        tableName = PlSqlVisitor.getRealTableName(tableName.toUpperCase());
         if (existTable(tableName))
             return false;
 
@@ -198,7 +236,7 @@ public class Graph {
     }
 
     public boolean deleteTable(String targetTableName) {
-        if(targetTableName == null || targetTableName.isEmpty())
+        if (targetTableName == null || targetTableName.isEmpty())
             return false;
         targetTableName = targetTableName.toUpperCase();
         if (!tableNameMapper.containsKey(targetTableName))
@@ -211,7 +249,7 @@ public class Graph {
         Set<Node> columNamesToBeDeleted = new HashSet<>();
         for (Map.Entry<String, Column> entry : targetColumnNameMap.entrySet()) {
             columnsToBeDeleted.add(entry.getValue());
-            columNamesToBeDeleted.add(new Node(NodeType.COLUMN,targetTableName + ":" + entry.getValue().columnName));
+            columNamesToBeDeleted.add(new Node(NodeType.COLUMN, targetTableName + ":" + entry.getValue().columnName));
         }
 
         // 2. 删除相关边
@@ -245,8 +283,6 @@ public class Graph {
         targetTable.tableName = toTableName;
         tableNameMapper.remove(fromTableName);
         tableNameMapper.put(toTableName, targetTable);
-
-
 
         return true;
     }
@@ -333,12 +369,13 @@ public class Graph {
 
             buf.append(QUOTE).append(tableName).append(QUOTE).append(" [");
 
-            buf.append( "label=<\n<table border=\"0\" cellspacing=\"0\" cellborder=\"1\">\n");
+            buf.append("label=<\n<table border=\"0\" cellspacing=\"0\" cellborder=\"1\">\n");
             buf.append("<tr><td bgcolor=\"lightblue2\"><i>").append(tableName).append("</i></td></tr>").append(NEWLINE);
 
             for (Map.Entry<String, Column> entry1 : columns.entrySet()) {
                 Column column = entry1.getValue();
-                buf.append("  <tr><td port=\"").append(column.columnName).append("\">").append(column.columnName).append("</td></tr>").append(NEWLINE);
+                buf.append("  <tr><td port=\"").append(column.columnName).append("\">").append(column.columnName)
+                        .append("</td></tr>").append(NEWLINE);
             }
 
             buf.append("</table>>];\n");
@@ -350,20 +387,20 @@ public class Graph {
     private void drawNodes(StringBuilder buf) {
         String attribute = "[shape=\"%s\", color=\"%s\", style=filled]";
         String certainAttribute;
-        for(Node node:nodes){
+        for (Node node : nodes) {
             buf.append(QUOTE).append(node.name).append(QUOTE);
 
-            certainAttribute = switch (node.nodeType){
+            certainAttribute = switch (node.nodeType) {
                 case JOIN -> String.format(attribute, "parallelogram", "lightblue2");
                 case WHERE -> String.format(attribute, "diamond", "lightblue2");
                 case GROUP_BY -> String.format(attribute, "trapezium", "lightblue2");
                 case ORDER_BY -> String.format(attribute, "house", "lightblue2");
                 case FUNCTION -> String.format(attribute, "cds", "lightyellow2");
-                case UNION ->  String.format(attribute, "circle", "lightblue2");
-                case CASE ->  String.format(attribute, "rectangle", "lightyellow2");
-                case MERGE ->  String.format(attribute, "polygon", "lightblue2");
-                case MERGE_UPDATE ->  String.format(attribute, "fivepoverhang", "lightblue2");
-                case MERGE_INSERT ->  String.format(attribute, "primersite", "lightblue2");
+                case UNION -> String.format(attribute, "circle", "lightblue2");
+                case CASE -> String.format(attribute, "rectangle", "lightyellow2");
+                case MERGE -> String.format(attribute, "polygon", "lightblue2");
+                case MERGE_UPDATE -> String.format(attribute, "fivepoverhang", "lightblue2");
+                case MERGE_INSERT -> String.format(attribute, "primersite", "lightblue2");
                 default -> "";
             };
 
@@ -374,18 +411,18 @@ public class Graph {
     private void drawEdges(StringBuilder buf) {
         String attribute = "[style=\"%s\", color=\"%s\", ]";
         String certainAttribute = "";
-        for(Map.Entry<Node, List<Node>> edge : edges.entrySet()) {
+        for (Map.Entry<Node, List<Node>> edge : edges.entrySet()) {
             Node src = edge.getKey();
-            for(Node dst : edge.getValue()){
+            for (Node dst : edge.getValue()) {
                 buf.append(quote(src));
                 buf.append(" -> ");
                 buf.append(quote(dst));
 
                 certainAttribute = switch (src.nodeType) {
-                    case TABLE,JOIN,WHERE,GROUP_BY,ORDER_BY,UNION,MERGE,MERGE_UPDATE,MERGE_INSERT ->
-                            String.format(attribute, "dotted", "blue");
-                    case COLUMN,QUOTED_STRING,FUNCTION,CASE ->
-                            String.format(attribute, "bold", "black");
+                    case TABLE, JOIN, WHERE, GROUP_BY, ORDER_BY, UNION, MERGE, MERGE_UPDATE, MERGE_INSERT ->
+                        String.format(attribute, "dotted", "blue");
+                    case COLUMN, QUOTED_STRING, FUNCTION, CASE ->
+                        String.format(attribute, "bold", "black");
                 };
 
                 buf.append(certainAttribute).append(SEMI).append(NEWLINE);
