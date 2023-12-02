@@ -38,7 +38,7 @@ public class CKTuple {
         return ret;
     }
 
-    public static CKTuple constraintIntersection(CKTuple p, Constraint c) {
+    public static CKTuple andConstraint(CKTuple p, Constraint c) {
         return new CKTuple(p.kTuple, Constraint.and(p.constraint, c));
     }
 

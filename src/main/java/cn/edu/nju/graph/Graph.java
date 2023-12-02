@@ -223,16 +223,16 @@ public class Graph {
         return new Node(NodeType.TABLE, tableName);
     }
 
-    public boolean createTable(String tableName) {
+    public Table createTable(String tableName) {
         if (tableName == null || tableName.isEmpty())
-            return false;
+            return null;
         tableName = PlSqlVisitor.getRealTableName(tableName.toUpperCase());
         if (existTable(tableName))
-            return false;
+            return null;
 
         Table newTable = new Table(tableName);
         tableNameMapper.put(tableName, newTable);
-        return true;
+        return newTable;
     }
 
     public boolean deleteTable(String targetTableName) {
@@ -342,6 +342,11 @@ public class Graph {
         tableNameMapper.remove(srcTableName);
 
         return true;
+    }
+
+    public Table getTable(String tableName) {
+        if(!existTable(tableName)) return null;
+        return this.tableNameMapper.get(tableName);
     }
 
     public String toDOT() {

@@ -21,6 +21,10 @@ public class CKTuples {
         this.ckTuples = ckTuples;
     }
 
+    public List<CKTuple> getCkTuples() {
+        return ckTuples;
+    }
+
     public static CKTuples projection(CKTuples P, Set<Graph.Column> relationScheme)  {
         List<CKTuple> ckTuplesTmp = new ArrayList<>();
         for(CKTuple p : P.ckTuples)
@@ -45,6 +49,14 @@ public class CKTuples {
         for(CKTuple p1 : P1.ckTuples)
             for(CKTuple p2 : P2.ckTuples)
                 ckTuplesTmp.addAll(CKTuple.completion(p1,p2));
+        return new CKTuples(ckTuplesTmp);
+    }
+    public static CKTuples selection(CKTuples P, Constraint C) {
+        List<CKTuple> ckTuplesTmp = new ArrayList<>();
+        for(CKTuple p : P.ckTuples)
+            for(Constraint c : C.orSplit())
+                ckTuplesTmp.add(CKTuple.andConstraint(p, c));
+
         return new CKTuples(ckTuplesTmp);
     }
 }
