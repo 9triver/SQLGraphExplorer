@@ -816,6 +816,9 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String toDot() {
         return graph.toDOT();
     }
+    public String toJSON() {
+        return graph.toJSON();
+    }
 
     public static String getRealTableName(String tableName) {
         if (tableName == null)

@@ -55,7 +55,7 @@ SELECT
   CASE
     WHEN A.A01AN IN ('01', '02', '03', '04', '05', '06', '07', '09') THEN '是'
     ELSE '否'
-  END SFGG,
+  END AS SFGG,
   /*是否高管,根据A01AN:组织高管类型判断是否为高管*/
   '' AS PFRQ,
   /*批复日期（通过补录数据获取）*/

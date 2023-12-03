@@ -1,6 +1,8 @@
 package cn.edu.nju.graph;
 
 import cn.edu.nju.PlSqlVisitor;
+import cn.edu.nju.graph.json.GraphJSON;
+import com.google.gson.Gson;
 import org.antlr.v4.runtime.misc.MultiMap;
 
 import java.util.*;
@@ -357,16 +359,16 @@ public class Graph {
         buf.append(nodeConfigure);
         buf.append(edgeConfigure);
         buf.append(NEWLINE).append(NEWLINE).append(NEWLINE);
-        drawNodes(buf);
+        dotDrawNodes(buf);
         buf.append(NEWLINE).append(NEWLINE).append(NEWLINE);
-        drawTablesAndColumns(buf);
+        dotDrawTablesAndColumns(buf);
         buf.append(NEWLINE).append(NEWLINE).append(NEWLINE);
-        drawEdges(buf);
+        dotDrawEdges(buf);
 
         return buf.toString();
     }
 
-    private void drawTablesAndColumns(StringBuilder buf) {
+    private void dotDrawTablesAndColumns(StringBuilder buf) {
         for (Map.Entry<String, Table> entry : tableNameMapper.entrySet()) {
             String tableName = entry.getKey();
             Table table = entry.getValue();
@@ -389,7 +391,7 @@ public class Graph {
         buf.append(NEWLINE);
     }
 
-    private void drawNodes(StringBuilder buf) {
+    private void dotDrawNodes(StringBuilder buf) {
         String attribute = "[shape=\"%s\", color=\"%s\", style=filled]";
         String certainAttribute;
         for (Node node : nodes) {
@@ -413,7 +415,7 @@ public class Graph {
         }
     }
 
-    private void drawEdges(StringBuilder buf) {
+    private void dotDrawEdges(StringBuilder buf) {
         String attribute = "[style=\"%s\", color=\"%s\", ]";
         String certainAttribute = "";
         for (Map.Entry<Node, List<Node>> edge : edges.entrySet()) {
@@ -434,6 +436,33 @@ public class Graph {
             }
         }
         buf.append("}\n");
+    }
+
+    public String toJSON() {
+        Gson gson = new Gson();
+        GraphJSON graphJSON = new GraphJSON();
+
+        jsonDrawTablesAndColumns(graphJSON);
+        jsonDrawNodes(graphJSON);
+        jsonDrawEdges(graphJSON);
+
+        return gson.toJson(graphJSON);
+    }
+
+    private void jsonDrawTablesAndColumns(GraphJSON graphJSON) {
+        for (Map.Entry<String, Table> entry : tableNameMapper.entrySet())
+            graphJSON.addTable(entry.getValue());
+    }
+    private void jsonDrawNodes(GraphJSON graphJSON) {
+        for (Node node : nodes)
+            graphJSON.addNode(node);
+    }
+    private void jsonDrawEdges(GraphJSON graphJSON) {
+        for (Map.Entry<Node, List<Node>> edge : edges.entrySet()) {
+            Node src = edge.getKey();
+            for (Node dst : edge.getValue())
+                graphJSON.addEdge(src,dst);
+        }
     }
 
     private String quote(Node node) {

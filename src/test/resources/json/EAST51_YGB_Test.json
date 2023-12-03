@@ -1,0 +1,1201 @@
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": "1142675826",
+        "value": {
+          "title": "GWMC",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136864",
+        "value": {
+          "title": "A01CA",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376434",
+        "value": {
+          "title": "A0130",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376342",
+        "value": {
+          "title": "A0101",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136351",
+        "value": {
+          "title": "A0130",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-469202674",
+        "value": {
+          "title": "EAST51_YGB",
+          "items": [
+            {
+              "text": "BBZ"
+            },
+            {
+              "text": "CJRQ"
+            },
+            {
+              "text": "GH"
+            },
+            {
+              "text": "GJ"
+            },
+            {
+              "text": "GWBH"
+            },
+            {
+              "text": "GWMC"
+            },
+            {
+              "text": "JRXKZH"
+            },
+            {
+              "text": "LXDH"
+            },
+            {
+              "text": "NBJGH"
+            },
+            {
+              "text": "PFRQ"
+            },
+            {
+              "text": "RZRQ"
+            },
+            {
+              "text": "SFGG"
+            },
+            {
+              "text": "SSBM"
+            },
+            {
+              "text": "XM"
+            },
+            {
+              "text": "YGLX"
+            },
+            {
+              "text": "YGZT"
+            },
+            {
+              "text": "YHJGMC"
+            },
+            {
+              "text": "ZJHM"
+            },
+            {
+              "text": "ZJLB"
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1318550891",
+        "value": {
+          "title": "JRXKZH",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376947",
+        "value": {
+          "title": "A01CA",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136386",
+        "value": {
+          "title": "A0144",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1749510336",
+        "value": {
+          "title": "B01AA",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136809",
+        "value": {
+          "title": "A01AH",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1069048587",
+        "value": {
+          "title": "NBJGH",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136805",
+        "value": {
+          "title": "A01AD",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376591",
+        "value": {
+          "title": "A0182",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "2101745359",
+        "value": {
+          "title": "GJ",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1142675490",
+        "value": {
+          "title": "GWBH",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1749510863",
+        "value": {
+          "title": "B010A",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-126714097",
+        "value": {
+          "title": "WHERE",
+          "items": [
+            {
+              "text": "WHERE0\nLENGTH (NVL (A.A0144, \u0027\u0027)) \u003e 0\r\n  /*员工编号有值的数据*/\r\n  AND A.HYREN_S_DATE \u003c\u003d \u0027#{ETL_DT}\u0027\r\n  AND A.HYREN_E_DATE \u003e \u0027#{ETL_DT}\u0027"
+            }
+          ]
+        }
+      },
+      {
+        "id": "2101745889",
+        "value": {
+          "title": "XM",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1112176691",
+        "value": {
+          "title": "HRS_HRS_RETA01",
+          "items": [
+            {
+              "text": "A0101"
+            },
+            {
+              "text": "A0130"
+            },
+            {
+              "text": "A0144"
+            },
+            {
+              "text": "A0148"
+            },
+            {
+              "text": "A0177"
+            },
+            {
+              "text": "A0182"
+            },
+            {
+              "text": "A01AD"
+            },
+            {
+              "text": "A01AH"
+            },
+            {
+              "text": "A01BK"
+            },
+            {
+              "text": "A01CA"
+            },
+            {
+              "text": "A01CV"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136390",
+        "value": {
+          "title": "A0148",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136482",
+        "value": {
+          "title": "A0177",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1143006579",
+        "value": {
+          "title": "RZRQ",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1260947675",
+        "value": {
+          "title": "JOIN",
+          "items": [
+            {
+              "text": "JOIN1\nLEFT JOIN\nA.B0110 \u003d B.B0110\r\n  AND B.HYREN_S_DATE \u003c\u003d \u0027#{ETL_DT}\u0027\r\n  AND B.HYREN_E_DATE \u003e \u0027#{ETL_DT}\u0027"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1143229330",
+        "value": {
+          "title": "ZJLB",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1143196678",
+        "value": {
+          "title": "YGLX",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "729591726",
+        "value": {
+          "title": "BBZ",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-898770162",
+        "value": {
+          "title": "YHJGMC",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1142544338",
+        "value": {
+          "title": "CJRQ",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1143197108",
+        "value": {
+          "title": "YGZT",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376926",
+        "value": {
+          "title": "A01BK",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376968",
+        "value": {
+          "title": "A01CV",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-886624759",
+        "value": {
+          "title": "CASE",
+          "items": [
+            {
+              "text": "CASE3\nCASE\r\n    WHEN A.A01AN IN (\u002701\u0027, \u002702\u0027, \u002703\u0027, \u002704\u0027, \u002705\u0027, \u002706\u0027, \u002707\u0027, \u002709\u0027) THEN \u0027是\u0027\r\n    ELSE \u0027否\u0027\r\n  END"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136508",
+        "value": {
+          "title": "A0182",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1133208041",
+        "value": {
+          "title": "WHERE",
+          "items": [
+            {
+              "text": "WHERE1\nLENGTH (NVL (A.A0144, \u0027\u0027)) \u003e 0\r\n  /*员工编号有值的数据*/\r\n  AND A.HYREN_S_DATE \u003c\u003d \u0027#{ETL_DT}\u0027\r\n  AND A.HYREN_E_DATE \u003e \u0027#{ETL_DT}\u0027\r\n  AND A.A0182 \u003c\u003e \u00270101\u0027"
+            }
+          ]
+        }
+      },
+      {
+        "id": "-263343157",
+        "value": {
+          "title": "CASE",
+          "items": [
+            {
+              "text": "CASE1\nCASE\r\n    WHEN A.A01AN IN (\u002701\u0027, \u002702\u0027, \u002703\u0027, \u002704\u0027, \u002705\u0027, \u002706\u0027, \u002707\u0027, \u002709\u0027) THEN \u0027是\u0027\r\n    ELSE \u0027否\u0027\r\n  END"
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376892",
+        "value": {
+          "title": "A01AH",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-327593338",
+        "value": {
+          "title": "JOIN",
+          "items": [
+            {
+              "text": "JOIN0\nLEFT JOIN\nA.B0110 \u003d B.B0110\r\n  AND B.HYREN_S_DATE \u003c\u003d \u0027#{ETL_DT}\u0027\r\n  AND B.HYREN_E_DATE \u003e \u0027#{ETL_DT}\u0027"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136885",
+        "value": {
+          "title": "A01CV",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1142825468",
+        "value": {
+          "title": "LXDH",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "2101745357",
+        "value": {
+          "title": "GH",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1787201695",
+        "value": {
+          "title": "UNION",
+          "items": [
+            {
+              "text": "UNION0"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1142927777",
+        "value": {
+          "title": "PFRQ",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1013419526",
+        "value": {
+          "title": "HRS_HRS_USRA01",
+          "items": [
+            {
+              "text": "A0101"
+            },
+            {
+              "text": "A0130"
+            },
+            {
+              "text": "A0144"
+            },
+            {
+              "text": "A0148"
+            },
+            {
+              "text": "A0177"
+            },
+            {
+              "text": "A0182"
+            },
+            {
+              "text": "A01AD"
+            },
+            {
+              "text": "A01AH"
+            },
+            {
+              "text": "A01BK"
+            },
+            {
+              "text": "A01CA"
+            },
+            {
+              "text": "A01CV"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1143016799",
+        "value": {
+          "title": "SFGG",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376473",
+        "value": {
+          "title": "A0148",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376565",
+        "value": {
+          "title": "A0177",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-1094636759",
+        "value": {
+          "title": "CASE",
+          "items": [
+            {
+              "text": "CASE2\nCASE\r\n    WHEN A.B0110 \u003d \u00270101\u0027 THEN B.B010A\r\n    ELSE B.B01AA\r\n  END"
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376469",
+        "value": {
+          "title": "A0144",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "238376888",
+        "value": {
+          "title": "A01AD",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136259",
+        "value": {
+          "title": "A0101",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "-127286105",
+        "value": {
+          "title": "CASE",
+          "items": [
+            {
+              "text": "CASE0\nCASE\r\n    WHEN A.B0110 \u003d \u00270101\u0027 THEN B.B010A\r\n    ELSE B.B01AA\r\n  END"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1143029143",
+        "value": {
+          "title": "SSBM",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "805568343",
+        "value": {
+          "title": "HRS_HRS_B01",
+          "items": [
+            {
+              "text": "B010A"
+            },
+            {
+              "text": "B01AA"
+            }
+          ]
+        }
+      },
+      {
+        "id": "1631136843",
+        "value": {
+          "title": "A01BK",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      },
+      {
+        "id": "1143229217",
+        "value": {
+          "title": "ZJHM",
+          "items": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "-1749510336",
+        "target": "-127286105",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376469",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376926",
+        "value": ""
+      },
+      {
+        "source": "705320",
+        "target": "-263343157",
+        "value": ""
+      },
+      {
+        "source": "1248",
+        "target": "1142927777",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "-327593338",
+        "value": ""
+      },
+      {
+        "source": "238376469",
+        "target": "2101745357",
+        "value": ""
+      },
+      {
+        "source": "848447",
+        "target": "-263343157",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136885",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136259",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376473",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1143016799",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1143197108",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1069048587",
+        "value": ""
+      },
+      {
+        "source": "238376892",
+        "target": "1143196678",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136508",
+        "value": ""
+      },
+      {
+        "source": "805568343",
+        "target": "-327593338",
+        "value": ""
+      },
+      {
+        "source": "238376591",
+        "target": "1143197108",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376947",
+        "value": ""
+      },
+      {
+        "source": "1631136864",
+        "target": "2101745359",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "729591726",
+        "value": ""
+      },
+      {
+        "source": "-263343157",
+        "target": "1143016799",
+        "value": ""
+      },
+      {
+        "source": "-1749510863",
+        "target": "-1094636759",
+        "value": ""
+      },
+      {
+        "source": "238376434",
+        "target": "1143229330",
+        "value": ""
+      },
+      {
+        "source": "238376968",
+        "target": "1143029143",
+        "value": ""
+      },
+      {
+        "source": "805568343",
+        "target": "-1749510336",
+        "value": ""
+      },
+      {
+        "source": "238376926",
+        "target": "1142675490",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376591",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136482",
+        "value": ""
+      },
+      {
+        "source": "1631136482",
+        "target": "1143229217",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "2101745359",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376434",
+        "value": ""
+      },
+      {
+        "source": "1248",
+        "target": "-898770162",
+        "value": ""
+      },
+      {
+        "source": "1248",
+        "target": "729591726",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1143229330",
+        "value": ""
+      },
+      {
+        "source": "1248",
+        "target": "-1318550891",
+        "value": ""
+      },
+      {
+        "source": "238376888",
+        "target": "1142675826",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376968",
+        "value": ""
+      },
+      {
+        "source": "-1094636759",
+        "target": "1069048587",
+        "value": ""
+      },
+      {
+        "source": "238376473",
+        "target": "1142825468",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136390",
+        "value": ""
+      },
+      {
+        "source": "-126714097",
+        "target": "-1787201695",
+        "value": ""
+      },
+      {
+        "source": "-886624759",
+        "target": "1143016799",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "-1260947675",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1142825468",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "2101745889",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136386",
+        "value": ""
+      },
+      {
+        "source": "1631136259",
+        "target": "2101745889",
+        "value": ""
+      },
+      {
+        "source": "1631136390",
+        "target": "1142825468",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136843",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1143006579",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1143229217",
+        "value": ""
+      },
+      {
+        "source": "-327593338",
+        "target": "-126714097",
+        "value": ""
+      },
+      {
+        "source": "1631136351",
+        "target": "1143229330",
+        "value": ""
+      },
+      {
+        "source": "1631136885",
+        "target": "1143029143",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376342",
+        "value": ""
+      },
+      {
+        "source": "1631136386",
+        "target": "2101745357",
+        "value": ""
+      },
+      {
+        "source": "-1133208041",
+        "target": "-1787201695",
+        "value": ""
+      },
+      {
+        "source": "1631136508",
+        "target": "1143197108",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1142544338",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "-898770162",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136805",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376888",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136809",
+        "value": ""
+      },
+      {
+        "source": "1631136809",
+        "target": "1143196678",
+        "value": ""
+      },
+      {
+        "source": "238376565",
+        "target": "1143229217",
+        "value": ""
+      },
+      {
+        "source": "805568343",
+        "target": "-1749510863",
+        "value": ""
+      },
+      {
+        "source": "-127286105",
+        "target": "1069048587",
+        "value": ""
+      },
+      {
+        "source": "873123195",
+        "target": "1142544338",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1142675490",
+        "value": ""
+      },
+      {
+        "source": "805568343",
+        "target": "-1260947675",
+        "value": ""
+      },
+      {
+        "source": "-1749510336",
+        "target": "-1094636759",
+        "value": ""
+      },
+      {
+        "source": "-1260947675",
+        "target": "-1133208041",
+        "value": ""
+      },
+      {
+        "source": "1631136805",
+        "target": "1142675826",
+        "value": ""
+      },
+      {
+        "source": "848447",
+        "target": "-886624759",
+        "value": ""
+      },
+      {
+        "source": "705320",
+        "target": "-886624759",
+        "value": ""
+      },
+      {
+        "source": "238376342",
+        "target": "2101745889",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1142927777",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1143029143",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1143196678",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136351",
+        "value": ""
+      },
+      {
+        "source": "-1787201695",
+        "target": "-469202674",
+        "value": ""
+      },
+      {
+        "source": "1248",
+        "target": "1143006579",
+        "value": ""
+      },
+      {
+        "source": "238376947",
+        "target": "2101745359",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "1142675826",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376892",
+        "value": ""
+      },
+      {
+        "source": "-1749510863",
+        "target": "-127286105",
+        "value": ""
+      },
+      {
+        "source": "1631136843",
+        "target": "1142675490",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "-1318550891",
+        "value": ""
+      },
+      {
+        "source": "-1112176691",
+        "target": "238376565",
+        "value": ""
+      },
+      {
+        "source": "-1013419526",
+        "target": "1631136864",
+        "value": ""
+      },
+      {
+        "source": "-469202674",
+        "target": "2101745357",
+        "value": ""
+      }
+    ]
+  }
+}

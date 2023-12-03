@@ -14,4 +14,9 @@ public enum NodeType {
     TABLE,
     QUOTED_STRING,
     COLUMN;
+
+    @Override
+    public String toString() {
+        return this.name();
+    }
 }

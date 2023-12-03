@@ -10,7 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class GraphTest {
+public class GraphDotTest {
     String srcTableA = "HRS_HRS_USRA01";
     String srcTableB = "HRS_HRS_B01";
     String dstTable = "EAST51_YGB";
@@ -169,7 +169,7 @@ public class GraphTest {
 
 
     public static void writeIntoFile(String context, String fileName) throws IOException, URISyntaxException {
-        String rootPath = GraphTest.class.getResource("/").toURI().getPath();
+        String rootPath = GraphDotTest.class.getResource("/").toURI().getPath();
         String dirPath = "../../src/test/resources/dot/";
         String fullFilePath = rootPath + dirPath + fileName + ".gv";
         File file = new File(fullFilePath);
