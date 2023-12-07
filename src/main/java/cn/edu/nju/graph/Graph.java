@@ -40,6 +40,14 @@ public class Graph {
                 ret.add(entry.getValue());
             return ret;
         }
+
+        public Set<Graph.Column> scheme(String ... columnNames) {
+            Set<Graph.Column> ret = new HashSet<>();
+            for (String columnName : columnNames)
+                if (this.columnNameMapper.containsKey(columnName))
+                    ret.add(this.columnNameMapper.get(columnName));
+            return ret;
+        }
     }
 
     public class Column {
@@ -105,6 +113,11 @@ public class Graph {
                 addColumn(tableName, columnName);
             }
         }
+    }
+
+    public void addColumns(String tableName, String ... columnNames) {
+        for (String columnName:columnNames)
+            addColumn(tableName, columnName);
     }
 
     public boolean addColumn(String tableName, String columnName) {

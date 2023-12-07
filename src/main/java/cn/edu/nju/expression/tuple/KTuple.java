@@ -10,6 +10,10 @@ public class KTuple {
     private Graph.Table table;
     private Set<Graph.Column> columns;
 
+    public KTuple(Graph.Table table, Set<Graph.Column> columns) {
+        this.table = table;
+        this.columns = columns;
+    }
     public KTuple(Set<Graph.Column> columns) {
         if (columns == null || columns.isEmpty())
             return;
@@ -27,5 +31,9 @@ public class KTuple {
 
     public Graph.Table getTable() {
         return table;
+    }
+
+    public Set<Graph.Column> getColumns() {
+        return columns;
     }
 }

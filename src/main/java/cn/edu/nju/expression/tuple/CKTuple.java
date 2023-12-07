@@ -10,20 +10,47 @@ import java.util.Set;
 public class CKTuple {
     private final KTuple kTuple;
     private final Constraint constraint;
+    public CKTuple(CKTuple ckTuple) {
+        this.kTuple = ckTuple.kTuple;
+        this.constraint = ckTuple.constraint;
+    }
     public CKTuple(KTuple kTuple, Constraint constraint) {
         this.kTuple = kTuple;
         this.constraint=constraint;
     }
 
     public static CKTuple projection(CKTuple p, Set<Graph.Column> relationScheme)  {
-        Constraint constraint = p.getConstraint();
-        KTuple kTuple = new KTuple(relationScheme);
-        return new CKTuple(kTuple, constraint);
+        Constraint constraint = p.constraint;
+        Set<Graph.Column> columns = p.kTuple.getColumns();
+        Graph.Table table = p.kTuple.getTable();
+        Set<Graph.Column> results = new HashSet<>();
+        for(Graph.Column srcCol : columns) {
+            for(Graph.Column targetCol : relationScheme) {
+                if(srcCol.columnName.equals(targetCol.columnName)) {
+                    results.add(srcCol);
+                }
+            }
+        }
+
+        return new CKTuple(new KTuple(table,results), constraint);
     }
     public static CKTuple extension(CKTuple p, Set<Graph.Column> relationScheme)  {
-        Constraint constraint = p.getConstraint();
-        KTuple kTuple = new KTuple(relationScheme);
-        return new CKTuple(kTuple, constraint);
+        Constraint constraint = p.constraint;
+        Set<Graph.Column> columns = p.kTuple.getColumns();
+        Graph.Table table = p.kTuple.getTable();
+        for(Graph.Column targetCol : relationScheme) {
+            boolean exist = false;
+            for(Graph.Column srcCol : columns) {
+                if(srcCol.columnName.equals(targetCol.columnName)) {
+                    exist = true;
+                    break;
+                }
+            }
+            if(!exist)
+                columns.add(targetCol);
+        }
+
+        return new CKTuple(new KTuple(table,columns), constraint);
     }
     public static List<CKTuple> append(CKTuple p1, CKTuple p2) {
         List<CKTuple> ret = new ArrayList<>();
@@ -42,6 +69,10 @@ public class CKTuple {
         return new CKTuple(p.kTuple, Constraint.and(p.constraint, c));
     }
 
+    public String toSql(Graph.Table dstTable) {
+        // TODO : CKTuple -> sql, 很困难，感觉这CKTuple的结构要改一下
+        return "";
+    }
     public KTuple getKTuple() {
         return kTuple;
     }
