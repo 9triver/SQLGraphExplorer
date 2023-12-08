@@ -1,19 +1,16 @@
 package cn.edu.nju.expression;
 
-import cn.edu.nju.expression.tuple.CKTuples;
-import cn.edu.nju.expression.tuple.Constraint;
-import cn.edu.nju.graph.Graph;
+import cn.edu.nju.expression.cktuple.CKTuples;
+import cn.edu.nju.expression.cktuple.Constraint;
 import cn.edu.nju.graph.Graph.Table;
 
-import java.util.HashSet;
-import java.util.Set;
 
 public class Expression {
-    private OpType op;
+    private final OpType op;
     private Expression e1;
     private Expression e2;
     private Table table;
-    private Set<Graph.Column> projectionColumns;
+    private Scheme projectionScheme;
     private Constraint selectionCondition;
 
     public Expression(Table table) {
@@ -21,7 +18,7 @@ public class Expression {
         this.table = table;
     }
 
-    public Expression(OpType op, Constraint selectionCondition, Set<Graph.Column> projectionColumns, Expression... e) {
+    public Expression(OpType op, Constraint selectionCondition, Scheme projectionScheme, Expression... e) {
         this.op = op;
         if (e.length > 1)
             e2 = e[1];
@@ -29,14 +26,14 @@ public class Expression {
             e1 = e[0];
 
         if (op == OpType.PROJECTION)
-            this.projectionColumns = projectionColumns;
+            this.projectionScheme = projectionScheme;
         if(op == OpType.SELECTION)
             this.selectionCondition = selectionCondition;
     }
 
     public CKTuples inverse(CKTuples pSet) {
         return switch (this.op) {
-            case ATOM -> pSet;
+            case ATOM -> CKTuples.atom(pSet);
             case SELECTION -> e1.inverse(CKTuples.selection(pSet, this.selectionCondition));
             case PROJECTION -> e1.inverse(CKTuples.extension(pSet, e1.scheme()));
             case CARTESIAN_PRODUCTION -> CKTuples.append(e1.inverse(CKTuples.projection(pSet, e1.scheme())),
@@ -47,17 +44,17 @@ public class Expression {
         };
     }
 
-    public Set<Graph.Column> scheme() {
-        Set<Graph.Column> ret = new HashSet<>();
+    public Scheme scheme() {
+        Scheme ret = new Scheme();
         switch (this.op) {
-            case ATOM -> ret.addAll(this.table.allScheme());
-            case SELECTION, INTERSECTION, UNION -> ret.addAll(this.e1.scheme());
-            case PROJECTION -> ret.addAll(this.projectionColumns);
+            case ATOM -> ret.add(this.table.allScheme());
+            case SELECTION, INTERSECTION, UNION -> ret.add(this.e1.scheme());
+            case PROJECTION -> ret.add(this.projectionScheme);
             case CARTESIAN_PRODUCTION -> {
-                ret.addAll(this.e1.scheme());
-                ret.addAll(this.e2.scheme());
+                ret.add(this.e1.scheme());
+                ret.add(this.e2.scheme());
             }
-            default -> ret = new HashSet<>();
+            default -> ret = new Scheme();
         }
         return ret;
     }

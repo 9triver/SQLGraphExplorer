@@ -1,10 +1,8 @@
-package cn.edu.nju.expression.tuple;
+package cn.edu.nju.expression.cktuple;
 
-import org.checkerframework.checker.units.qual.C;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ConstraintTest {

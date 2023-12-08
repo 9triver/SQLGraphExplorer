@@ -1,5 +1,8 @@
-package cn.edu.nju.expression.tuple;
+package cn.edu.nju.expression.cktuple;
 
+import cn.edu.nju.expression.Scheme;
+import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
+import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
 
 import java.util.ArrayList;
@@ -19,38 +22,37 @@ public class CKTuple {
         this.constraint=constraint;
     }
 
-    public static CKTuple projection(CKTuple p, Set<Graph.Column> relationScheme)  {
+    public static CKTuple projection(CKTuple p, Scheme relationScheme)  {
         Constraint constraint = p.constraint;
-        Set<Graph.Column> columns = p.kTuple.getColumns();
+        Set<TupleBaseNode> tuple = p.kTuple.getTuple();
         Graph.Table table = p.kTuple.getTable();
-        Set<Graph.Column> results = new HashSet<>();
-        for(Graph.Column srcCol : columns) {
-            for(Graph.Column targetCol : relationScheme) {
-                if(srcCol.columnName.equals(targetCol.columnName)) {
-                    results.add(srcCol);
-                }
-            }
-        }
+        Set<TupleBaseNode> results = new HashSet<>();
 
+        for(TupleBaseNode t : tuple) {
+            if(relationScheme.containColumn(t.getColumnScheme()))
+                results.add(t);
+        }
         return new CKTuple(new KTuple(table,results), constraint);
     }
-    public static CKTuple extension(CKTuple p, Set<Graph.Column> relationScheme)  {
+    public static CKTuple extension(CKTuple p, Scheme relationScheme)  {
         Constraint constraint = p.constraint;
-        Set<Graph.Column> columns = p.kTuple.getColumns();
+        Set<TupleBaseNode> tuple = p.kTuple.getTuple();
         Graph.Table table = p.kTuple.getTable();
-        for(Graph.Column targetCol : relationScheme) {
+        Set<TupleBaseNode> results = new HashSet<>();
+
+        for(Graph.Column s : relationScheme.getColumns()) {
             boolean exist = false;
-            for(Graph.Column srcCol : columns) {
-                if(srcCol.columnName.equals(targetCol.columnName)) {
+            for(TupleBaseNode t : tuple) {
+                if(t.getColumnSchemeName().equals(s.columnName)){
                     exist = true;
+                    results.add(t.setColumnScheme(s));
                     break;
                 }
             }
-            if(!exist)
-                columns.add(targetCol);
+            if(!exist) results.add(new ColumnNode(s,s));
         }
 
-        return new CKTuple(new KTuple(table,columns), constraint);
+        return new CKTuple(new KTuple(table,results), constraint);
     }
     public static List<CKTuple> append(CKTuple p1, CKTuple p2) {
         List<CKTuple> ret = new ArrayList<>();
@@ -67,6 +69,11 @@ public class CKTuple {
 
     public static CKTuple andConstraint(CKTuple p, Constraint c) {
         return new CKTuple(p.kTuple, Constraint.and(p.constraint, c));
+    }
+    public static CKTuple atom(CKTuple p) {
+        Set<TupleBaseNode> tuple = p.kTuple.getTuple();
+        Graph.Table targetTable = tuple.iterator().next().getColumnScheme().table;
+        return new CKTuple(new KTuple(targetTable,tuple),p.constraint);
     }
 
     public String toSql(Graph.Table dstTable) {

@@ -1,6 +1,9 @@
 package cn.edu.nju.graph;
 
 import cn.edu.nju.PlSqlVisitor;
+import cn.edu.nju.expression.Scheme;
+import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
+import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.json.GraphJSON;
 import com.google.gson.Gson;
 import org.antlr.v4.runtime.misc.MultiMap;
@@ -34,29 +37,41 @@ public class Graph {
             this.columnNameMapper = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         }
 
-        public Set<Graph.Column> allScheme() {
+        public Scheme allScheme() {
             Set<Graph.Column> ret = new HashSet<>();
             for (Map.Entry<String, Graph.Column> entry : this.columnNameMapper.entrySet())
                 ret.add(entry.getValue());
-            return ret;
+            return new Scheme(ret);
         }
 
-        public Set<Graph.Column> scheme(String ... columnNames) {
+        public Scheme scheme(String ... columnNames) {
             Set<Graph.Column> ret = new HashSet<>();
             for (String columnName : columnNames)
                 if (this.columnNameMapper.containsKey(columnName))
                     ret.add(this.columnNameMapper.get(columnName));
+            return new Scheme(ret);
+        }
+        public Set<TupleBaseNode> getTuple() {
+            Set<TupleBaseNode> ret = new HashSet<>();
+            for(Graph.Column column : this.allScheme().getColumns())
+                ret.add(new ColumnNode(column, column));
             return ret;
+        }
+        public Graph.Column getColumn(String columnName) {
+            return this.columnNameMapper.get(columnName);
         }
     }
 
     public class Column {
         public Table table;
         public String columnName;
-
         public Column(Table table, String columnName) {
             this.table = table;
             this.columnName = columnName;
+        }
+        @Override
+        public String toString() {
+            return this.table.tableName+"."+this.columnName;
         }
     }
 

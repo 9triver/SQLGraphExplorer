@@ -1,5 +1,6 @@
-package cn.edu.nju.expression.tuple;
+package cn.edu.nju.expression.cktuple;
 
+import cn.edu.nju.expression.Scheme;
 import cn.edu.nju.graph.Graph;
 
 import java.util.ArrayList;
@@ -25,13 +26,13 @@ public class CKTuples {
         return ckTuples;
     }
 
-    public static CKTuples projection(CKTuples P, Set<Graph.Column> relationScheme)  {
+    public static CKTuples projection(CKTuples P, Scheme relationScheme)  {
         List<CKTuple> ckTuplesTmp = new ArrayList<>();
         for(CKTuple p : P.ckTuples)
             ckTuplesTmp.add(CKTuple.projection(p,relationScheme));
         return new CKTuples(ckTuplesTmp);
     }
-    public static CKTuples extension(CKTuples P, Set<Graph.Column> relationScheme)  {
+    public static CKTuples extension(CKTuples P, Scheme relationScheme)  {
         List<CKTuple> ckTuplesTmp = new ArrayList<>();
         for(CKTuple p : P.ckTuples)
             ckTuplesTmp.add(CKTuple.extension(p,relationScheme));
@@ -57,6 +58,12 @@ public class CKTuples {
             for(Constraint c : C.orSplit())
                 ckTuplesTmp.add(CKTuple.andConstraint(p, c));
 
+        return new CKTuples(ckTuplesTmp);
+    }
+    public static CKTuples atom(CKTuples P) {
+        List<CKTuple> ckTuplesTmp = new ArrayList<>();
+        for(CKTuple p : P.ckTuples)
+            ckTuplesTmp.add(CKTuple.atom(p));
         return new CKTuples(ckTuplesTmp);
     }
 }

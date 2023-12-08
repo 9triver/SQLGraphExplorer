@@ -1,16 +1,16 @@
 package cn.edu.nju.expression;
 
-import cn.edu.nju.expression.tuple.CKTuple;
-import cn.edu.nju.expression.tuple.CKTuples;
-import cn.edu.nju.expression.tuple.Constraint;
-import cn.edu.nju.expression.tuple.KTuple;
+import cn.edu.nju.expression.cktuple.CKTuple;
+import cn.edu.nju.expression.cktuple.CKTuples;
+import cn.edu.nju.expression.cktuple.Constraint;
+import cn.edu.nju.expression.cktuple.KTuple;
+import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
+import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class ExpressionTest {
@@ -66,30 +66,48 @@ public class ExpressionTest {
     }
     @Test
     public void testScheme1() {
-        Set<Graph.Column> answer = graph.getTable("R3").allScheme();
-        Set<Graph.Column> result = this.expression1.scheme();
+        Scheme answer = graph.getTable("R3").allScheme();
+        Scheme result = this.expression1.scheme();
         Assert.assertEquals(result, answer);
 
         answer=graph.getTable("R1").allScheme();
-        answer.addAll(graph.getTable("R2").allScheme());
+        answer.add(graph.getTable("R2").allScheme());
         result=this.expression1.getE1().scheme();
         Assert.assertEquals(result, answer);
     }
 
     @Test
     public void testInverse1() {
-        CKTuples target = new CKTuples(new KTuple(graph.getTable("R3").allScheme()), new Constraint(""));
+        Graph.Table r1 = graph.getTable("R1");
+        Graph.Table r2 = graph.getTable("R2");
+        Graph.Table r3 = graph.getTable("R3");
+        Graph.Column r1a = r1.getColumn("A");
+        Graph.Column r1b = r1.getColumn("B");
+        Graph.Column r2b = r2.getColumn("B");
+        Graph.Column r2c = r2.getColumn("C");
+        Graph.Column r3a = r3.getColumn("A");
+        Graph.Column r3c = r3.getColumn("C");
+        CKTuples target = new CKTuples(new KTuple(r3, r3.getTuple()), new Constraint(""));
         CKTuples results = this.expression1.inverse(target);
         Assert.assertEquals(results.getCkTuples().size(),2);
 
         CKTuple ckTuple1 = results.getCkTuples().get(0);
         CKTuple ckTuple2 = results.getCkTuples().get(1);
-        Assert.assertEquals(ckTuple1.getConstraint().toString(), "B=b");
-        Assert.assertEquals(ckTuple2.getConstraint().toString(), "B=b");
-        Assert.assertEquals(ckTuple1.getKTuple().getTable().tableName, "R1");
-        Assert.assertEquals(ckTuple2.getKTuple().getTable().tableName, "R2");
-        Assert.assertEquals(ckTuple1.getKTuple().allScheme(),graph.getTable("R1").allScheme());
-        Assert.assertEquals(ckTuple2.getKTuple().allScheme(),graph.getTable("R2").allScheme());
+        KTuple kTuple1 = ckTuple1.getKTuple();
+        KTuple kTuple2 = ckTuple2.getKTuple();
+        KTuple exceptedKTuple1 = new KTuple(r1).addTupleNode(new ColumnNode(r1a, r3a), new ColumnNode(r1b, r1b));
+        KTuple exceptedKTuple2 = new KTuple(r2).addTupleNode(new ColumnNode(r2b, r2b), new ColumnNode(r2c, r3c));
+        Constraint constraint1 = ckTuple1.getConstraint();
+        Constraint constraint2 = ckTuple2.getConstraint();
+
+        Assert.assertEquals("B=b",constraint1.toString());
+        Assert.assertEquals("B=b",constraint2.toString());
+        Assert.assertEquals("R1",kTuple1.getTable().tableName);
+        Assert.assertEquals("R2",kTuple2.getTable().tableName);
+        Assert.assertEquals(r1.allScheme(),kTuple1.allScheme());
+        Assert.assertEquals(r2.allScheme(),kTuple2.allScheme());
+        Assert.assertEquals(exceptedKTuple1, kTuple1);
+        Assert.assertEquals(exceptedKTuple2, kTuple2);
     }
 
     @Test
