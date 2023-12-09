@@ -1,9 +1,13 @@
 package cn.edu.nju.expression;
 
+import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
 import cn.edu.nju.expression.cktuple.Constraint;
-import cn.edu.nju.graph.Graph;
 import cn.edu.nju.graph.Graph.Table;
+import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Expression {
@@ -14,6 +18,7 @@ public class Expression {
     private Scheme projectionScheme;
     private RenameMap renameMap;
     private Constraint selectionCondition;
+    static Logger logger = Logger.getLogger(Expression.class);
     public Expression(Table table) {
         this.op = OpType.ATOM;
         this.table = table;
@@ -55,7 +60,7 @@ public class Expression {
     }
 
     public CKTuples inverse(CKTuples pSet) {
-        return switch (this.op) {
+        CKTuples result = switch (this.op) {
             case ATOM -> CKTuples.atom(pSet);
             case SELECTION -> e1.inverse(CKTuples.selection(pSet, this.selectionCondition));
             case PROJECTION -> e1.inverse(CKTuples.extension(pSet, e1.scheme()));
@@ -66,6 +71,15 @@ public class Expression {
             case RENAME -> e1.inverse(CKTuples.rename(pSet, this.renameMap));
             case DIFFERENCE -> null;
         };
+
+        assert result != null;
+        logger.debug("op: " + this.op);
+        logger.debug("size: " + result.size());
+        List<String> tableNames = new ArrayList<>();
+        for(CKTuple ckTuple : result.getCkTuples())
+            tableNames.add(ckTuple.getKTuple().getTable().tableName);
+        logger.debug("tables: "+tableNames);
+        return result;
     }
 
     public Scheme scheme() {

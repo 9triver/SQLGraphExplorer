@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class ExpressionTest {
@@ -83,7 +84,7 @@ public class ExpressionTest {
     }
 
     @Test
-    public void testInverse1() {
+    public void testInverse0() {
         Graph.Table r1 = graph.getTable("R1");
         Graph.Table r2 = graph.getTable("R2");
         Graph.Table r3 = graph.getTable("R3");
@@ -117,6 +118,99 @@ public class ExpressionTest {
     }
 
     @Test
-    public void testInverse2() {
+    public void testInverse1() {
+        Graph.Table a1 = graph.getTable("A1");
+        Graph.Table a2 = graph.getTable("A2");
+        Graph.Table b = graph.getTable("B");
+        Graph.Table c = graph.getTable("C");
+        Graph.Column a11 = a1.getColumn("A11");
+        Graph.Column a12 = a1.getColumn("A12");
+        Graph.Column a13 = a1.getColumn("A13");
+        Graph.Column a14 = a1.getColumn("A14");
+        Graph.Column a15 = a1.getColumn("A15");
+        Graph.Column a16 = a1.getColumn("A16");
+        Graph.Column b11 = a1.getColumn("B11");
+        Graph.Column a21 = a2.getColumn("A21");
+        Graph.Column a22 = a2.getColumn("A22");
+        Graph.Column a23 = a2.getColumn("A23");
+        Graph.Column a24 = a2.getColumn("A24");
+        Graph.Column a25 = a2.getColumn("A25");
+        Graph.Column a26 = a2.getColumn("A26");
+        Graph.Column b21 = a2.getColumn("B21");
+        Graph.Column b01 = b.getColumn("B01");
+        Graph.Column b02 = b.getColumn("B02");
+        Graph.Column b03 = b.getColumn("B03");
+        Graph.Column b04 = b.getColumn("B04");
+        Graph.Column gh = c.getColumn("GH");
+        Graph.Column xm = c.getColumn("XM");
+        Graph.Column gj = c.getColumn("GJ");
+
+        CKTuples target = new CKTuples(new KTuple(c, c.getTuple()), new Constraint(""));
+        CKTuples results = this.expression2.inverse(target);
+        Assert.assertEquals(results.getCkTuples().size(),4);
+
+        for(CKTuple ckTuple : results.getCkTuples()) {
+            KTuple kTuple = ckTuple.getKTuple();
+            Constraint constraint = ckTuple.getConstraint();
+            String tableName = kTuple.getTable().tableName;
+
+            switch (tableName) {
+                case "A1" -> {
+                    Assert.assertEquals(a1.allScheme(), kTuple.allScheme());
+                    Assert.assertEquals("(((LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}')) AND (A1.A15 > '#{ETL_DT}')) AND (((A1.B11 = B.B01) AND (B.B02 <= '#{ETL_DT}')) AND (B.B03 > '#{ETL_DT}'))", constraint.toString());
+                    KTuple exceptedKTuple = new KTuple(a1).addTupleNode(
+                            new ColumnNode(a11, gh),
+                            new ColumnNode(a12, xm),
+                            new ColumnNode(a13, gj),
+                            new ColumnNode(a14, a14),
+                            new ColumnNode(a15, a15),
+                            new ColumnNode(a16, a16),
+                            new ColumnNode(b11, b11)
+                            );
+                    Assert.assertEquals(exceptedKTuple.getTable(),kTuple.getTable());
+                    Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
+                    for(TupleBaseNode t : kTuple.getTuple())
+                        if(!exceptedKTuple.getTuple().contains(t))
+                            Assert.fail();
+                }
+                case "A2" -> {
+                    Assert.assertEquals(a2.allScheme(), kTuple.allScheme());
+                    Assert.assertEquals("((((LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}')) AND (A2.A25 > '#{ETL_DT}')) AND (A2.A26 <> '0101';)) AND (((A2.B21 = B.B01) AND (B.B02 <= '#{ETL_DT}')) AND (B.B03 > '#{ETL_DT}'))", constraint.toString());
+                    KTuple exceptedKTuple = new KTuple(a2).addTupleNode(
+                            new ColumnNode(a21, gh),
+                            new ColumnNode(a22, xm),
+                            new ColumnNode(a23, gj),
+                            new ColumnNode(a24, a24),
+                            new ColumnNode(a25, a25),
+                            new ColumnNode(a26, a26),
+                            new ColumnNode(b21, b21)
+                    );
+                    Assert.assertEquals(exceptedKTuple.getTable(),kTuple.getTable());
+                    Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
+                    for(TupleBaseNode t : kTuple.getTuple())
+                        if(!exceptedKTuple.getTuple().contains(t))
+                            Assert.fail();
+                }
+                case "B" -> {
+                    Assert.assertEquals(b.allScheme(), kTuple.allScheme());
+                    Set<String> expectedConstraints = new HashSet<>();
+                    expectedConstraints.add("(((LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}')) AND (A1.A15 > '#{ETL_DT}')) AND (((A1.B11 = B.B01) AND (B.B02 <= '#{ETL_DT}')) AND (B.B03 > '#{ETL_DT}'))");
+                    expectedConstraints.add("((((LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}')) AND (A2.A25 > '#{ETL_DT}')) AND (A2.A26 <> '0101';)) AND (((A2.B21 = B.B01) AND (B.B02 <= '#{ETL_DT}')) AND (B.B03 > '#{ETL_DT}'))");
+                    Assert.assertTrue(expectedConstraints.contains(constraint.toString()));
+                    KTuple exceptedKTuple = new KTuple(b).addTupleNode(
+                            new ColumnNode(b01, b01),
+                            new ColumnNode(b02, b02),
+                            new ColumnNode(b03, b03),
+                            new ColumnNode(b04, b04)
+                    );
+                    Assert.assertEquals(exceptedKTuple.getTable(),kTuple.getTable());
+                    Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
+                    for(TupleBaseNode t : kTuple.getTuple())
+                        if(!exceptedKTuple.getTuple().contains(t))
+                            Assert.fail();
+                }
+                default -> Assert.fail();
+            }
+        }
     }
 }

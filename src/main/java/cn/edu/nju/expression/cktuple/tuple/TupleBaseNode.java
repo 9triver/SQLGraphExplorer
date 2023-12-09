@@ -1,20 +1,31 @@
 package cn.edu.nju.expression.cktuple.tuple;
 
+import cn.edu.nju.Tools.Tools;
 import cn.edu.nju.graph.Graph;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.Objects;
 
 
-public abstract class TupleBaseNode {
+public abstract class TupleBaseNode implements Serializable {
     protected Graph.Column columnScheme;
 
     public TupleBaseNode(Graph.Column column){
         this.columnScheme = column;
     }
 
-    public TupleBaseNode setColumnScheme(Graph.Column columnScheme) {
-        this.columnScheme = columnScheme;
-        return this;
+    public TupleBaseNode setNewColumnScheme(Graph.Column columnScheme) {
+        TupleBaseNode newTupleBaseNode = null;
+        try {
+            newTupleBaseNode = Tools.clone(this);
+        }
+        catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        newTupleBaseNode.columnScheme = columnScheme;
+        return newTupleBaseNode;
     }
     public String getColumnSchemeName() { return columnScheme.columnName; }
 

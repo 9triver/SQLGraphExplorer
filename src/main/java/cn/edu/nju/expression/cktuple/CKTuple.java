@@ -31,7 +31,7 @@ public class CKTuple {
 
         for(TupleBaseNode t : tuple) {
             Graph.Column srcScheme = renameMap.getSrc(t.getColumnScheme());
-            if(srcScheme != null) results.add(t.setColumnScheme(srcScheme));
+            if(srcScheme != null) results.add(t.setNewColumnScheme(srcScheme));
         }
 
         return new CKTuple(new KTuple(table,results), constraint);
@@ -59,7 +59,7 @@ public class CKTuple {
             for(TupleBaseNode t : tuple) {
                 if(t.getColumnSchemeName().equals(s.columnName)){
                     exist = true;
-                    results.add(t.setColumnScheme(s));
+                    results.add(t.setNewColumnScheme(s));
                     break;
                 }
             }
@@ -72,12 +72,6 @@ public class CKTuple {
         List<CKTuple> ret = new ArrayList<>();
         ret.add(new CKTuple(p1.kTuple, Constraint.and(p1.constraint, p2.constraint)));
         ret.add(new CKTuple(p2.kTuple, Constraint.and(p1.constraint, p2.constraint)));
-        return ret;
-    }
-    public static List<CKTuple> completion(CKTuple p1, CKTuple p2) {
-        List<CKTuple> ret = new ArrayList<>();
-        ret.add(new CKTuple(p1.kTuple, p1.constraint));
-        ret.add(new CKTuple(p2.kTuple, p2.constraint));
         return ret;
     }
 

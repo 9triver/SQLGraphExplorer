@@ -48,9 +48,8 @@ public class CKTuples {
     }
     public static CKTuples completion(CKTuples P1, CKTuples P2) {
         List<CKTuple> ckTuplesTmp = new ArrayList<>();
-        for(CKTuple p1 : P1.ckTuples)
-            for(CKTuple p2 : P2.ckTuples)
-                ckTuplesTmp.addAll(CKTuple.completion(p1,p2));
+        ckTuplesTmp.addAll(P1.ckTuples);
+        ckTuplesTmp.addAll(P2.ckTuples);
         return new CKTuples(ckTuplesTmp);
     }
     public static CKTuples selection(CKTuples P, Constraint C) {
@@ -72,5 +71,9 @@ public class CKTuples {
         for(CKTuple p : P.ckTuples)
             ckTuplesTmp.add(CKTuple.rename(p,renameMap));
         return new CKTuples(ckTuplesTmp);
+    }
+
+    public int size() {
+        return this.ckTuples.size();
     }
 }

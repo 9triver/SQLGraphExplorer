@@ -8,9 +8,10 @@ import cn.edu.nju.graph.json.GraphJSON;
 import com.google.gson.Gson;
 import org.antlr.v4.runtime.misc.MultiMap;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Graph {
+public class Graph implements Serializable{
     private final String NEWLINE = "\n";
     private final String SEMI = ";";
     private final String QUOTE = "\"";
@@ -28,7 +29,7 @@ public class Graph {
     private final Map<String, Table> tableNameMapper = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private String graphName = "G";
 
-    public class Table {
+    public class Table implements Serializable{
         public String tableName;
         public Map<String, Column> columnNameMapper;
 
@@ -67,9 +68,22 @@ public class Graph {
                     "tableName='" + tableName + '\'' +
                     '}';
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Table table = (Table) o;
+            return Objects.equals(tableName, table.tableName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(tableName);
+        }
     }
 
-    public class Column {
+    public class Column implements Serializable {
         public Table table;
         public String columnName;
         public Column(Table table, String columnName) {
@@ -79,6 +93,19 @@ public class Graph {
         @Override
         public String toString() {
             return this.table.tableName+"."+this.columnName;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Column column = (Column) o;
+            return Objects.equals(table, column.table) && Objects.equals(columnName, column.columnName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(table, columnName);
         }
     }
 

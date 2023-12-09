@@ -15,7 +15,7 @@ public class RenameMap {
     }
 
     public Graph.Column getSrc(Graph.Column dst) {
-        return maps.get(dst);
+        return maps.inverse().get(dst);
     }
 
     @Override
