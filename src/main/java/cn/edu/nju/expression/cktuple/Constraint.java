@@ -66,8 +66,9 @@ public class Constraint {
 
         return ret;
     }
+
     @Override
     public String toString() {
-        return this.context;
+        return context;
     }
 }

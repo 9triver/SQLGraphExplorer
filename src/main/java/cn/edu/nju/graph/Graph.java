@@ -60,6 +60,13 @@ public class Graph {
         public Graph.Column getColumn(String columnName) {
             return this.columnNameMapper.get(columnName);
         }
+
+        @Override
+        public String toString() {
+            return "Table{" +
+                    "tableName='" + tableName + '\'' +
+                    '}';
+        }
     }
 
     public class Column {

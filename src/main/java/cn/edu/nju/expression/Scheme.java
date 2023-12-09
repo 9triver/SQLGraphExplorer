@@ -68,4 +68,12 @@ public class Scheme {
         //比较属性值
         return this.columns.equals(other.columns) && this.columnNames.equals(other.columnNames);
     }
+
+    @Override
+    public String toString() {
+        return "Scheme{" +
+                "columns=" + columns +
+                ", columnNames=" + columnNames +
+                '}';
+    }
 }

@@ -1,5 +1,6 @@
 package cn.edu.nju.expression.cktuple;
 
+import cn.edu.nju.expression.RenameMap;
 import cn.edu.nju.expression.Scheme;
 import cn.edu.nju.graph.Graph;
 
@@ -64,6 +65,12 @@ public class CKTuples {
         List<CKTuple> ckTuplesTmp = new ArrayList<>();
         for(CKTuple p : P.ckTuples)
             ckTuplesTmp.add(CKTuple.atom(p));
+        return new CKTuples(ckTuplesTmp);
+    }
+    public static CKTuples rename(CKTuples P, RenameMap renameMap) {
+        List<CKTuple> ckTuplesTmp = new ArrayList<>();
+        for(CKTuple p : P.ckTuples)
+            ckTuplesTmp.add(CKTuple.rename(p,renameMap));
         return new CKTuples(ckTuplesTmp);
     }
 }

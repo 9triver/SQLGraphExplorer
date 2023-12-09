@@ -1,5 +1,6 @@
 package cn.edu.nju.expression.cktuple;
 
+import cn.edu.nju.expression.RenameMap;
 import cn.edu.nju.expression.Scheme;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
@@ -22,7 +23,20 @@ public class CKTuple {
         this.constraint=constraint;
     }
 
-    public static CKTuple projection(CKTuple p, Scheme relationScheme)  {
+    public static CKTuple rename(CKTuple p, RenameMap renameMap) {
+        Constraint constraint = p.constraint;
+        Set<TupleBaseNode> tuple = p.kTuple.getTuple();
+        Graph.Table table = p.kTuple.getTable();
+        Set<TupleBaseNode> results = new HashSet<>();
+
+        for(TupleBaseNode t : tuple) {
+            Graph.Column srcScheme = renameMap.getSrc(t.getColumnScheme());
+            if(srcScheme != null) results.add(t.setColumnScheme(srcScheme));
+        }
+
+        return new CKTuple(new KTuple(table,results), constraint);
+    }
+    public static CKTuple projection(CKTuple p, Scheme relationScheme) {
         Constraint constraint = p.constraint;
         Set<TupleBaseNode> tuple = p.kTuple.getTuple();
         Graph.Table table = p.kTuple.getTable();

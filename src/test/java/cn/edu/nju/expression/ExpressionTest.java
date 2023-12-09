@@ -7,6 +7,7 @@ import cn.edu.nju.expression.cktuple.KTuple;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,36 +34,41 @@ public class ExpressionTest {
         Graph.Table b = graph.createTable("B");
         graph.addColumns("B","B01","B02","B03","B04");
         Graph.Table c = graph.createTable("C");
-        graph.addColumns("B","GH","XM","GJ");
+        graph.addColumns("C","GH","XM","GJ");
 
         // expression1
-        Expression er1 = new Expression(r1);
-        Expression er2 = new Expression(r2);
-        Expression e = new Expression(OpType.CARTESIAN_PRODUCTION, null, null, er1, er2);
-        e = new Expression(OpType.SELECTION, new Constraint("B=b"), null, e);
-        e = new Expression(OpType.PROJECTION, null, r3.allScheme(), e);
+        Expression er1 = Expression.table(r1);
+        Expression er2 = Expression.table(r2);
+        Expression e = Expression.production(er1,er2);
+        e = Expression.selection(new Constraint("B=b"),e);
+        e = Expression.projection(r3.allScheme(),e);
         this.expression1 = e;
         // expression2
-        Expression ea1 = new Expression(a1);
-        Expression ea2 = new Expression(a2);
-        Expression eb = new Expression(b);
-        Expression e1 = new Expression(OpType.CARTESIAN_PRODUCTION, null, null, ea1, eb);
-        Expression e2 = new Expression(OpType.CARTESIAN_PRODUCTION, null, null, ea2, eb);
-        e1 = new Expression(OpType.SELECTION,
-                new Constraint("A1.B11 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"),
-                null,e1);
-        e1 = new Expression(OpType.SELECTION,
-                new Constraint("LENGTH(NVL(A1.A11,'')) > 0 AND A1.A14 <= '#{ETL_DT}' AND A1.A15 > '#{ETL_DT}'"),
-                null,e1);
-        e2 = new Expression(OpType.SELECTION,
-                new Constraint("A2.B21 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"),
-                null,e2);
-        e2 = new Expression(OpType.SELECTION,
-                new Constraint("LENGTH(NVL(A2.A21,'')) > 0 AND A2.A24 <= '#{ETL_DT}' AND A2.A25 > '#{ETL_DT}' AND A2.A26 <> '0101';"),
-                null,e2);
-        e1 = new Expression(OpType.PROJECTION, null, a1.scheme("A11","A12","A13"), e1);
-        e2 = new Expression(OpType.PROJECTION, null, a1.scheme("A21","A22","A23"), e2);
-        this.expression2 = new Expression(OpType.UNION, null, null, e1, e2);
+        Expression ea1 = Expression.table(a1);
+        Expression ea2 = Expression.table(a2);
+        Expression eb = Expression.table(b);
+
+        Expression e1 = Expression.production(ea1,eb);
+        e1 = Expression.selection(new Constraint("A1.B11 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"),e1);
+        e1 = Expression.selection(new Constraint("LENGTH(NVL(A1.A11,'')) > 0 AND A1.A14 <= '#{ETL_DT}' AND A1.A15 > '#{ETL_DT}'"),e1);
+        e1 = Expression.projection(a1.scheme("A11","A12","A13"), e1);
+        RenameMap renameMap1 = new RenameMap();
+        renameMap1.add(a1.getColumn("A11"), c.getColumn("GH"));
+        renameMap1.add(a1.getColumn("A12"), c.getColumn("XM"));
+        renameMap1.add(a1.getColumn("A13"), c.getColumn("GJ"));
+        e1 = Expression.rename(renameMap1, e1);
+
+        Expression e2 = Expression.production(ea2,eb);
+        e2 = Expression.selection(new Constraint("A2.B21 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"), e2);
+        e2 = Expression.selection(new Constraint("LENGTH(NVL(A2.A21,'')) > 0 AND A2.A24 <= '#{ETL_DT}' AND A2.A25 > '#{ETL_DT}' AND A2.A26 <> '0101';"), e2);
+        e2 = Expression.projection(a2.scheme("A21","A22","A23"), e2);
+        RenameMap renameMap2 = new RenameMap();
+        renameMap2.add(a2.getColumn("A21"), c.getColumn("GH"));
+        renameMap2.add(a2.getColumn("A22"), c.getColumn("XM"));
+        renameMap2.add(a2.getColumn("A23"), c.getColumn("GJ"));
+        e2 = Expression.rename(renameMap2, e2);
+
+        this.expression2 = Expression.union(e1,e2);
     }
     @Test
     public void testScheme1() {

@@ -2,6 +2,7 @@ package cn.edu.nju.expression;
 
 import cn.edu.nju.expression.cktuple.CKTuples;
 import cn.edu.nju.expression.cktuple.Constraint;
+import cn.edu.nju.graph.Graph;
 import cn.edu.nju.graph.Graph.Table;
 
 
@@ -11,14 +12,13 @@ public class Expression {
     private Expression e2;
     private Table table;
     private Scheme projectionScheme;
+    private RenameMap renameMap;
     private Constraint selectionCondition;
-
     public Expression(Table table) {
         this.op = OpType.ATOM;
         this.table = table;
     }
-
-    public Expression(OpType op, Constraint selectionCondition, Scheme projectionScheme, Expression... e) {
+    public Expression(OpType op, Constraint selectionCondition, Scheme projectionScheme, RenameMap renameMap, Expression... e) {
         this.op = op;
         if (e.length > 1)
             e2 = e[1];
@@ -29,6 +29,29 @@ public class Expression {
             this.projectionScheme = projectionScheme;
         if(op == OpType.SELECTION)
             this.selectionCondition = selectionCondition;
+        if(op == OpType.RENAME)
+            this.renameMap = renameMap;
+    }
+    public static Expression table(Table table) {
+        return new Expression(table);
+    }
+    public static Expression selection(Constraint selectionCondition, Expression e) {
+        return new Expression(OpType.SELECTION,selectionCondition,null,null, e);
+    }
+    public static Expression projection(Scheme projectionScheme, Expression e) {
+        return new Expression(OpType.PROJECTION,null,projectionScheme,null, e);
+    }
+    public static Expression rename(RenameMap renameMap, Expression e) {
+        return new Expression(OpType.RENAME,null,null,renameMap, e);
+    }
+    public static Expression union(Expression e1, Expression e2) {
+        return new Expression(OpType.UNION,null,null,null, e1,e2);
+    }
+    public static Expression intersection(Expression e1, Expression e2) {
+        return new Expression(OpType.INTERSECTION,null,null,null, e1,e2);
+    }
+    public static Expression production(Expression e1, Expression e2) {
+        return new Expression(OpType.CARTESIAN_PRODUCTION,null,null,null, e1,e2);
     }
 
     public CKTuples inverse(CKTuples pSet) {
@@ -40,7 +63,8 @@ public class Expression {
                                                          e2.inverse(CKTuples.projection(pSet, e2.scheme())));
             case INTERSECTION -> CKTuples.append(e1.inverse(pSet), e2.inverse(pSet));
             case UNION -> CKTuples.completion(e1.inverse(pSet), e2.inverse(pSet));
-            case DIFFERENCE,RENAME -> null;
+            case RENAME -> e1.inverse(CKTuples.rename(pSet, this.renameMap));
+            case DIFFERENCE -> null;
         };
     }
 
