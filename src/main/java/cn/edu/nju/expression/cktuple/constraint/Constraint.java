@@ -1,10 +1,14 @@
-package cn.edu.nju.expression.cktuple;
+package cn.edu.nju.expression.cktuple.constraint;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Constraint {
+    private Constraint constraint1;
+    private Constraint constraint2;
+    private LogicOpType logicOpType;
     private final String context;
+
     public Constraint(String context) {
         this.context = context;
     }
@@ -34,12 +38,12 @@ public class Constraint {
             else if(context.charAt(j)==')') count--;
             else if(count == 0) {
                 boolean is_or = j<context.length()-1 &&
-                                (context.charAt(j)=='O' || context.charAt(j)=='o') &&
-                                (context.charAt(j+1)=='R' || context.charAt(j+1)=='r');
+                        (context.charAt(j)=='O' || context.charAt(j)=='o') &&
+                        (context.charAt(j+1)=='R' || context.charAt(j+1)=='r');
                 boolean is_and = j<context.length()-2 &&
-                                (context.charAt(j)=='A' || context.charAt(j)=='a') &&
-                                (context.charAt(j+1)=='N' || context.charAt(j+1)=='n') &&
-                                (context.charAt(j+2)=='D' || context.charAt(j+2)=='d');
+                        (context.charAt(j)=='A' || context.charAt(j)=='a') &&
+                        (context.charAt(j+1)=='N' || context.charAt(j+1)=='n') &&
+                        (context.charAt(j+2)=='D' || context.charAt(j+2)=='d');
                 if(is_or || is_and) {
                     if (isAND) {
                         for (int index = 0; index < ret.size(); ++index)
@@ -69,6 +73,10 @@ public class Constraint {
 
     @Override
     public String toString() {
-        return context;
+        return switch (logicOpType) {
+            case ATOM -> this.context;
+            case OR -> "(" + this.constraint1.toString() + ") OR (" + this.constraint2.toString() + ")";
+            case AND -> "(" + this.constraint1.toString() + ") AND (" + this.constraint2.toString() + ")";
+        };
     }
 }

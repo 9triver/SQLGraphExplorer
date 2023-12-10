@@ -1,5 +1,8 @@
 package cn.edu.nju.Tools;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.misc.Interval;
+
 import java.io.*;
 
 public class Tools {
@@ -19,5 +22,11 @@ public class Tools {
         return (T) ois.readObject();
     }
 
-
+    public static String getFullContext(ParserRuleContext context) {
+        if(context.start == null || context.stop == null ||
+                context.start.getStartIndex() < 0 ||
+                context.stop.getStopIndex() < 0)
+            return context.getText();
+        return context.start.getInputStream().getText(Interval.of(context.start.getStartIndex(), context.stop.getStopIndex()));
+    }
 }

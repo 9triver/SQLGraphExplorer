@@ -2,7 +2,7 @@ package cn.edu.nju.expression;
 
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
-import cn.edu.nju.expression.cktuple.Constraint;
+import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.graph.Graph.Table;
 import org.apache.log4j.Logger;
 

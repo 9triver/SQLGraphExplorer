@@ -2,6 +2,7 @@ package cn.edu.nju.expression.cktuple;
 
 import cn.edu.nju.expression.RenameMap;
 import cn.edu.nju.expression.Scheme;
+import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;

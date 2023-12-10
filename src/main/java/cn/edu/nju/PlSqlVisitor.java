@@ -1,5 +1,6 @@
 package cn.edu.nju;
 
+import cn.edu.nju.Tools.Tools;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.graph.Node;
 import cn.edu.nju.graph.NodeType;
@@ -170,7 +171,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + ctx.ln2.getText()));
 
 
-        String caseContext = PlSqlVisitor.getFullConext(ctx);
+        String caseContext = Tools.getFullContext(ctx);
         Node caseNode = graph.addCase(caseContext);
         columnSrc.add(caseNode);
 
@@ -270,19 +271,19 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             return null;
 
         // 不再继续向下访问
-        return PlSqlVisitor.getFullConext(ctx.expression());
+        return Tools.getFullContext(ctx.expression());
     }
 
     @Override
     public String visitGroup_by_clause(PlSqlParser.Group_by_clauseContext ctx) {
         // 不再继续向下访问
-        return PlSqlVisitor.getFullConext(ctx);
+        return Tools.getFullContext(ctx);
     }
 
     @Override
     public String visitOrder_by_clause(PlSqlParser.Order_by_clauseContext ctx) {
         // 不再继续向下访问
-        return PlSqlVisitor.getFullConext(ctx);
+        return Tools.getFullContext(ctx);
     }
 
     @Override
@@ -361,7 +362,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         StringBuilder condition = new StringBuilder();
         if (ctx.join_on_part() != null)
             for (PlSqlParser.Join_on_partContext join_on_ctx : ctx.join_on_part())
-                condition.append(PlSqlVisitor.getFullConext(join_on_ctx.condition()));
+                condition.append(Tools.getFullContext(join_on_ctx.condition()));
 
         return joinType + "@" + condition;
     }
@@ -404,7 +405,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
     @Override
     public String visitSubstr_function(PlSqlParser.Substr_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
         columnSrc.add(functionNode);
         // arg1
@@ -422,7 +423,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitTo_char_function(PlSqlParser.To_char_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
         columnSrc.add(functionNode);
         // arg1
@@ -449,7 +450,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitDecode_function(PlSqlParser.Decode_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
         columnSrc.add(functionNode);
         // args...
@@ -461,7 +462,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitChr_function(PlSqlParser.Chr_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
         columnSrc.add(functionNode);
         // arg1
@@ -471,7 +472,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitNvl_function(PlSqlParser.Nvl_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
         columnSrc.add(functionNode);
         // arg1, arg2
@@ -483,7 +484,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitTrim_function(PlSqlParser.Trim_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
         columnSrc.add(functionNode);
         // arg1
@@ -498,7 +499,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitTo_date_function(PlSqlParser.To_date_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
         columnSrc.add(functionNode);
         // arg1
@@ -533,7 +534,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         if (ctx.function_argument() != null &&
                 ctx.function_argument().argument() != null &&
                 !ctx.function_argument().argument().isEmpty()) {
-            String functionName = PlSqlVisitor.getFullConext(ctx);
+            String functionName = Tools.getFullContext(ctx);
             Node functionNode = graph.addFunction(functionName);
             columnSrc.add(functionNode);
         }
@@ -553,13 +554,13 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitOther_function(PlSqlParser.Other_functionContext ctx) {
-        String ret = PlSqlVisitor.getFullConext(ctx);
+        String ret = Tools.getFullContext(ctx);
         columnSrc.add(this.graph.addFunction(ret));
         return ret;
     }
     @Override
     public String visitSum_function(PlSqlParser.Sum_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         columnSrc.add(this.graph.addFunction(functionName));
         // arg1
         visitExpression(ctx.expression());
@@ -568,7 +569,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitCount_function(PlSqlParser.Count_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         columnSrc.add(this.graph.addFunction(functionName));
         // arg1?
         if(ctx.concatenation() != null) {
@@ -579,7 +580,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitRound_function(PlSqlParser.Round_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         columnSrc.add(this.graph.addFunction(functionName));
         // arg1
         visitExpression(ctx.expression());
@@ -588,7 +589,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitAvg_function(PlSqlParser.Avg_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         columnSrc.add(this.graph.addFunction(functionName));
         // arg1
         visitExpression(ctx.expression());
@@ -597,7 +598,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitMax_function(PlSqlParser.Max_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         columnSrc.add(this.graph.addFunction(functionName));
         // arg1
         visitExpression(ctx.expression());
@@ -606,7 +607,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitLeast_function(PlSqlParser.Least_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         columnSrc.add(this.graph.addFunction(functionName));
         // args...
         for (PlSqlParser.ExpressionContext expressionCtx : ctx.expressions().expression()) {
@@ -617,7 +618,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
     @Override
     public String visitGreatest_function(PlSqlParser.Greatest_functionContext ctx) {
-        String functionName = PlSqlVisitor.getFullConext(ctx);
+        String functionName = Tools.getFullContext(ctx);
         columnSrc.add(this.graph.addFunction(functionName));
         // args...
         for (PlSqlParser.ExpressionContext expressionCtx : ctx.expressions().expression()) {
@@ -647,7 +648,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         if(ctx.table_alias()!=null)
             aliasTableName = ctx.table_alias().getText();
         // 2. Merge
-        String condition = PlSqlVisitor.getFullConext(ctx.condition());
+        String condition = Tools.getFullContext(ctx.condition());
         tableSrc.add(graph.addMerge(condition));
         // 3. 源表
         visitSelected_tableview(ctx.selected_tableview());
@@ -841,14 +842,6 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         aliasTableName = aliasTableName.toUpperCase();
         realTableNameMapper.put(aliasTableName, tableName);
         realTableNameMapper.put(tableName, tableName);
-    }
-
-    private static String getFullConext(ParserRuleContext context) {
-        if(context.start == null || context.stop == null ||
-            context.start.getStartIndex() < 0 ||
-            context.stop.getStopIndex() < 0)
-            return context.getText();
-        return context.start.getInputStream().getText(Interval.of(context.start.getStartIndex(), context.stop.getStopIndex()));
     }
 
     private String findSrcTable(String columnName) {
