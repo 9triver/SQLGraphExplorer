@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Constraint {
-    private Constraint constraint1;
-    private Constraint constraint2;
-    private LogicOpType logicOpType;
     private final String context;
 
     public Constraint(String context) {
@@ -73,10 +70,6 @@ public class Constraint {
 
     @Override
     public String toString() {
-        return switch (logicOpType) {
-            case ATOM -> this.context;
-            case OR -> "(" + this.constraint1.toString() + ") OR (" + this.constraint2.toString() + ")";
-            case AND -> "(" + this.constraint1.toString() + ") AND (" + this.constraint2.toString() + ")";
-        };
+        return this.context;
     }
 }
