@@ -1,5 +1,5 @@
 // Generated from D:/Antlr-SQLGraphExplorer/SQLGraphExplorer/src/main/java/cn/edu/nju/expression/cktuple/constraint/grammar/ConditionParser.g4 by ANTLR 4.13.1
-package grammar;
+package cn.edu.nju.expression.cktuple.constraint.grammar;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -17,75 +17,12 @@ public interface ConditionParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitParse(ConditionParser.ParseContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code andDistributiveLawExpression}
+	 * Visit a parse tree produced by the {@code basicBlockExpression}
 	 * labeled alternative in {@link ConditionParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAndDistributiveLawExpression(ConditionParser.AndDistributiveLawExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code identityLawExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIdentityLawExpression(ConditionParser.IdentityLawExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code involutionLawExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInvolutionLawExpression(ConditionParser.InvolutionLawExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code andDeMorganLawExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAndDeMorganLawExpression(ConditionParser.AndDeMorganLawExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code notExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNotExpression(ConditionParser.NotExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code singleParenExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSingleParenExpression(ConditionParser.SingleParenExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code andAllExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAndAllExpression(ConditionParser.AndAllExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code orBasicExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOrBasicExpression(ConditionParser.OrBasicExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code orAllExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitOrAllExpression(ConditionParser.OrAllExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code multiParenExpression}
-	 * labeled alternative in {@link ConditionParser#expression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMultiParenExpression(ConditionParser.MultiParenExpressionContext ctx);
+	T visitBasicBlockExpression(ConditionParser.BasicBlockExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code annulmentLawExpression}
 	 * labeled alternative in {@link ConditionParser#expression}.
@@ -94,12 +31,33 @@ public interface ConditionParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAnnulmentLawExpression(ConditionParser.AnnulmentLawExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code basicBlockExpression}
+	 * Visit a parse tree produced by the {@code identityLawExpression}
 	 * labeled alternative in {@link ConditionParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBasicBlockExpression(ConditionParser.BasicBlockExpressionContext ctx);
+	T visitIdentityLawExpression(ConditionParser.IdentityLawExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code andDistributiveLawExpression}
+	 * labeled alternative in {@link ConditionParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAndDistributiveLawExpression(ConditionParser.AndDistributiveLawExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code andAllExpression}
+	 * labeled alternative in {@link ConditionParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAndAllExpression(ConditionParser.AndAllExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code orAllExpression}
+	 * labeled alternative in {@link ConditionParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOrAllExpression(ConditionParser.OrAllExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code andBasicExpression}
 	 * labeled alternative in {@link ConditionParser#expression}.
@@ -108,11 +66,61 @@ public interface ConditionParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAndBasicExpression(ConditionParser.AndBasicExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ConditionParser#parenExpression}.
+	 * Visit a parse tree produced by the {@code orBasicExpression}
+	 * labeled alternative in {@link ConditionParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParenExpression(ConditionParser.ParenExpressionContext ctx);
+	T visitOrBasicExpression(ConditionParser.OrBasicExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code notsExpression}
+	 * labeled alternative in {@link ConditionParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNotsExpression(ConditionParser.NotsExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code parensExpression}
+	 * labeled alternative in {@link ConditionParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParensExpression(ConditionParser.ParensExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code multiParenExpression}
+	 * labeled alternative in {@link ConditionParser#parenExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiParenExpression(ConditionParser.MultiParenExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code singleParenExpression}
+	 * labeled alternative in {@link ConditionParser#parenExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSingleParenExpression(ConditionParser.SingleParenExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code andDeMorganLawExpression}
+	 * labeled alternative in {@link ConditionParser#notExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAndDeMorganLawExpression(ConditionParser.AndDeMorganLawExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code involutionLawExpression}
+	 * labeled alternative in {@link ConditionParser#notExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInvolutionLawExpression(ConditionParser.InvolutionLawExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code singleNotExpression}
+	 * labeled alternative in {@link ConditionParser#notExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSingleNotExpression(ConditionParser.SingleNotExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ConditionParser#andExpression}.
 	 * @param ctx the parse tree
@@ -178,6 +186,18 @@ public interface ConditionParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunctionName(ConditionParser.FunctionNameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ConditionParser#trueExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTrueExpression(ConditionParser.TrueExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ConditionParser#falseExpression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFalseExpression(ConditionParser.FalseExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ConditionParser#comparator}.
 	 * @param ctx the parse tree
