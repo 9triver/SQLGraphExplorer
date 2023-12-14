@@ -3,16 +3,23 @@ package cn.edu.nju.expression.cktuple.constraint;
 import cn.edu.nju.Tools.Tools;
 import cn.edu.nju.expression.cktuple.constraint.grammar.ConditionParser;
 import cn.edu.nju.expression.cktuple.constraint.grammar.ConditionParserBaseVisitor;
+import cn.edu.nju.graph.Graph;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
-    private Set<String> columnNames = new HashSet<>();
+    private final Set<String> targetFullColumnNames = new HashSet<>();
+
+    public void setTargetColumnName(Graph.Table targetTable) {
+        if(targetTable == null) return;
+
+        targetFullColumnNames.clear();
+        targetFullColumnNames.addAll(targetTable.allFullColumnNames());
+    }
 
     @Override
     public String visitParse(ConditionParser.ParseContext ctx) {
-        columnNames.clear();
         return visit(ctx.expression());
     }
 
@@ -118,26 +125,36 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
 
     @Override
     public String visitBasicBlockExpression(ConditionParser.BasicBlockExpressionContext ctx) {
-        return bracked(visitChildren(ctx));
+        String ret = bracked(visitChildren(ctx));
+        if(ret.contains("@#$%TRUE%$#@"))
+            ret = "TRUE";
+        return bracked(ret);
     }
 
     @Override
     public String visitCompareExpression(ConditionParser.CompareExpressionContext ctx) {
-        return Tools.getFullContext(ctx);
+        return visit(ctx.left) + Tools.getFullContext(ctx.op) + visit(ctx.right);
     }
     @Override
-    public String visitBoolExpression(ConditionParser.BoolExpressionContext ctx) {
-        return visitBool(ctx.bool());
+    public String visitBool(ConditionParser.BoolContext ctx) {
+        if(ctx.trueExpression() != null) return visitTrueExpression(ctx.trueExpression());
+        else if(ctx.falseExpression() != null) return visitFalseExpression(ctx.falseExpression());
+        else return Tools.getFullContext(ctx);
     }
+
     @Override
-    public String visitFunctionExpression(ConditionParser.FunctionExpressionContext ctx) {
+    public String visitFuncExpression(ConditionParser.FuncExpressionContext ctx) {
         return Tools.getFullContext(ctx);
     }
+
     @Override
-    public String visitColumnExpression(ConditionParser.ColumnExpressionContext ctx) {
-        columnNames.add(ctx.getText());
-        return Tools.getFullContext(ctx);
+    public String visitColExpression(ConditionParser.ColExpressionContext ctx) {
+        String fullColumnName = Tools.getFullContext(ctx);
+        if(!this.targetFullColumnNames.contains(fullColumnName))
+            fullColumnName = "@#$%TRUE%$#@";
+        return fullColumnName;
     }
+
     @Override
     public String visitAtomExpression(ConditionParser.AtomExpressionContext ctx) {
         return Tools.getFullContext(ctx);
@@ -151,13 +168,6 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     @Override
     public String visitSingleNotExpression(ConditionParser.SingleNotExpressionContext ctx) {
         return "NOT " + visit(ctx.parenExpression());
-    }
-
-    @Override
-    public String visitBool(ConditionParser.BoolContext ctx) {
-        if(ctx.trueExpression() != null) return visitTrueExpression(ctx.trueExpression());
-        else if(ctx.falseExpression() != null) return visitFalseExpression(ctx.falseExpression());
-        else return Tools.getFullContext(ctx);
     }
 
     @Override
@@ -200,9 +210,7 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
         return ret.toString();
     }
 
-    public Set<String> getColumnNames() {
-        return columnNames;
-    }
+
     private String bracked(String str) {
         return "(" + str + ")";
     }

@@ -62,6 +62,17 @@ public class Graph implements Serializable{
             return this.columnNameMapper.get(columnName);
         }
 
+        public Collection<String> allColumnNames() {
+            return new ArrayList<>(this.columnNameMapper.keySet());
+        }
+        public Collection<String> allFullColumnNames() {
+            Collection<String> ret = new ArrayList<>();
+            for(String columnName : this.columnNameMapper.keySet())
+                ret.add(this.tableName + "." + columnName);
+            return ret;
+        }
+
+
         @Override
         public String toString() {
             return "Table{" +
