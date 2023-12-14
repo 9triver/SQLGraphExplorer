@@ -9,9 +9,17 @@ parse
  ;
 
 expression
- : basicExpression                                              #basicBlockExpression
+ : notParenExpression
+ | parenExpression
+ ;
 
- | parenExpression AND falseExpression                          #annulmentLawExpression
+parenExpression
+ : LPAREN parenExpression RPAREN                                #multiParenExpression
+ | LPAREN notParenExpression RPAREN                             #singleParenExpression
+ ;
+
+notParenExpression
+ : parenExpression AND falseExpression                          #annulmentLawExpression
  | falseExpression AND parenExpression                          #annulmentLawExpression
  | parenExpression OR trueExpression                            #annulmentLawExpression
  | trueExpression OR parenExpression                            #annulmentLawExpression
@@ -24,31 +32,35 @@ expression
  | leftOr=orExpression AND rightOr=orExpression                 #andDistributiveLawExpression
  | leftBasic=parenExpression AND rightOr=orExpression           #andDistributiveLawExpression
  | leftOr=orExpression AND rightBasic=parenExpression           #andDistributiveLawExpression
-// | leftAnd=andExpression OR rightAnd=andExpression                #ordistributiveLawExpression
-// | leftBasic=parenExpression OR rightAnd=andExpression                  #ordistributiveLawExpression
-// | leftAnd=andExpression OR rightBasic=parenExpression                  #ordistributiveLawExpression
+// | leftAnd=andExpression OR rightAnd=andExpression              #ordistributiveLawExpression
+// | leftBasic=parenExpression OR rightAnd=andExpression          #ordistributiveLawExpression
+// | leftAnd=andExpression OR rightBasic=parenExpression          #ordistributiveLawExpression
 
- | andExpression                                                #andAllExpression
- | orExpression                                                 #orAllExpression
- | parenExpression (AND parenExpression)+                       #andBasicExpression
- | parenExpression (OR parenExpression)+                        #orBasicExpression
+// | andExpression                                                #andAllExpression
+// | orExpression                                                 #orAllExpression
+
+ | basicExpression                                              #basicBlockExpression
 
  | notExpression                                                #notsExpression
 
- | parenExpression                                              #parensExpression
- ;
+ | parenExpression (AND parenExpression)+                       #andBasicExpression
+ | parenExpression (OR parenExpression)+                        #orBasicExpression
 
-parenExpression
- : LPAREN parenExpression RPAREN                                #multiParenExpression
- | LPAREN expression RPAREN                                     #singleParenExpression
+ | notParenExpression AND notParenExpression                    #notParenBlockExpression1
+ | notParenExpression AND parenExpression                       #notParenBlockExpression2
+ | parenExpression AND notParenExpression                       #notParenBlockExpression3
+ | notParenExpression OR notParenExpression                     #notParenBlockExpression4
+ | notParenExpression OR parenExpression                        #notParenBlockExpression5
+ | parenExpression OR notParenExpression                        #notParenBlockExpression6
+ | NOT notParenExpression                                       #notParenBlockExpression7
  ;
 
 notExpression
  : NOT andExpression                                            #andDeMorganLawExpression
 // | NOT orExpression                                             #deMorganLawExpression
- | NOT NOT parenExpression                                           #involutionLawExpression
- | NOT LPAREN NOT parenExpression RPAREN                             #involutionLawExpression
- | NOT parenExpression                                               #singleNotExpression
+ | NOT NOT parenExpression                                      #involutionLawExpression
+ | NOT LPAREN NOT parenExpression RPAREN                        #involutionLawExpression
+ | NOT parenExpression                                          #singleNotExpression
  ;
 
 andExpression

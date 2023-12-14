@@ -16,29 +16,30 @@ public class ConditionVisitorTest {
     @Test
     public void testBrackets() throws IOException {
         Assert.assertEquals("((A) AND (B))", test("(((((((A) AND ((B))))))))"));
+        Assert.assertEquals("(((A) AND (B)) OR (C))", test("A AND B OR C"));
     }
 
     @Test
     public void testDeMorganLaw() throws IOException {
-        Assert.assertEquals("(NOT (A)) OR (B) OR (NOT (C))",test("NOT(((((A)) AND ((NOT (B))) AND (C))))"));
+        Assert.assertEquals("((NOT (A)) OR (B) OR (NOT (C)))",test("NOT(((((A)) AND ((NOT (B))) AND (C))))"));
     }
     @Test
     public void testAnnulmentLaw() throws IOException {
-        Assert.assertEquals("TRUE", test("NOT((A) AND (FALSE))"));
-        Assert.assertEquals("FALSE", test("NOT((A) AND (FALSE) OR (TRUE))"));
+        Assert.assertEquals("(TRUE)", test("NOT(A AND FALSE)"));
+        Assert.assertEquals("(FALSE)", test("NOT(A AND FALSE OR TRUE)"));
     }
 
     @Test
     public void testIdentityLaw() throws IOException {
-        Assert.assertEquals("(A)", test("(A) OR (NOT(TRUE))"));
-        Assert.assertEquals("(A)", test("(FALSE) OR (A)"));
-        Assert.assertEquals("(A)", test("(A) AND (NOT(NOT(TRUE)))"));
-        Assert.assertEquals("(A)", test("(TRUE) AND (A)"));
+        Assert.assertEquals("(A)", test("A OR NOT TRUE"));
+        Assert.assertEquals("(A)", test("FALSE OR A"));
+        Assert.assertEquals("(A)", test("A AND NOT NOT TRUE"));
+        Assert.assertEquals("(A)", test("TRUE AND A"));
     }
 
     @Test
     public void testDistributiveLaw() throws IOException {
-        Assert.assertEquals("((A) AND (C)) OR ((B) AND (C))",test("((A) OR (B)) AND (C)"));
+        Assert.assertEquals("(((A) AND (C)) OR ((B) AND (C)))",test("(A OR B) AND C"));
     }
 
     private String test(String testCase) throws IOException {

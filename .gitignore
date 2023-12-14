@@ -41,6 +41,7 @@ buildNumber.properties
 ## Directory-based project format:
 .idea/
 src/main/resources/data/examples/
+src/main/resources/.log
 .vscode/
 # if you remove the above rule, at least ignore the following:
 
