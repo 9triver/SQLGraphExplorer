@@ -1,6 +1,6 @@
 package cn.edu.nju;
 
-import cn.edu.nju.Tools.Tools;
+import cn.edu.nju.tools.Tools;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.graph.Node;
 import cn.edu.nju.graph.NodeType;
@@ -9,7 +9,6 @@ import grammar.PlSqlLexer;
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseVisitor;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.Interval;
 import org.apache.log4j.Logger;
 
 import java.io.*;

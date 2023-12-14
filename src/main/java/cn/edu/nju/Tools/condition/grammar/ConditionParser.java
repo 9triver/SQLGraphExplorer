@@ -1,5 +1,5 @@
-// Generated from D:/Antlr-SQLGraphExplorer/SQLGraphExplorer/src/main/java/cn/edu/nju/expression/cktuple/constraint/grammar/ConditionParser.g4 by ANTLR 4.13.1
-package cn.edu.nju.expression.cktuple.constraint.grammar;
+// Generated from D:/Antlr-SQLGraphExplorer/SQLGraphExplorer/src/main/java/cn/edu/nju/tools/condition/grammar/ConditionParser.g4 by ANTLR 4.13.1
+package cn.edu.nju.tools.condition.grammar;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;

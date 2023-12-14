@@ -1,9 +1,9 @@
-package cn.edu.nju.Tools;
+package cn.edu.nju.tools;
 
-import cn.edu.nju.expression.cktuple.constraint.ConditionVisitor;
-import cn.edu.nju.expression.cktuple.constraint.grammar.ConditionLexer;
-import cn.edu.nju.expression.cktuple.constraint.grammar.ConditionParser;
 import cn.edu.nju.graph.Graph;
+import cn.edu.nju.tools.condition.ConditionVisitor;
+import cn.edu.nju.tools.condition.grammar.ConditionLexer;
+import cn.edu.nju.tools.condition.grammar.ConditionParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;

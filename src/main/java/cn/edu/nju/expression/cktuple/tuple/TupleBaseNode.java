@@ -1,6 +1,6 @@
 package cn.edu.nju.expression.cktuple.tuple;
 
-import cn.edu.nju.Tools.Tools;
+import cn.edu.nju.tools.Tools;
 import cn.edu.nju.graph.Graph;
 
 import java.io.IOException;

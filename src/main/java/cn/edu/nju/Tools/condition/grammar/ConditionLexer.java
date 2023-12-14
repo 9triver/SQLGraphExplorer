@@ -1,4 +1,5 @@
-// Generated from d:/Antlr-SQLGraphExplorer/SQLGraphExplorer/src/main/java/cn/edu/nju/expression/cktuple/constraint/grammar/ConditionLexer.g4 by ANTLR 4.13.1
+// Generated from D:/Antlr-SQLGraphExplorer/SQLGraphExplorer/src/main/java/cn/edu/nju/tools/condition/grammar/ConditionLexer.g4 by ANTLR 4.13.1
+package cn.edu.nju.tools.condition.grammar;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
