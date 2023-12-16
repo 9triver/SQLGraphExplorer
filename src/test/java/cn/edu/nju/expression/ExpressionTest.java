@@ -60,7 +60,7 @@ public class ExpressionTest {
 
         Expression e2 = Expression.production(ea2,eb);
         e2 = Expression.selection(new Constraint("A2.B21 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"), e2);
-        e2 = Expression.selection(new Constraint("LENGTH(NVL(A2.A21,'')) > 0 AND A2.A24 <= '#{ETL_DT}' AND A2.A25 > '#{ETL_DT}' AND A2.A26 <> '0101';"), e2);
+        e2 = Expression.selection(new Constraint("LENGTH(NVL(A2.A21,'')) > 0 AND A2.A24 <= '#{ETL_DT}' AND A2.A25 > '#{ETL_DT}' AND A2.A26 <> '0101'"), e2);
         e2 = Expression.projection(a2.scheme("A21","A22","A23"), e2);
         RenameMap renameMap2 = new RenameMap();
         renameMap2.add(a2.getColumn("A21"), c.getColumn("GH"));
@@ -146,6 +146,7 @@ public class ExpressionTest {
 
         CKTuples target = new CKTuples(new KTuple(c, c.getTuple()), new Constraint(""));
         CKTuples results = this.expression2.inverse(target);
+        results.simplifyConstraints();
         Assert.assertEquals(results.getCkTuples().size(),4);
 
         for(CKTuple ckTuple : results.getCkTuples()) {
@@ -156,7 +157,7 @@ public class ExpressionTest {
             switch (tableName) {
                 case "A1" -> {
                     Assert.assertEquals(a1.allScheme(), kTuple.allScheme());
-                    Assert.assertEquals("(((LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}')) AND (A1.A15 > '#{ETL_DT}')) AND (((A1.B11 = B.B01) AND (B.B02 <= '#{ETL_DT}')) AND (B.B03 > '#{ETL_DT}'))", constraint.toString());
+                    Assert.assertEquals("(((LENGTH((NVL((A1.A11),(''))))>0) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))", constraint.toString());
                     KTuple exceptedKTuple = new KTuple(a1).addTupleNode(
                             new ColumnNode(a11, gh),
                             new ColumnNode(a12, xm),
@@ -174,7 +175,7 @@ public class ExpressionTest {
                 }
                 case "A2" -> {
                     Assert.assertEquals(a2.allScheme(), kTuple.allScheme());
-                    Assert.assertEquals("((((LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}')) AND (A2.A25 > '#{ETL_DT}')) AND (A2.A26 <> '0101';)) AND (((A2.B21 = B.B01) AND (B.B02 <= '#{ETL_DT}')) AND (B.B03 > '#{ETL_DT}'))", constraint.toString());
+                    Assert.assertEquals("((((LENGTH((NVL((A2.A21),(''))))>0) AND (A2.A24<='#{ETL_DT}')) AND (A2.A25>'#{ETL_DT}')) AND (A2.A26<>'0101'))", constraint.toString());
                     KTuple exceptedKTuple = new KTuple(a2).addTupleNode(
                             new ColumnNode(a21, gh),
                             new ColumnNode(a22, xm),
@@ -192,10 +193,7 @@ public class ExpressionTest {
                 }
                 case "B" -> {
                     Assert.assertEquals(b.allScheme(), kTuple.allScheme());
-                    Set<String> expectedConstraints = new HashSet<>();
-                    expectedConstraints.add("(((LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}')) AND (A1.A15 > '#{ETL_DT}')) AND (((A1.B11 = B.B01) AND (B.B02 <= '#{ETL_DT}')) AND (B.B03 > '#{ETL_DT}'))");
-                    expectedConstraints.add("((((LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}')) AND (A2.A25 > '#{ETL_DT}')) AND (A2.A26 <> '0101';)) AND (((A2.B21 = B.B01) AND (B.B02 <= '#{ETL_DT}')) AND (B.B03 > '#{ETL_DT}'))");
-                    Assert.assertTrue(expectedConstraints.contains(constraint.toString()));
+                    Assert.assertEquals("((B.B02<='#{ETL_DT}') AND (B.B03>'#{ETL_DT}'))", constraint.toString());
                     KTuple exceptedKTuple = new KTuple(b).addTupleNode(
                             new ColumnNode(b01, b01),
                             new ColumnNode(b02, b02),

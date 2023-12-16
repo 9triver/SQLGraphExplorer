@@ -85,6 +85,10 @@ public class CKTuple {
         return new CKTuple(new KTuple(targetTable,tuple),p.constraint);
     }
 
+    public void simplifyConstraint() {
+        this.constraint.simplify(this.kTuple.getTable());
+    }
+
     public String toSql(Graph.Table dstTable) {
         // TODO : CKTuple -> sql, 很困难，感觉这CKTuple的结构要改一下
         return "";

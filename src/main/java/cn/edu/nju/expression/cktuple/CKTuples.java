@@ -55,8 +55,9 @@ public class CKTuples {
     }
     public static CKTuples selection(CKTuples P, Constraint C) {
         List<CKTuple> ckTuplesTmp = new ArrayList<>();
+        List<Constraint> splitResult = C.orSplit();
         for(CKTuple p : P.ckTuples)
-            for(Constraint c : C.orSplit())
+            for(Constraint c : splitResult)
                 ckTuplesTmp.add(CKTuple.andConstraint(p, c));
 
         return new CKTuples(ckTuplesTmp);
@@ -72,6 +73,11 @@ public class CKTuples {
         for(CKTuple p : P.ckTuples)
             ckTuplesTmp.add(CKTuple.rename(p,renameMap));
         return new CKTuples(ckTuplesTmp);
+    }
+
+    public void simplifyConstraints() {
+        for(CKTuple p : this.ckTuples)
+            p.simplifyConstraint();
     }
 
     public int size() {

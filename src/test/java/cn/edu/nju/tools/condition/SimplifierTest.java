@@ -49,7 +49,7 @@ public class SimplifierTest {
         graph.addColumns("B","B01","B02","B03","B04");
 
         Assert.assertEquals(
-            "((((((A1.A11=gh) AND (A1.A12=xm)) AND (A1.A13=gj)) AND (LENGTH(NVL(A1.A11,''))>0)) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))",
+            "((((((A1.A11=gh) AND (A1.A12=xm)) AND (A1.A13=gj)) AND (LENGTH((NVL((A1.A11),(''))))>0)) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))",
             test(
                 "A1.A11 = gh AND " +
                 "A1.A12 = xm AND " +
@@ -61,6 +61,11 @@ public class SimplifierTest {
                 "B.B02 <= '#{ETL_DT}' AND " +
                 "B.B03 > '#{ETL_DT}'",
                 graph.getTable("A1")));
+
+        Assert.assertEquals(
+                "((B.B02<='#{ETL_DT}') AND (B.B03>'#{ETL_DT}'))",
+                test("((LENGTH(NVL(A1.A11,''))>0) AND ((B.B02<='#{ETL_DT}') AND (B.B03>'#{ETL_DT}')))",
+                        graph.getTable("B")));
     }
 
     private String test(String context) {
