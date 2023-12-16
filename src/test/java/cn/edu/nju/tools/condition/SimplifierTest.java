@@ -1,13 +1,13 @@
 package cn.edu.nju.tools.condition;
 
-import cn.edu.nju.tools.Tools;
 import cn.edu.nju.graph.Graph;
+import cn.edu.nju.tools.Tools;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ConditionVisitorTest {
-    private static final Logger logger = Logger.getLogger(ConditionVisitorTest.class);
+public class SimplifierTest {
+    private static final Logger logger = Logger.getLogger(SimplifierTest.class);
 
     @Test
     public void testBrackets() {
@@ -36,6 +36,7 @@ public class ConditionVisitorTest {
     @Test
     public void testDistributiveLaw() {
         Assert.assertEquals("(((A) AND (C)) OR ((B) AND (C)))",test("(A OR B) AND C"));
+        Assert.assertEquals("((((A) AND (D)) OR ((B) AND (D))) OR ((C) AND (D)))",test("(A OR B) OR C AND D"));
     }
 
     @Test
@@ -63,12 +64,12 @@ public class ConditionVisitorTest {
     }
 
     private String test(String context) {
-        String ret = Tools.simplifyBooleanAlgebra(context);
+        String ret = Tools.simplify(context);
         logger.info(ret);
         return ret;
     }
     private String test(String context, Graph.Table targetTable) {
-        String ret = Tools.simplifyBooleanAlgebra(context, targetTable);
+        String ret = Tools.simplify(context, targetTable);
         logger.info(ret);
         return ret;
     }

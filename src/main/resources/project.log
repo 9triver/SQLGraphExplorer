@@ -2788,3 +2788,55 @@
 [INFO][2023-12-14 21:22:23,626][cn.edu.nju.tools.condition.ConditionVisitorTest](A)
 [INFO][2023-12-14 21:22:23,676][cn.edu.nju.tools.condition.ConditionVisitorTest]((NOT (A)) OR (B) OR (NOT (C)))
 [INFO][2023-12-14 21:22:23,888][cn.edu.nju.tools.condition.ConditionVisitorTest]((((((A1.A11=gh) AND (A1.A12=xm)) AND (A1.A13=gj)) AND (LENGTH(NVL(A1.A11,''))>0)) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))
+[INFO][2023-12-16 09:38:34,840][cn.edu.nju.tools.condition.SimplifierTest](((A) AND (C)) OR ((B) AND (C)))
+[INFO][2023-12-16 09:38:34,879][cn.edu.nju.tools.condition.SimplifierTest](TRUE)
+[INFO][2023-12-16 09:38:34,900][cn.edu.nju.tools.condition.SimplifierTest](FALSE)
+[INFO][2023-12-16 09:38:34,909][cn.edu.nju.tools.condition.SimplifierTest]((A) AND (B))
+[INFO][2023-12-16 09:38:34,911][cn.edu.nju.tools.condition.SimplifierTest](((A) AND (B)) OR (C))
+[INFO][2023-12-16 09:38:34,919][cn.edu.nju.tools.condition.SimplifierTest](A)
+[INFO][2023-12-16 09:38:34,925][cn.edu.nju.tools.condition.SimplifierTest](A)
+[INFO][2023-12-16 09:38:34,930][cn.edu.nju.tools.condition.SimplifierTest](A)
+[INFO][2023-12-16 09:38:34,937][cn.edu.nju.tools.condition.SimplifierTest](A)
+[INFO][2023-12-16 09:38:35,020][cn.edu.nju.tools.condition.SimplifierTest]((NOT (A)) OR (B) OR (NOT (C)))
+[INFO][2023-12-16 09:38:35,258][cn.edu.nju.tools.condition.SimplifierTest]((((((A1.A11=gh) AND (A1.A12=xm)) AND (A1.A13=gj)) AND (LENGTH(NVL(A1.A11,''))>0)) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))
+[INFO][2023-12-16 14:34:14,058][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (F)]
+[INFO][2023-12-16 14:34:53,181][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (F)]
+[INFO][2023-12-16 14:35:59,425][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (E OR F)]
+[INFO][2023-12-16 14:38:22,485][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (E OR F)]
+[INFO][2023-12-16 14:39:47,004][cn.edu.nju.tools.condition.SpliterTest][(A OR B OR C OR D)]
+[INFO][2023-12-16 14:40:40,558][cn.edu.nju.tools.condition.SpliterTest][(A OR B OR C OR D)]
+[INFO][2023-12-16 14:49:46,928][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (E OR F)]
+[INFO][2023-12-16 14:49:59,824][cn.edu.nju.tools.condition.SpliterTest][((A OR B) OR C), D]
+[INFO][2023-12-16 14:58:41,705][cn.edu.nju.tools.condition.SpliterTest][A, B, C, D]
+[INFO][2023-12-16 15:00:27,039][cn.edu.nju.tools.condition.SpliterTest][A1.A11=gh AND A1.A12=xm AND A1.A13=gj AND LENGTH(NVL(A1.A11,''))>0 AND A1.A14<='#{ETL_DT}' AND A1.A15>'#{ETL_DT}']
+[INFO][2023-12-16 15:03:02,920][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (E OR F)]
+[INFO][2023-12-16 15:03:03,085][cn.edu.nju.tools.condition.SpliterTest][A, B, C, D]
+[INFO][2023-12-16 15:03:03,345][cn.edu.nju.tools.condition.SpliterTest][A1.A11=gh AND A1.A12=xm AND A1.A13=gj AND LENGTH(NVL(A1.A11,''))>0 AND A1.A14<='#{ETL_DT}' AND A1.A15>'#{ETL_DT}']
+[INFO][2023-12-16 15:05:45,085][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (E OR F)]
+[INFO][2023-12-16 15:05:45,124][cn.edu.nju.tools.condition.SpliterTest][(A AND B), C]
+[INFO][2023-12-16 15:06:48,090][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (E OR F)]
+[INFO][2023-12-16 15:06:48,136][cn.edu.nju.tools.condition.SpliterTest][(A AND B), C]
+[INFO][2023-12-16 15:06:48,159][cn.edu.nju.tools.condition.SpliterTest][(NOT A), B, (NOT C)]
+[INFO][2023-12-16 15:07:29,732][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (E OR F)]
+[INFO][2023-12-16 15:07:29,777][cn.edu.nju.tools.condition.SpliterTest][(A AND B), C]
+[INFO][2023-12-16 15:07:29,801][cn.edu.nju.tools.condition.SpliterTest][(NOT A), B, (NOT C)]
+[INFO][2023-12-16 15:26:57,858][cn.edu.nju.tools.condition.SimplifierTest](((A) OR (B)) OR ((C) AND (D)))
+[INFO][2023-12-16 15:43:29,224][cn.edu.nju.tools.condition.SimplifierTest]((((A) OR B) OR C) AND D)
+[INFO][2023-12-16 15:46:09,540][cn.edu.nju.tools.condition.SimplifierTest]((((A) AND (D)) OR ((B) AND (D))) OR ((C) AND (D)))
+[INFO][2023-12-16 15:47:14,500][cn.edu.nju.tools.condition.SimplifierTest](((A) AND (C)) OR ((B) AND (C)))
+[INFO][2023-12-16 15:47:14,542][cn.edu.nju.tools.condition.SimplifierTest]((((A) AND (D)) OR ((B) AND (D))) OR ((C) AND (D)))
+[INFO][2023-12-16 15:47:14,566][cn.edu.nju.tools.condition.SimplifierTest](TRUE)
+[INFO][2023-12-16 15:47:14,585][cn.edu.nju.tools.condition.SimplifierTest](FALSE)
+[INFO][2023-12-16 15:47:14,594][cn.edu.nju.tools.condition.SimplifierTest]((A) AND (B))
+[INFO][2023-12-16 15:47:14,595][cn.edu.nju.tools.condition.SimplifierTest](((A) AND (B)) OR (C))
+[INFO][2023-12-16 15:47:14,599][cn.edu.nju.tools.condition.SimplifierTest](A)
+[INFO][2023-12-16 15:47:14,603][cn.edu.nju.tools.condition.SimplifierTest](A)
+[INFO][2023-12-16 15:47:14,608][cn.edu.nju.tools.condition.SimplifierTest](A)
+[INFO][2023-12-16 15:47:14,612][cn.edu.nju.tools.condition.SimplifierTest](A)
+[INFO][2023-12-16 15:47:14,638][cn.edu.nju.tools.condition.SimplifierTest]((NOT (A)) OR (B) OR (NOT (C)))
+[INFO][2023-12-16 15:47:14,831][cn.edu.nju.tools.condition.SimplifierTest]((((((A1.A11=gh) AND (A1.A12=xm)) AND (A1.A13=gj)) AND (LENGTH(NVL(A1.A11,''))>0)) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))
+[INFO][2023-12-16 15:48:21,836][cn.edu.nju.tools.condition.SpliterTest][A, (NOT B), (C AND D), (E OR F)]
+[INFO][2023-12-16 15:48:21,873][cn.edu.nju.tools.condition.SpliterTest][(A AND B), C]
+[INFO][2023-12-16 15:48:21,891][cn.edu.nju.tools.condition.SpliterTest][(NOT A), B, (NOT C)]
+[INFO][2023-12-16 15:48:21,943][cn.edu.nju.tools.condition.SpliterTest][A, B, C, D]
+[INFO][2023-12-16 15:48:22,068][cn.edu.nju.tools.condition.SpliterTest][A1.A11=gh AND A1.A12=xm AND A1.A13=gj AND LENGTH(NVL(A1.A11,''))>0 AND A1.A14<='#{ETL_DT}' AND A1.A15>'#{ETL_DT}']

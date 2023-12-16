@@ -1,4 +1,4 @@
-lexer grammar ConditionLexer;
+lexer grammar SpliterLexer;
 
 options {
     caseInsensitive = true;

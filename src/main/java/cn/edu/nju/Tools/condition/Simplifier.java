@@ -2,13 +2,13 @@ package cn.edu.nju.tools.condition;
 
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.tools.Tools;
-import cn.edu.nju.tools.condition.grammar.ConditionParser;
-import cn.edu.nju.tools.condition.grammar.ConditionParserBaseVisitor;
+import cn.edu.nju.tools.condition.grammar.simplifier.SimplifierParser;
+import cn.edu.nju.tools.condition.grammar.simplifier.SimplifierParserBaseVisitor;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
+public class Simplifier extends SimplifierParserBaseVisitor<String> {
     private final Set<String> targetFullColumnNames = new HashSet<>();
 
     public void setTargetColumnName(Graph.Table targetTable) {
@@ -19,22 +19,22 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitParse(ConditionParser.ParseContext ctx) {
+    public String visitParse(SimplifierParser.ParseContext ctx) {
         return visit(ctx.expression());
     }
 
     @Override
-    public String visitMultiParenExpression(ConditionParser.MultiParenExpressionContext ctx) {
+    public String visitMultiParenExpression(SimplifierParser.MultiParenExpressionContext ctx) {
         return visit(ctx.parenExpression());
     }
 
     @Override
-    public String visitSingleParenExpression(ConditionParser.SingleParenExpressionContext ctx) {
+    public String visitSingleParenExpression(SimplifierParser.SingleParenExpressionContext ctx) {
         return visit(ctx.notParenExpression());
     }
 
     @Override
-    public String visitAnnulmentLawExpression(ConditionParser.AnnulmentLawExpressionContext ctx) {
+    public String visitAnnulmentLawExpression(SimplifierParser.AnnulmentLawExpressionContext ctx) {
         String ret;
         if(ctx.falseExpression() != null) ret = visitFalseExpression(ctx.falseExpression());
         else if(ctx.trueExpression() != null) ret = visitTrueExpression(ctx.trueExpression());
@@ -43,24 +43,24 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitIdentityLawExpression(ConditionParser.IdentityLawExpressionContext ctx) {
+    public String visitIdentityLawExpression(SimplifierParser.IdentityLawExpressionContext ctx) {
         return bracked(visit(ctx.parenExpression()));
     }
 
     @Override
-    public String visitAndDistributiveLawExpression(ConditionParser.AndDistributiveLawExpressionContext ctx) {
+    public String visitAndDistributiveLawExpression(SimplifierParser.AndDistributiveLawExpressionContext ctx) {
         StringBuilder ret = new StringBuilder();
         if(ctx.leftOr != null && ctx.rightOr != null) {
-            for(ConditionParser.ParenExpressionContext left : ctx.leftOr.parenExpression())
-                for(ConditionParser.ParenExpressionContext right : ctx.rightOr.parenExpression())
+            for(SimplifierParser.ParenExpressionContext left : ctx.leftOr.parenExpression())
+                for(SimplifierParser.ParenExpressionContext right : ctx.rightOr.parenExpression())
                     ret.append("(").append(visit(left)).append(" AND ").append(visit(right)).append(")").append(" OR ");
         }
         else if(ctx.leftBasic != null && ctx.rightOr != null) {
-            for(ConditionParser.ParenExpressionContext right : ctx.rightOr.parenExpression())
+            for(SimplifierParser.ParenExpressionContext right : ctx.rightOr.parenExpression())
                 ret.append("(").append(visit(ctx.leftBasic)).append(" AND ").append(visit(right)).append(")").append(" OR ");
         }
         else if(ctx.leftOr != null && ctx.rightBasic != null) {
-            for(ConditionParser.ParenExpressionContext left : ctx.leftOr.parenExpression())
+            for(SimplifierParser.ParenExpressionContext left : ctx.leftOr.parenExpression())
                 ret.append("(").append(visit(left)).append(" AND ").append(visit(ctx.rightBasic)).append(")").append(" OR ");
         }
         else
@@ -70,7 +70,7 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitAndBasicExpression(ConditionParser.AndBasicExpressionContext ctx) {
+    public String visitAndBasicExpression(SimplifierParser.AndBasicExpressionContext ctx) {
         StringBuilder ret = new StringBuilder(visit(ctx.parenExpression(0)));
         for(int i = 1; i < ctx.parenExpression().size(); ++i) {
             ret.append(" AND ").append(visit(ctx.parenExpression(i)));
@@ -80,7 +80,7 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitOrBasicExpression(ConditionParser.OrBasicExpressionContext ctx) {
+    public String visitOrBasicExpression(SimplifierParser.OrBasicExpressionContext ctx) {
         StringBuilder ret = new StringBuilder(visit(ctx.parenExpression(0)));
         for(int i = 1; i < ctx.parenExpression().size(); ++i) {
             ret.append(" OR ").append(visit(ctx.parenExpression(i)));
@@ -90,41 +90,29 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitNotsExpression(ConditionParser.NotsExpressionContext ctx) {
+    public String visitNotsExpression(SimplifierParser.NotsExpressionContext ctx) {
         return bracked(visit(ctx.notExpression()));
     }
 
     @Override
-    public String visitNotParenBlockExpression1(ConditionParser.NotParenBlockExpression1Context ctx) {
-        return bracked(visit(ctx.notParenExpression(0)) + " AND " + visit(ctx.notParenExpression(1)));
+    public String visitNotParenBlockExpression1(SimplifierParser.NotParenBlockExpression1Context ctx) {
+        return bracked(visit(ctx.notParenExpression()) + " " + ctx.logicOp().getText() + " " + bracked(visit(ctx.basicExpression())));
     }
     @Override
-    public String visitNotParenBlockExpression2(ConditionParser.NotParenBlockExpression2Context ctx) {
-        return bracked(visit(ctx.notParenExpression()) + " AND " + visit(ctx.parenExpression()));
+    public String visitNotParenBlockExpression2(SimplifierParser.NotParenBlockExpression2Context ctx) {
+        return bracked(visit(ctx.notParenExpression()) + " " + ctx.logicOp().getText() + " " + visit(ctx.parenExpression()));
     }
     @Override
-    public String visitNotParenBlockExpression3(ConditionParser.NotParenBlockExpression3Context ctx) {
-        return bracked(visit(ctx.parenExpression()) + " AND " + visit(ctx.notParenExpression()));
+    public String visitNotParenBlockExpression3(SimplifierParser.NotParenBlockExpression3Context ctx) {
+        return visit(ctx.parenExpression()) + " " + ctx.logicOp().getText() + " " + bracked(visit(ctx.basicExpression()));
     }
     @Override
-    public String visitNotParenBlockExpression4(ConditionParser.NotParenBlockExpression4Context ctx) {
-        return bracked(visit(ctx.notParenExpression(0)) + " OR " + visit(ctx.notParenExpression(1)));
-    }
-    @Override
-    public String visitNotParenBlockExpression5(ConditionParser.NotParenBlockExpression5Context ctx) {
-        return bracked(visit(ctx.notParenExpression()) + " OR " + visit(ctx.parenExpression()));
-    }
-    @Override
-    public String visitNotParenBlockExpression6(ConditionParser.NotParenBlockExpression6Context ctx) {
-        return bracked(visit(ctx.parenExpression()) + " OR " + visit(ctx.notParenExpression()));
-    }
-    @Override
-    public String visitNotParenBlockExpression7(ConditionParser.NotParenBlockExpression7Context ctx) {
+    public String visitNotParenBlockExpression4(SimplifierParser.NotParenBlockExpression4Context ctx) {
         return bracked("NOT " + visit(ctx.notParenExpression()));
     }
 
     @Override
-    public String visitBasicBlockExpression(ConditionParser.BasicBlockExpressionContext ctx) {
+    public String visitBasicBlockExpression(SimplifierParser.BasicBlockExpressionContext ctx) {
         String ret = visitChildren(ctx);
         if(ret.contains("@#$%TRUE%$#@"))
             ret = "TRUE";
@@ -132,23 +120,23 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitCompareExpression(ConditionParser.CompareExpressionContext ctx) {
+    public String visitCompareExpression(SimplifierParser.CompareExpressionContext ctx) {
         return visit(ctx.left) + Tools.getFullContext(ctx.op) + visit(ctx.right);
     }
     @Override
-    public String visitBool(ConditionParser.BoolContext ctx) {
+    public String visitBool(SimplifierParser.BoolContext ctx) {
         if(ctx.trueExpression() != null) return visitTrueExpression(ctx.trueExpression());
         else if(ctx.falseExpression() != null) return visitFalseExpression(ctx.falseExpression());
         else return Tools.getFullContext(ctx);
     }
 
     @Override
-    public String visitFuncExpression(ConditionParser.FuncExpressionContext ctx) {
+    public String visitFuncExpression(SimplifierParser.FuncExpressionContext ctx) {
         return Tools.getFullContext(ctx);
     }
 
     @Override
-    public String visitColExpression(ConditionParser.ColExpressionContext ctx) {
+    public String visitColExpression(SimplifierParser.ColExpressionContext ctx) {
         String fullColumnName = Tools.getFullContext(ctx);
         if(!this.targetFullColumnNames.contains(fullColumnName))
             fullColumnName = "@#$%TRUE%$#@";
@@ -156,22 +144,22 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitAtomExpression(ConditionParser.AtomExpressionContext ctx) {
+    public String visitAtomExpression(SimplifierParser.AtomExpressionContext ctx) {
         return Tools.getFullContext(ctx);
     }
 
     @Override
-    public String visitInvolutionLawExpression(ConditionParser.InvolutionLawExpressionContext ctx) {
+    public String visitInvolutionLawExpression(SimplifierParser.InvolutionLawExpressionContext ctx) {
         return visit(ctx.parenExpression());
     }
 
     @Override
-    public String visitSingleNotExpression(ConditionParser.SingleNotExpressionContext ctx) {
+    public String visitSingleNotExpression(SimplifierParser.SingleNotExpressionContext ctx) {
         return "NOT " + visit(ctx.parenExpression());
     }
 
     @Override
-    public String visitAndExpression(ConditionParser.AndExpressionContext ctx) {
+    public String visitAndExpression(SimplifierParser.AndExpressionContext ctx) {
         StringBuilder ret = new StringBuilder(visit(ctx.parenExpression(0)));
         for(int i = 1; i < ctx.parenExpression().size(); ++i) {
             ret.append(" AND ").append(visit(ctx.parenExpression(i)));
@@ -181,7 +169,7 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitOrExpression(ConditionParser.OrExpressionContext ctx) {
+    public String visitOrExpression(SimplifierParser.OrExpressionContext ctx) {
         StringBuilder ret = new StringBuilder(visit(ctx.parenExpression(0)));
         for(int i = 1; i < ctx.parenExpression().size(); ++i) {
             ret.append(" OR ").append(visit(ctx.parenExpression(i)));
@@ -191,19 +179,19 @@ public class ConditionVisitor extends ConditionParserBaseVisitor<String> {
     }
 
     @Override
-    public String visitTrueExpression(ConditionParser.TrueExpressionContext ctx) {
+    public String visitTrueExpression(SimplifierParser.TrueExpressionContext ctx) {
         return "TRUE";
     }
 
     @Override
-    public String visitFalseExpression(ConditionParser.FalseExpressionContext ctx) {
+    public String visitFalseExpression(SimplifierParser.FalseExpressionContext ctx) {
         return "FALSE";
     }
 
     @Override
-    public String visitAndDeMorganLawExpression(ConditionParser.AndDeMorganLawExpressionContext ctx) {
+    public String visitAndDeMorganLawExpression(SimplifierParser.AndDeMorganLawExpressionContext ctx) {
         StringBuilder ret = new StringBuilder();
-        for (ConditionParser.ParenExpressionContext e : ctx.andExpression().parenExpression()) {
+        for (SimplifierParser.ParenExpressionContext e : ctx.andExpression().parenExpression()) {
             ret.append("(NOT (").append(visit(e)).append(")) OR ");
         }
         ret.delete(ret.length()-" OR ".length(),ret.length());

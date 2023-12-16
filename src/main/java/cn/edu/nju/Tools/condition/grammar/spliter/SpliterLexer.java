@@ -1,5 +1,5 @@
-// Generated from D:/Antlr-SQLGraphExplorer/SQLGraphExplorer/src/main/java/cn/edu/nju/tools/condition/grammar/ConditionLexer.g4 by ANTLR 4.13.1
-package cn.edu.nju.tools.condition.grammar;
+// Generated from D:/Antlr-SQLGraphExplorer/SQLGraphExplorer/src/main/java/cn/edu/nju/tools/condition/grammar/spliter/SpliterLexer.g4 by ANTLR 4.13.1
+package cn.edu.nju.tools.condition.grammar.spliter;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue", "this-escape"})
-public class ConditionLexer extends Lexer {
+public class SpliterLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.13.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -85,13 +85,13 @@ public class ConditionLexer extends Lexer {
 	}
 
 
-	public ConditionLexer(CharStream input) {
+	public SpliterLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "ConditionLexer.g4"; }
+	public String getGrammarFileName() { return "SpliterLexer.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

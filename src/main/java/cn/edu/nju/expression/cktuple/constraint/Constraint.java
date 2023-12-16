@@ -1,10 +1,13 @@
 package cn.edu.nju.expression.cktuple.constraint;
 
+import cn.edu.nju.graph.Graph;
+import cn.edu.nju.tools.Tools;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Constraint {
-    private final String context;
+    private String context;
 
     public Constraint(String context) {
         this.context = context;
@@ -26,7 +29,22 @@ public class Constraint {
         return new Constraint("("+c1+") OR ("+c2+")");
     }
 
+    public Constraint simplify(Graph.Table targetTable) {
+        this.context = Tools.simplify(this.context, targetTable);
+        return this;
+    }
+    public Constraint simplify() {
+        this.context = Tools.simplify(this.context);
+        return this;
+    }
+
     public List<Constraint> orSplit() {
+        List<Constraint> ret = new ArrayList<>();
+        for(String str : Tools.split(this.context))
+            ret.add(new Constraint(str));
+        return ret;
+    }
+    /*public List<Constraint> orSplit() {
         List<Constraint> ret = new ArrayList<>();
         int i = 0, j = 0, count = 0;
         boolean isAND = false;
@@ -66,7 +84,7 @@ public class Constraint {
         }
 
         return ret;
-    }
+    }*/
 
     @Override
     public String toString() {

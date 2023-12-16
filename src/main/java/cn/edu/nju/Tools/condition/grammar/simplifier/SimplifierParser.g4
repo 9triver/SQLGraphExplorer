@@ -1,7 +1,7 @@
-parser grammar ConditionParser;
+parser grammar SimplifierParser;
 
 options {
-    tokenVocab=ConditionLexer;
+    tokenVocab=SimplifierLexer;
 }
 
 parse
@@ -46,13 +46,10 @@ notParenExpression
  | parenExpression (AND parenExpression)+                       #andBasicExpression
  | parenExpression (OR parenExpression)+                        #orBasicExpression
 
- | notParenExpression AND notParenExpression                    #notParenBlockExpression1
- | notParenExpression AND parenExpression                       #notParenBlockExpression2
- | parenExpression AND notParenExpression                       #notParenBlockExpression3
- | notParenExpression OR notParenExpression                     #notParenBlockExpression4
- | notParenExpression OR parenExpression                        #notParenBlockExpression5
- | parenExpression OR notParenExpression                        #notParenBlockExpression6
- | NOT notParenExpression                                       #notParenBlockExpression7
+ | notParenExpression logicOp basicExpression                   #notParenBlockExpression1
+ | notParenExpression logicOp parenExpression                   #notParenBlockExpression2
+ | parenExpression logicOp basicExpression                      #notParenBlockExpression3
+ | NOT notParenExpression                                       #notParenBlockExpression4
  ;
 
 notExpression
@@ -118,4 +115,8 @@ bool
 
 identifer
  : IDENTIFIER
+ ;
+
+logicOp
+ : AND | OR
  ;
