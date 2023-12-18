@@ -7,6 +7,8 @@ import cn.edu.nju.tools.condition.grammar.simplifier.SimplifierLexer;
 import cn.edu.nju.tools.condition.grammar.simplifier.SimplifierParser;
 import cn.edu.nju.tools.condition.grammar.spliter.SpliterLexer;
 import cn.edu.nju.tools.condition.grammar.spliter.SpliterParser;
+import cn.edu.nju.tools.ra.RelationalAlgebraInterpreter;
+import cn.edu.nju.tools.ra.adt.Database;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -105,5 +107,11 @@ public class Tools {
             logger.error(e.toString());
         }
         return result;
+    }
+
+
+    private static RelationalAlgebraInterpreter interpreter = new RelationalAlgebraInterpreter(new Database("defaultDatabase"));
+    public static String translateFromRA2Sql(String relationalAlgebraInput) {
+        return interpreter.translate(relationalAlgebraInput);
     }
 }
