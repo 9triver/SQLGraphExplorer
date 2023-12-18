@@ -6,15 +6,16 @@ import cn.edu.nju.tools.condition.grammar.simplifier.SimplifierParser;
 import cn.edu.nju.tools.condition.grammar.simplifier.SimplifierParserBaseVisitor;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Simplifier extends SimplifierParserBaseVisitor<String> {
     private final Set<String> targetFullColumnNames = new HashSet<>();
 
     public void setTargetColumnName(Graph.Table targetTable) {
+        targetFullColumnNames.clear();
         if(targetTable == null) return;
 
-        targetFullColumnNames.clear();
         targetFullColumnNames.addAll(targetTable.allFullColumnNames());
     }
 
@@ -111,10 +112,13 @@ public class Simplifier extends SimplifierParserBaseVisitor<String> {
         return bracked("NOT " + visit(ctx.notParenExpression()));
     }
 
+    int deepHeight = 0;
     @Override
     public String visitBasicBlockExpression(SimplifierParser.BasicBlockExpressionContext ctx) {
+        deepHeight++;
         String ret = visitChildren(ctx);
-        if(ret.contains("@#$%TRUE%$#@"))
+        deepHeight--;
+        if(deepHeight <= 0 && ret.contains("@#$%TRUE%$#@"))
             ret = "TRUE";
         return bracked(ret);
     }
@@ -132,7 +136,13 @@ public class Simplifier extends SimplifierParserBaseVisitor<String> {
 
     @Override
     public String visitFuncExpression(SimplifierParser.FuncExpressionContext ctx) {
-        return Tools.getFullContext(ctx);
+        StringBuilder ret = new StringBuilder(ctx.functionName().getText() + "(");
+        List<SimplifierParser.ExpressionContext> expressions = ctx.expression();
+        ret.append(visit(expressions.get(0)));
+        for(int i = 1; i < expressions.size(); ++i)
+            ret.append(",").append(visit(expressions.get(i)));
+
+        return ret.append(")").toString();
     }
 
     @Override
