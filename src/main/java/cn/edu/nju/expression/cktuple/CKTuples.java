@@ -75,9 +75,10 @@ public class CKTuples {
         return new CKTuples(ckTuplesTmp);
     }
 
-    public void simplifyConstraints() {
+    public CKTuples simplifyConstraints() {
         for(CKTuple p : this.ckTuples)
             p.simplifyConstraint();
+        return this;
     }
 
     public List<String> toSql() {

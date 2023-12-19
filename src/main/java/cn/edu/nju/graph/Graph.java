@@ -10,6 +10,7 @@ import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.json.GraphJSON;
 import com.google.gson.Gson;
 import org.antlr.v4.runtime.misc.MultiMap;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 import java.util.*;
@@ -105,6 +106,21 @@ public class Graph implements Serializable{
             this.table = table;
             this.columnName = columnName;
         }
+
+        public static Pair<Table,Column> parseColumnName(Graph graph, String columnName, Table table) {
+            if(!columnName.contains(".") && !columnName.contains(":")) {
+                if(table == null)
+                    return Pair.of(null,null);
+                return Pair.of(table, table.getColumn(columnName));
+            }
+
+            String []results = columnName.split(":|\\.");
+            if(results.length != 2)
+                return Pair.of(null,null);
+            table = graph.getTable(results[0]);
+            return Pair.of(table, table.getColumn(results[1]));
+        }
+
         @Override
         public String toString() {
             return this.table.tableName+"."+this.columnName;

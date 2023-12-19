@@ -1,6 +1,8 @@
 package cn.edu.nju;
 
 import cn.edu.nju.expression.Expression;
+import cn.edu.nju.expression.RenameMap;
+import cn.edu.nju.expression.Scheme;
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
 import cn.edu.nju.expression.cktuple.constraint.Constraint;
@@ -13,6 +15,7 @@ import grammar.PlSqlLexer;
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseVisitor;
 import org.antlr.v4.runtime.*;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -61,6 +64,21 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
 
     @Override
+    public String visitSelect_statement(PlSqlParser.Select_statementContext ctx) {
+        String select_statement_context = visitChildren(ctx);
+
+        // Expression Inverse
+        Expression expression = this.expressions.peek();
+        Graph.Table targetTable = this.graph.getTable(this.curDstTableName);
+        CKTuples pSet = targetTable.getCKTuples();
+        CKTuples inverseResults = expression.inverse(pSet).simplifyConstraints();
+        logger.info("sql: " + select_statement_context);
+        logger.info("inverse: " + inverseResults.toSql());
+
+        return select_statement_context;
+    }
+
+    @Override
     public String visitSubquery(PlSqlParser.SubqueryContext ctx) {
         if (ctx.subquery_operation_part() != null &&
                 !ctx.subquery_operation_part().isEmpty() &&
@@ -79,9 +97,21 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         return ctx.getText();
     }
 
+    @Override
+    public String visitSubquery_operation_part(PlSqlParser.Subquery_operation_partContext ctx) {
+        String ret = visitSubquery_basic_elements(ctx.subquery_basic_elements());
+        Expression selectExpression2 = this.expressions.pop();
+        Expression selectExpression1 = this.expressions.pop();
+        Expression unionExpression = Expression.union(selectExpression1,selectExpression2);
+        this.expressions.push(unionExpression);
+        return ret;
+    }
+
     private Stack<String> tableRefs = new Stack<>();
     private Stack<Node> columnSrc = new Stack<>();
     private Stack<Expression> expressions = new Stack<>();
+    private Stack<Scheme> projections = new Stack<>();
+    private Stack<RenameMap> renames = new Stack<>();
     private Map<PlSqlParser.Query_blockContext, Integer> tableRefsSize = new HashMap<>();
     @Override
     public String visitQuery_block(PlSqlParser.Query_blockContext ctx) {
@@ -123,30 +153,34 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             this.curDstTableName = tableSrc.peek().name;
 
         if (ctx.selected_list() != null) {
+            this.projections.push(new Scheme());
+            this.renames.push(new RenameMap());
             this.tableRefsSize.put(ctx, tableRefsOldSize);
+
             visitSelected_list(ctx.selected_list());
+
             this.tableRefsSize.remove(ctx);
+            RenameMap rename = this.renames.pop();
+            Scheme projection = this.projections.pop();
 
             // Expression Generate
-            Expression expression = this.expressions.pop();
-            Graph.Table curDstTable = this.graph.getTable(this.curDstTableName);
-            Expression projectExpression = Expression.projection(curDstTable.allScheme(),expression);
-            this.expressions.push(projectExpression);
+            // projection
+            if(!projection.isEmpty()) {
+                Expression expression = this.expressions.pop();
+                Expression projectExpression = Expression.projection(projection, expression);
+                this.expressions.push(projectExpression);
+            }
+            // rename
+            if(!rename.isEmpty()) {
+                Expression expression = this.expressions.pop();
+                Expression renameExpression = Expression.rename(rename, expression);
+                this.expressions.push(renameExpression);
+            }
         }
 
         while(tableRefs.size() > tableRefsOldSize) tableRefs.pop();
 
-        String query_block_context = Tools.getFullContext(ctx);
-
-        // Expression Inverse
-        Expression expression = this.expressions.peek();
-        Graph.Table targetTable = this.graph.getTable(this.curDstTableName);
-        CKTuples pSet = targetTable.getCKTuples();
-        CKTuples inverseResults = expression.inverse(pSet);
-        logger.info("sql: " + query_block_context);
-        logger.info("inverse: " + inverseResults.toSql());
-
-        return query_block_context;
+        return Tools.getFullContext(ctx);
     }
     @Override
     public String visitSelected_list(PlSqlParser.Selected_listContext ctx) {
@@ -179,11 +213,21 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             }
         }
         else if(ctx.expression() != null) {
-            visitExpression(ctx.expression());
+            String columnName = visitExpression(ctx.expression());
             Node srcColumn = columnSrc.pop();
 
-            if (ctx.column_alias() != null)
-                visitColumn_alias(ctx.column_alias());
+            // Expression Generate : projection
+            Graph.Table table = this.graph.getTable(this.curDstTableName);
+            Graph.Column sourceColumn = Graph.Column.parseColumnName(this.graph, columnName, table).getRight();
+            this.projections.peek().add(sourceColumn);
+
+            if (ctx.column_alias() != null) {
+                String columnAliasName = visitColumn_alias(ctx.column_alias());
+                // Expression Generate : rename
+                table = this.graph.getTable(this.curDstTableName);
+                Graph.Column destinationColumn = Graph.Column.parseColumnName(this.graph, columnAliasName, table).getRight();
+                this.renames.peek().add(sourceColumn, destinationColumn);
+            }
             else if(srcColumn.nodeType == NodeType.COLUMN)
                 columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + srcColumn.name.split(":")[1]));
             else
@@ -243,10 +287,15 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
     @Override
     public String visitColumn_alias(PlSqlParser.Column_aliasContext ctx) {
-        if (ctx.identifier() != null)
+        if (ctx.identifier() != null) {
             columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + ctx.identifier().getText()));
-        if (ctx.quoted_string() != null)
+            return ctx.identifier().getText();
+        }
+        if (ctx.quoted_string() != null) {
             columnSrc.add(new Node(NodeType.QUOTED_STRING, ctx.quoted_string().getText()));
+            return ctx.quoted_string().getText();
+        }
+
         return ctx.getText();
     }
 
@@ -387,7 +436,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitJoin_clause(PlSqlParser.Join_clauseContext ctx) {
         visitTable_ref_aux(ctx.table_ref_aux());
 
-        // Expression Generate
+        // Expression Generate : joinExpression
         Expression table2 = this.expressions.pop();
         Expression table1 = this.expressions.pop();
         Expression joinExpression = Expression.production(table1,table2);
@@ -409,6 +458,13 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             for (PlSqlParser.Join_on_partContext join_on_ctx : ctx.join_on_part())
                 condition.append(Tools.getFullContext(join_on_ctx.condition()));
 
+
+        // Expression Generate : joinOnExpression
+        if(!condition.isEmpty()) {
+            joinExpression = this.expressions.pop();
+            Expression joinOnExpression = Expression.selection(new Constraint(condition.toString()), joinExpression);
+            this.expressions.push(joinOnExpression);
+        }
         return joinType + "@" + condition;
     }
 

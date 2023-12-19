@@ -57,6 +57,10 @@ public class Scheme {
         return this.columnNames.contains(columnName);
     }
 
+    public boolean isEmpty() {
+        return this.columns.isEmpty();
+    }
+
     @Override
     public boolean equals(Object obj) {
         //自反性

@@ -127,8 +127,8 @@ public class ExpressionTest {
         // check Sqls
         List<String> resultSqls = results.toSql();
         Assert.assertEquals(2 ,resultSqls.size());
-        Assert.assertEquals("SELECT A FROM R1 WHERE (A = R3.A) AND (B = b);", resultSqls.get(0));
-        Assert.assertEquals("SELECT C FROM R2 WHERE (C = R3.C) AND (B = b);", resultSqls.get(1));
+        Assert.assertEquals("SELECT R1.A, R1.B FROM R1 WHERE (R1.A = R3.A) AND (B = b);", resultSqls.get(0));
+        Assert.assertEquals("SELECT R2.C, R2.B FROM R2 WHERE (R2.C = R3.C) AND (B = b);", resultSqls.get(1));
     }
 
     @Test
@@ -160,8 +160,7 @@ public class ExpressionTest {
         Graph.Column gj = c.getColumn("GJ");
 
         CKTuples target = new CKTuples(new KTuple(c, c.getTuple()), new Constraint(""));
-        CKTuples results = this.expression2.inverse(target);
-        results.simplifyConstraints();
+        CKTuples results = this.expression2.inverse(target).simplifyConstraints();
 
         // check CKTuples
         Assert.assertEquals(results.getCkTuples().size(),4);
@@ -255,6 +254,85 @@ public class ExpressionTest {
                 ");\n";
         String selectSql = "SELECT A,C FROM R1 JOIN R2 WHERE B=b;";
         PlSqlVisitor visitor = testExpression(createR1Sql+createR2Sql+createR3Sql+selectSql,"R3");
+    }
+
+    @Test
+    public void testExpression1() {
+        String createA1Sql =
+                "create table A1 (\n" +
+                "  A11 VARCHAR2(255),\n" +
+                "  A12 VARCHAR2(255),\n" +
+                "  A13 VARCHAR2(255),\n" +
+                "  A14 VARCHAR2(255),\n" +
+                "  A15 VARCHAR2(255),\n" +
+                "  A16 VARCHAR2(255),\n" +
+                "  B11 VARCHAR2(255)\n" +
+                ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
+                "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
+                ");\n";
+        String createA2Sql =
+                "create table A2 (\n" +
+                "  A21 VARCHAR2(255),\n" +
+                "  A22 VARCHAR2(255),\n" +
+                "  A23 VARCHAR2(255),\n" +
+                "  A24 VARCHAR2(255),\n" +
+                "  A25 VARCHAR2(255),\n" +
+                "  A26 VARCHAR2(255),\n" +
+                "  B21 VARCHAR2(255)\n" +
+                ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
+                "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
+                ");\n";
+        String createBSql =
+                "create table B (\n" +
+                "  B01 VARCHAR2(255),\n" +
+                "  B02 VARCHAR2(255),\n" +
+                "  B03 VARCHAR2(255),\n" +
+                "  B04 VARCHAR2(255)\n" +
+                ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
+                "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
+                ");\n";
+        String createCSql =
+                "create table C (\n" +
+                "  GH VARCHAR2(255),\n" +
+                "  XM VARCHAR2(255),\n" +
+                "  GJ VARCHAR2(255)\n" +
+                ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
+                "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
+                ");\n";
+        String selectUnionSql =
+                "SELECT\n" +
+                "  A1.A11 AS GH, /*工号*/\n" +
+                "  A1.A12 AS XM, /*姓名*/\n" +
+                "  A1.A13 AS GJ  /*国籍*/\n" +
+                "FROM\n" +
+                "  A1 /*在职人员基本信息*/\n" +
+                "  JOIN B /*机构基本情况*/\n" +
+                "  ON A1.B11 = B.B01\n" +
+                "  AND B.B02 <= '#{ETL_DT}'\n" +
+                "  AND B.B03 > '#{ETL_DT}'\n" +
+                "WHERE\n" +
+                "  LENGTH (NVL (A1.A11, '')) > 0 /*员工编号有值的数据*/\n" +
+                "  AND A1.A14 <= '#{ETL_DT}'\n" +
+                "  AND A1.A15 > '#{ETL_DT}'\n" +
+                "\n" +
+                "UNION ALL --从减员人员基本信息表中获取除了状态为'非正常在岗'的人员信息\n" +
+                "\n" +
+                "SELECT\n" +
+                "  A2.A21 AS GH, /*工号*/\n" +
+                "  A2.A22 AS XM, /*姓名*/\n" +
+                "  A2.A23 AS GJ  /*国籍*/\n" +
+                "FROM\n" +
+                "  A2\n" +
+                "  JOIN B /*机构基本情况*/\n" +
+                "  ON A2.B21 = B.B01\n" +
+                "  AND B.B02 <= '#{ETL_DT}'\n" +
+                "  AND B.B03 > '#{ETL_DT}'\n" +
+                "WHERE\n" +
+                "  LENGTH (NVL (A2.A21, '')) > 0 /*员工编号有值的数据*/\n" +
+                "  AND A2.A24 <= '#{ETL_DT}'\n" +
+                "  AND A2.A25 > '#{ETL_DT}'\n" +
+                "  AND A2.A26 <> '0101';";
+        PlSqlVisitor visitor = testExpression(createA1Sql+createA2Sql+createBSql+createCSql+selectUnionSql,"C");
     }
 
     private PlSqlVisitor testExpression(String sql, String dstTableName) {

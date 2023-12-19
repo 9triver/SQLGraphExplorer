@@ -18,6 +18,9 @@ public class RenameMap {
         return maps.inverse().get(dst);
     }
 
+    public boolean isEmpty() {
+        return this.maps.isEmpty();
+    }
     @Override
     public String toString() {
         return "RenameMap{" +
