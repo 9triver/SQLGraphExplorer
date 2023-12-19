@@ -1,5 +1,6 @@
 package cn.edu.nju.expression;
 
+import cn.edu.nju.PlSqlVisitor;
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
 import cn.edu.nju.expression.cktuple.KTuple;
@@ -7,11 +8,18 @@ import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
+import grammar.PlSqlLexer;
+import grammar.PlSqlParser;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ExpressionTest {
@@ -95,8 +103,9 @@ public class ExpressionTest {
         Graph.Column r3c = r3.getColumn("C");
         CKTuples target = new CKTuples(new KTuple(r3, r3.getTuple()), new Constraint(""));
         CKTuples results = this.expression1.inverse(target);
-        Assert.assertEquals(results.getCkTuples().size(),2);
 
+        // Check CKTuples
+        Assert.assertEquals(2, results.getCkTuples().size());
         CKTuple ckTuple1 = results.getCkTuples().get(0);
         CKTuple ckTuple2 = results.getCkTuples().get(1);
         KTuple kTuple1 = ckTuple1.getKTuple();
@@ -114,6 +123,12 @@ public class ExpressionTest {
         Assert.assertEquals(r2.allScheme(),kTuple2.allScheme());
         Assert.assertEquals(exceptedKTuple1, kTuple1);
         Assert.assertEquals(exceptedKTuple2, kTuple2);
+
+        // check Sqls
+        List<String> resultSqls = results.toSql();
+        Assert.assertEquals(2 ,resultSqls.size());
+        Assert.assertEquals("SELECT A FROM R1 WHERE (A = R3.A) AND (B = b);", resultSqls.get(0));
+        Assert.assertEquals("SELECT C FROM R2 WHERE (C = R3.C) AND (B = b);", resultSqls.get(1));
     }
 
     @Test
@@ -147,8 +162,9 @@ public class ExpressionTest {
         CKTuples target = new CKTuples(new KTuple(c, c.getTuple()), new Constraint(""));
         CKTuples results = this.expression2.inverse(target);
         results.simplifyConstraints();
-        Assert.assertEquals(results.getCkTuples().size(),4);
 
+        // check CKTuples
+        Assert.assertEquals(results.getCkTuples().size(),4);
         for(CKTuple ckTuple : results.getCkTuples()) {
             KTuple kTuple = ckTuple.getKTuple();
             Constraint constraint = ckTuple.getConstraint();
@@ -209,5 +225,49 @@ public class ExpressionTest {
                 default -> Assert.fail();
             }
         }
+
+        // check Sqls
+        List<String> resultSqls = results.toSql();
+        Assert.assertEquals(2 ,resultSqls.size());
+        Assert.assertEquals("SELECT A1.A11, A1.A13, A1.B11, A1.A15, A1.A14, A1.A16, A1.A12 FROM A1 WHERE (A1.A11 = C.GH) AND (A1.A13 = C.GJ) AND (A1.A12 = C.XM) AND (LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}') AND (A1.A15 > '#{ETL_DT}');", resultSqls.get(0));
+        Assert.assertEquals("SELECT A2.A22, A2.A21, A2.A23, A2.B21, A2.A25, A2.A24, A2.A26 FROM A2 WHERE (A2.A22 = C.XM) AND (A2.A21 = C.GH) AND (A2.A23 = C.GJ) AND (LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}') AND (A2.A25 > '#{ETL_DT}') AND (A2.A26 <> '0101');", resultSqls.get(1));
+    }
+
+    @Test
+    public void testExpression0() {
+        String createR1Sql = "create table R1 (\n" +
+                "  A VARCHAR2(255),\n" +
+                "  B VARCHAR2(255)\n" +
+                ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
+                "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
+                ");\n";
+        String createR2Sql = "create table R2 (\n" +
+                "  B VARCHAR2(255),\n" +
+                "  C VARCHAR2(255)\n" +
+                ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
+                "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
+                ");\n";
+        String createR3Sql = "create table R3 (\n" +
+                "  A VARCHAR2(255),\n" +
+                "  C VARCHAR2(255)\n" +
+                ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
+                "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
+                ");\n";
+        String selectSql = "SELECT A,C FROM R1 JOIN R2 WHERE B=b;";
+        PlSqlVisitor visitor = testExpression(createR1Sql+createR2Sql+createR3Sql+selectSql,"R3");
+    }
+
+    private PlSqlVisitor testExpression(String sql, String dstTableName) {
+        PlSqlLexer lexer = new PlSqlLexer(CharStreams.fromString(sql));
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        PlSqlParser parser = new PlSqlParser(tokens);
+        PlSqlParser.Sql_scriptContext rootContext = parser.sql_script();
+        PlSqlVisitor visitor;
+        if(dstTableName==null)
+            visitor = new PlSqlVisitor();
+        else
+            visitor = new PlSqlVisitor(dstTableName);
+        visitor.visitSql_script(rootContext);
+        return visitor;
     }
 }

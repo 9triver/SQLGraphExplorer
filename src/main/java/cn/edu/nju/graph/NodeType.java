@@ -1,6 +1,8 @@
 package cn.edu.nju.graph;
 
-public enum NodeType {
+import java.io.Serializable;
+
+public enum NodeType implements Serializable {
     JOIN,
     WHERE,
     GROUP_BY,

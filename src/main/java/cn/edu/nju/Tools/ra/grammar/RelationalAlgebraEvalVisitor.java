@@ -3,9 +3,9 @@ package cn.edu.nju.tools.ra.grammar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
+import cn.edu.nju.tools.Tools;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 import cn.edu.nju.tools.ra.adt.Attribute;
@@ -503,8 +503,29 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 		String comparator = (String) visit(ctx.comparator());
 		return "(" + left + " " + comparator + " " + right + ")";
 	}
-	
-	@Override 
+
+	@Override
+	public String visitFuncCondlist(RelationalAlgebraParser.FuncCondlistContext ctx) {
+		return visitFunction(ctx.function());
+	}
+
+	@Override
+	public String visitAtomCondlist(RelationalAlgebraParser.AtomCondlistContext ctx) {
+		return Tools.getFullContext(ctx);
+	}
+
+	@Override
+	public String visitFunction(RelationalAlgebraParser.FunctionContext ctx) {
+		StringBuilder functionStr = new StringBuilder(ctx.funcName.getText() + '(');
+		List<RelationalAlgebraParser.CondlistContext> condlist = ctx.condlist();
+		functionStr.append(visit(condlist.get(0)));
+		for(int i = 1; i < condlist.size(); ++i)
+			functionStr.append(',').append(visit(condlist.get(i)));
+		functionStr.append(')');
+		return functionStr.toString();
+	}
+
+	@Override
 	public String visitEqual(RelationalAlgebraParser.EqualContext ctx) {
 		return "=";
 	}
@@ -553,7 +574,12 @@ public class RelationalAlgebraEvalVisitor extends RelationalAlgebraBaseVisitor<S
 	public String visitNumberFromCompared(RelationalAlgebraParser.NumberFromComparedContext ctx) {
 		return ctx.NUMBER().getText();
 	}
-	
+
+	@Override
+	public String visitFunctionFromCompared(RelationalAlgebraParser.FunctionFromComparedContext ctx) {
+		return visitFunction(ctx.function());
+	}
+
 	@Override
 	public String visitRelationIdentifier(RelationalAlgebraParser.RelationIdentifierContext ctx) {
 		return ctx.IDENTIFIER().getText();

@@ -197,6 +197,18 @@ public class RelationalAlgebraBaseListener implements RelationalAlgebraListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAtomCondlist(RelationalAlgebraParser.AtomCondlistContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAtomCondlist(RelationalAlgebraParser.AtomCondlistContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBracketsCondlist(RelationalAlgebraParser.BracketsCondlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -233,6 +245,18 @@ public class RelationalAlgebraBaseListener implements RelationalAlgebraListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFuncCondlist(RelationalAlgebraParser.FuncCondlistContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFuncCondlist(RelationalAlgebraParser.FuncCondlistContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAndCondlist(RelationalAlgebraParser.AndCondlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -252,6 +276,18 @@ public class RelationalAlgebraBaseListener implements RelationalAlgebraListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitOrCondlist(RelationalAlgebraParser.OrCondlistContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunction(RelationalAlgebraParser.FunctionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunction(RelationalAlgebraParser.FunctionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -360,6 +396,18 @@ public class RelationalAlgebraBaseListener implements RelationalAlgebraListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitNumberFromCompared(RelationalAlgebraParser.NumberFromComparedContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunctionFromCompared(RelationalAlgebraParser.FunctionFromComparedContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunctionFromCompared(RelationalAlgebraParser.FunctionFromComparedContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

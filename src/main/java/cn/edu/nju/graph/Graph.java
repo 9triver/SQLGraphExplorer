@@ -2,6 +2,9 @@ package cn.edu.nju.graph;
 
 import cn.edu.nju.PlSqlVisitor;
 import cn.edu.nju.expression.Scheme;
+import cn.edu.nju.expression.cktuple.CKTuples;
+import cn.edu.nju.expression.cktuple.KTuple;
+import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.json.GraphJSON;
@@ -58,6 +61,9 @@ public class Graph implements Serializable{
                 ret.add(new ColumnNode(column, column));
             return ret;
         }
+        public CKTuples getCKTuples() {
+            return new CKTuples(new KTuple(this, this.getTuple()), new Constraint(""));
+        }
         public Graph.Column getColumn(String columnName) {
             return this.columnNameMapper.get(columnName);
         }
@@ -75,9 +81,7 @@ public class Graph implements Serializable{
 
         @Override
         public String toString() {
-            return "Table{" +
-                    "tableName='" + tableName + '\'' +
-                    '}';
+            return tableName;
         }
 
         @Override

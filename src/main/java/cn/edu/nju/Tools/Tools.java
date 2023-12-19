@@ -111,7 +111,7 @@ public class Tools {
 
 
     private static RelationalAlgebraInterpreter interpreter = new RelationalAlgebraInterpreter(new Database("defaultDatabase"));
-    public static String translateFromRA2Sql(String relationalAlgebraInput) {
+    public static String translateFromRA2Sql(String relationalAlgebraInput){
         return interpreter.translate(relationalAlgebraInput);
     }
 }

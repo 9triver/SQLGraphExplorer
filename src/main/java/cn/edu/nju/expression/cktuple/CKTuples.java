@@ -80,6 +80,16 @@ public class CKTuples {
             p.simplifyConstraint();
     }
 
+    public List<String> toSql() {
+        List<String> sqls = new ArrayList<>();
+        for(CKTuple ckTuple : this.ckTuples) {
+            try {
+                sqls.add(ckTuple.toSql());
+            } catch (Exception e) {}
+        }
+        return sqls;
+    }
+
     public int size() {
         return this.ckTuples.size();
     }

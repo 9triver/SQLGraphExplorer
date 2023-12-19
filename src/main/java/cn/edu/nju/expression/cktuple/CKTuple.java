@@ -6,11 +6,9 @@ import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
+import cn.edu.nju.tools.Tools;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CKTuple {
     private final KTuple kTuple;
@@ -89,10 +87,43 @@ public class CKTuple {
         this.constraint.simplify(this.kTuple.getTable());
     }
 
-    public String toSql(Graph.Table dstTable) {
-        // TODO : CKTuple -> sql, 很困难，感觉这CKTuple的结构要改一下
-        return "";
+    public String toSql() {
+        // TODO : CKTuple -> sql
+        return Tools.translateFromRA2Sql(this.toRA());
     }
+
+    private String toRA() {
+        StringBuilder
+                ra = new StringBuilder(),
+                matchCondition = new StringBuilder(),
+                projectionList = new StringBuilder();
+        Graph.Table srcTable = this.kTuple.getTable();
+        Set<TupleBaseNode> tuple = this.kTuple.getTuple();
+        for(TupleBaseNode node : tuple) {
+            if(node instanceof ColumnNode columnNode) {
+                String fullColumnName = columnNode.getColumn().toString();
+                String fullColumnSchemaName = columnNode.getColumnScheme().toString();
+
+                projectionList.append(fullColumnSchemaName).append(",");
+                if(fullColumnName.equals(fullColumnSchemaName))
+                    continue;
+                matchCondition.append(fullColumnSchemaName).append("=").append(fullColumnName).append(" AND ");
+            }
+        }
+        if(matchCondition.isEmpty())
+            return null;
+
+        matchCondition.delete(matchCondition.length()-" AND ".length(), matchCondition.length());
+        projectionList.delete(projectionList.length()-1,projectionList.length());
+        matchCondition.insert(0,"(").append(")");
+        projectionList.insert(0,"[").append("]");
+
+        Constraint combinedConstraint = Constraint.and(new Constraint(matchCondition.toString()), this.constraint);
+        return ra.append("project").append(projectionList).
+                append("(select[").append(combinedConstraint).append("](").
+                append(srcTable.toString()).append("));").toString();
+    }
+
     public KTuple getKTuple() {
         return kTuple;
     }

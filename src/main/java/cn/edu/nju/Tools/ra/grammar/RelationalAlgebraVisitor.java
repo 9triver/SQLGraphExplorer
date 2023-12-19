@@ -115,6 +115,13 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAttributeList(RelationalAlgebraParser.AttributeListContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code atomCondlist}
+	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAtomCondlist(RelationalAlgebraParser.AtomCondlistContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code bracketsCondlist}
 	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
 	 * @param ctx the parse tree
@@ -136,6 +143,13 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitComparedCondlist(RelationalAlgebraParser.ComparedCondlistContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code funcCondlist}
+	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFuncCondlist(RelationalAlgebraParser.FuncCondlistContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code andCondlist}
 	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
 	 * @param ctx the parse tree
@@ -149,6 +163,12 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitOrCondlist(RelationalAlgebraParser.OrCondlistContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link RelationalAlgebraParser#function}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction(RelationalAlgebraParser.FunctionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code equal}
 	 * labeled alternative in {@link RelationalAlgebraParser#comparator}.
@@ -212,6 +232,13 @@ public interface RelationalAlgebraVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitNumberFromCompared(RelationalAlgebraParser.NumberFromComparedContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code functionFromCompared}
+	 * labeled alternative in {@link RelationalAlgebraParser#compared}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionFromCompared(RelationalAlgebraParser.FunctionFromComparedContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code relationIdentifier}
 	 * labeled alternative in {@link RelationalAlgebraParser#relation}.

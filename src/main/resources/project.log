@@ -3659,3 +3659,545 @@
 [DEBUG][2023-12-16 20:51:52,622][cn.edu.nju.expression.Expression]op: UNION
 [DEBUG][2023-12-16 20:51:52,622][cn.edu.nju.expression.Expression]size: 4
 [DEBUG][2023-12-16 20:51:52,622][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 12:15:17,735][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:15:17,742][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:15:17,743][cn.edu.nju.expression.Expression]tables: [R1]
+[DEBUG][2023-12-19 12:15:17,743][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:15:17,743][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:15:17,743][cn.edu.nju.expression.Expression]tables: [R2]
+[DEBUG][2023-12-19 12:15:17,743][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:15:17,744][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:15:17,744][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[DEBUG][2023-12-19 12:15:17,744][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:15:17,744][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:15:17,744][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[DEBUG][2023-12-19 12:15:17,744][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:15:17,745][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:15:17,745][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[DEBUG][2023-12-19 12:20:58,115][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:20:58,121][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:20:58,122][cn.edu.nju.expression.Expression]tables: [R1]
+[DEBUG][2023-12-19 12:20:58,122][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:20:58,123][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:20:58,123][cn.edu.nju.expression.Expression]tables: [R2]
+[DEBUG][2023-12-19 12:20:58,124][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:20:58,125][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:20:58,126][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[DEBUG][2023-12-19 12:20:58,126][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:20:58,126][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:20:58,126][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[DEBUG][2023-12-19 12:20:58,127][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:20:58,127][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:20:58,127][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[DEBUG][2023-12-19 12:33:11,644][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:33:11,650][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:33:11,650][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 12:33:11,651][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:33:11,651][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:33:11,651][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:33:11,651][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:33:11,651][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,652][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:33:11,652][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:33:11,652][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,653][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:33:11,653][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:33:11,653][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,653][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:33:11,653][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:33:11,655][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,656][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:33:11,656][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:33:11,656][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,656][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:33:11,668][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:33:11,669][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:33:11,669][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 12:33:11,670][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:33:11,670][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:33:11,670][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:33:11,670][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:33:11,671][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,671][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:33:11,671][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:33:11,672][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,672][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:33:11,672][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:33:11,672][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,673][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:33:11,673][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:33:11,673][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,673][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:33:11,674][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:33:11,674][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:33:11,674][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:33:11,675][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 12:33:11,675][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 12:33:11,675][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 12:37:09,880][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:37:09,887][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:37:09,887][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 12:37:09,888][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:37:09,888][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:37:09,888][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:37:09,888][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:37:09,889][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,889][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:09,889][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:37:09,889][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,889][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:09,889][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:37:09,890][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,890][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:09,890][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:37:09,891][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,892][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:09,892][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:37:09,892][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,892][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:09,904][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:37:09,905][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:37:09,905][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 12:37:09,905][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:37:09,906][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:37:09,906][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:37:09,906][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:37:09,906][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,906][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:09,907][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:37:09,907][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,907][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:09,907][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:37:09,908][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,908][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:09,908][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:37:09,908][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,908][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:09,909][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:37:09,909][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:09,909][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:09,910][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 12:37:09,910][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 12:37:09,910][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 12:37:33,418][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:37:33,424][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:37:33,424][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 12:37:33,425][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:37:33,425][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:37:33,425][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:37:33,425][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:37:33,426][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,426][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:33,426][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:37:33,426][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,426][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:33,427][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:37:33,427][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,427][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:33,427][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:37:33,429][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,429][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:33,429][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:37:33,429][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,430][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:37:33,444][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:37:33,445][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:37:33,445][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 12:37:33,445][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:37:33,446][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:37:33,446][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:37:33,446][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:37:33,446][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,446][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:33,447][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:37:33,447][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,447][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:33,447][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:37:33,447][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,448][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:33,448][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:37:33,448][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,448][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:33,449][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:37:33,449][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:37:33,449][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:37:33,450][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 12:37:33,450][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 12:37:33,450][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 12:39:57,669][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:39:57,681][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:39:57,682][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 12:39:57,682][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:39:57,683][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:39:57,683][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:39:57,683][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:39:57,683][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,684][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:39:57,684][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:39:57,684][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,685][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:39:57,685][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:39:57,685][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,685][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:39:57,686][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:39:57,687][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,688][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:39:57,688][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:39:57,688][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,689][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:39:57,702][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:39:57,702][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:39:57,703][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 12:39:57,703][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:39:57,704][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:39:57,704][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:39:57,704][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:39:57,704][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,705][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:39:57,705][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:39:57,705][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,705][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:39:57,706][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:39:57,706][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,706][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:39:57,706][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:39:57,706][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,707][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:39:57,707][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:39:57,707][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:39:57,707][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:39:57,707][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 12:39:57,707][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 12:39:57,708][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 12:45:24,728][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:45:24,733][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:45:24,733][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 12:45:24,734][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:45:24,734][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:45:24,734][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:45:24,734][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:45:24,734][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,735][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:24,735][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:45:24,735][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,735][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:24,735][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:45:24,735][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,736][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:24,736][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:45:24,737][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,737][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:24,737][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:45:24,738][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,738][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:24,751][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:45:24,751][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:45:24,752][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 12:45:24,752][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:45:24,752][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:45:24,752][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:45:24,753][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:45:24,753][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,753][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:24,753][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:45:24,754][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,754][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:24,754][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:45:24,754][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,755][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:24,755][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:45:24,755][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,755][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:24,756][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:45:24,756][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:24,756][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:24,756][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 12:45:24,756][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 12:45:24,757][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 12:45:50,798][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:45:50,803][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:45:50,804][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 12:45:50,804][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:45:50,804][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:45:50,805][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:45:50,805][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:45:50,805][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,805][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:50,805][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:45:50,806][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,806][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:50,806][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:45:50,806][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,806][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:50,807][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:45:50,808][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,808][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:50,808][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:45:50,808][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,808][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:45:50,820][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:45:50,820][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:45:50,821][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 12:45:50,821][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:45:50,821][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:45:50,822][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:45:50,822][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:45:50,822][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,822][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:50,822][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:45:50,823][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,823][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:50,823][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:45:50,823][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,824][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:50,824][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:45:50,824][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,824][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:50,824][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:45:50,825][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:45:50,825][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:45:50,825][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 12:45:50,825][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 12:45:50,826][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 12:46:40,790][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:46:40,795][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:46:40,796][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 12:46:40,796][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:46:40,797][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:46:40,797][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:46:40,797][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:46:40,798][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,798][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:46:40,798][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:46:40,798][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,799][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:46:40,799][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:46:40,799][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,799][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:46:40,799][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:46:40,801][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,801][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:46:40,801][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:46:40,801][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,801][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 12:46:40,813][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:46:40,814][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:46:40,814][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 12:46:40,814][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 12:46:40,814][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 12:46:40,814][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 12:46:40,815][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 12:46:40,815][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,815][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:46:40,815][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:46:40,816][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,816][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:46:40,816][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 12:46:40,816][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,816][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:46:40,816][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 12:46:40,816][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,817][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:46:40,817][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 12:46:40,817][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 12:46:40,818][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 12:46:40,818][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 12:46:40,819][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 12:46:40,819][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 13:06:19,065][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:06:19,073][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:06:19,074][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 13:06:19,075][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:06:19,076][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:06:19,076][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 13:06:19,076][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 13:06:19,077][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,077][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:06:19,077][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:06:19,078][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,078][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:06:19,078][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:06:19,078][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,079][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:06:19,079][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 13:06:19,082][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,082][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:06:19,082][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 13:06:19,083][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,083][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:06:19,106][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:06:19,106][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:06:19,106][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 13:06:19,107][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:06:19,107][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:06:19,107][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 13:06:19,108][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 13:06:19,109][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,110][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:06:19,110][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:06:19,110][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,111][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:06:19,111][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:06:19,112][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,112][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:06:19,113][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 13:06:19,113][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,113][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:06:19,114][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 13:06:19,114][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:06:19,114][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:06:19,114][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 13:06:19,115][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 13:06:19,115][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 13:17:28,814][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:17:28,824][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:17:28,825][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 13:17:28,825][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:17:28,825][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:17:28,825][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 13:17:28,826][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 13:17:28,826][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,826][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:17:28,827][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:17:28,827][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,827][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:17:28,827][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:17:28,828][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,828][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:17:28,828][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 13:17:28,829][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,829][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:17:28,830][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 13:17:28,830][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,830][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:17:28,843][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:17:28,843][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:17:28,843][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 13:17:28,843][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:17:28,844][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:17:28,844][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 13:17:28,844][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 13:17:28,844][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,845][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:17:28,845][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:17:28,845][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,845][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:17:28,845][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:17:28,846][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,846][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:17:28,846][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 13:17:28,846][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,847][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:17:28,847][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 13:17:28,847][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:17:28,847][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:17:28,848][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 13:17:28,848][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 13:17:28,848][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 13:20:45,372][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:20:45,382][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:20:45,382][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 13:20:45,382][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:20:45,383][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:20:45,383][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 13:20:45,383][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 13:20:45,383][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,383][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:20:45,384][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:20:45,384][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,384][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:20:45,384][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:20:45,385][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,385][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:20:45,385][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 13:20:45,387][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,387][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:20:45,387][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 13:20:45,387][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,387][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:20:45,401][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:20:45,402][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:20:45,403][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 13:20:45,403][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:20:45,403][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:20:45,403][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 13:20:45,403][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 13:20:45,404][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,404][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:20:45,404][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:20:45,404][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,404][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:20:45,404][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:20:45,405][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,406][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:20:45,406][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 13:20:45,406][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,406][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:20:45,406][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 13:20:45,406][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:20:45,407][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:20:45,407][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 13:20:45,407][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 13:20:45,407][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 13:22:19,125][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:22:19,130][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:22:19,131][cn.edu.nju.expression.Expression]tables: [A1]
+[DEBUG][2023-12-19 13:22:19,131][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:22:19,131][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:22:19,132][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 13:22:19,132][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 13:22:19,132][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,132][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:22:19,132][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:22:19,133][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,133][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:22:19,133][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:22:19,133][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,133][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:22:19,134][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 13:22:19,134][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,135][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:22:19,135][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 13:22:19,135][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,135][cn.edu.nju.expression.Expression]tables: [A1, B]
+[DEBUG][2023-12-19 13:22:19,147][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:22:19,148][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:22:19,148][cn.edu.nju.expression.Expression]tables: [A2]
+[DEBUG][2023-12-19 13:22:19,149][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 13:22:19,149][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 13:22:19,149][cn.edu.nju.expression.Expression]tables: [B]
+[DEBUG][2023-12-19 13:22:19,149][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 13:22:19,150][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,150][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:22:19,150][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:22:19,150][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,151][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:22:19,151][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 13:22:19,151][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,151][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:22:19,151][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 13:22:19,152][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,152][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:22:19,152][cn.edu.nju.expression.Expression]op: RENAME
+[DEBUG][2023-12-19 13:22:19,152][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 13:22:19,152][cn.edu.nju.expression.Expression]tables: [A2, B]
+[DEBUG][2023-12-19 13:22:19,152][cn.edu.nju.expression.Expression]op: UNION
+[DEBUG][2023-12-19 13:22:19,152][cn.edu.nju.expression.Expression]size: 4
+[DEBUG][2023-12-19 13:22:19,153][cn.edu.nju.expression.Expression]tables: [A1, B, A2, B]
+[DEBUG][2023-12-19 15:06:16,275][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 15:06:16,297][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 15:06:16,299][cn.edu.nju.expression.Expression]tables: [R1]
+[DEBUG][2023-12-19 15:06:17,962][cn.edu.nju.expression.Expression]op: ATOM
+[DEBUG][2023-12-19 15:06:17,963][cn.edu.nju.expression.Expression]size: 1
+[DEBUG][2023-12-19 15:06:17,964][cn.edu.nju.expression.Expression]tables: [R2]
+[DEBUG][2023-12-19 15:06:18,543][cn.edu.nju.expression.Expression]op: CARTESIAN_PRODUCTION
+[DEBUG][2023-12-19 15:06:18,544][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 15:06:18,545][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[DEBUG][2023-12-19 15:06:18,970][cn.edu.nju.expression.Expression]op: SELECTION
+[DEBUG][2023-12-19 15:06:18,971][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 15:06:18,972][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[DEBUG][2023-12-19 15:06:20,168][cn.edu.nju.expression.Expression]op: PROJECTION
+[DEBUG][2023-12-19 15:06:20,169][cn.edu.nju.expression.Expression]size: 2
+[DEBUG][2023-12-19 15:06:20,170][cn.edu.nju.expression.Expression]tables: [R1, R2]
+[INFO][2023-12-19 15:06:20,171][cn.edu.nju.PlSqlVisitor]sql: SELECT A,C FROM R1 JOIN R2 WHERE B=b
+[INFO][2023-12-19 15:06:20,300][cn.edu.nju.PlSqlVisitor]inverse: [SELECT R1.A, R1.B FROM R1 WHERE (R1.A = R3.A) AND (B = b);, SELECT R2.C, R2.B FROM R2 WHERE (R2.C = R3.C) AND (B = b);]

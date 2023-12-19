@@ -1,5 +1,9 @@
 package cn.edu.nju;
 
+import cn.edu.nju.expression.Expression;
+import cn.edu.nju.expression.cktuple.CKTuple;
+import cn.edu.nju.expression.cktuple.CKTuples;
+import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.tools.Tools;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.graph.Node;
@@ -16,7 +20,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
-    private static final Logger log = Logger.getLogger(PlSqlVisitor.class);
+    private static final Logger logger = Logger.getLogger(PlSqlVisitor.class);
     private String curDstTableName = "";
     private final Graph graph;
     private static final Map<String, String> realTableNameMapper = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -77,6 +81,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
     private Stack<String> tableRefs = new Stack<>();
     private Stack<Node> columnSrc = new Stack<>();
+    private Stack<Expression> expressions = new Stack<>();
     private Map<PlSqlParser.Query_blockContext, Integer> tableRefsSize = new HashMap<>();
     @Override
     public String visitQuery_block(PlSqlParser.Query_blockContext ctx) {
@@ -102,6 +107,15 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         visitFrom_clause(ctx.from_clause());
         while(this.tableSrc.size() > tableSrcOldSize)
             this.graph.addEdge(this.tableSrc.pop(),dst);
+
+        // Expression Generate
+        if(ctx.where_clause() != null) {
+            String whereCondition = visitWhere_clause(ctx.where_clause());
+            Expression fromExpression = this.expressions.pop();
+            Expression whereExpression = Expression.selection(new Constraint(whereCondition), fromExpression);
+            this.expressions.push(whereExpression);
+        }
+
         // reverse base
         this.tableSrc.pop();
         this.tableSrc.add(base);
@@ -112,10 +126,27 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             this.tableRefsSize.put(ctx, tableRefsOldSize);
             visitSelected_list(ctx.selected_list());
             this.tableRefsSize.remove(ctx);
+
+            // Expression Generate
+            Expression expression = this.expressions.pop();
+            Graph.Table curDstTable = this.graph.getTable(this.curDstTableName);
+            Expression projectExpression = Expression.projection(curDstTable.allScheme(),expression);
+            this.expressions.push(projectExpression);
         }
 
         while(tableRefs.size() > tableRefsOldSize) tableRefs.pop();
-        return ctx.getText();
+
+        String query_block_context = Tools.getFullContext(ctx);
+
+        // Expression Inverse
+        Expression expression = this.expressions.peek();
+        Graph.Table targetTable = this.graph.getTable(this.curDstTableName);
+        CKTuples pSet = targetTable.getCKTuples();
+        CKTuples inverseResults = expression.inverse(pSet);
+        logger.info("sql: " + query_block_context);
+        logger.info("inverse: " + inverseResults.toSql());
+
+        return query_block_context;
     }
     @Override
     public String visitSelected_list(PlSqlParser.Selected_listContext ctx) {
@@ -292,8 +323,11 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         if (ctx.join_clause() != null && !ctx.join_clause().isEmpty()) {
             for (PlSqlParser.Join_clauseContext join_clause_ctx : ctx.join_clause()) {
                 String joinTypeWithCondition = visitJoin_clause(join_clause_ctx);
-                String joinType = joinTypeWithCondition.split("@")[0];
-                String condition = joinTypeWithCondition.split("@")[1];
+                String []joinTypeAndCondition = joinTypeWithCondition.split("@");
+                String joinType = joinTypeAndCondition[0];
+                String condition = "";
+                if(joinTypeAndCondition.length > 1)
+                    condition = joinTypeAndCondition[1];
 
                 Node src1 = tableSrc.pop();
                 Node src2 = tableSrc.pop();
@@ -331,8 +365,14 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
     @Override
     public String visitTableview_name(PlSqlParser.Tableview_nameContext ctx) {
-        tableSrc.add(new Node(NodeType.TABLE, ctx.getText()));
-        return ctx.getText();
+        String tableName = ctx.getText();
+
+        tableSrc.add(new Node(NodeType.TABLE, tableName));
+        graph.createTable(tableName);
+        Expression tableExpression = Expression.table(graph.getTable(tableName));
+        this.expressions.push(tableExpression);
+
+        return tableName;
     }
 
     @Override
@@ -346,6 +386,12 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
      */
     public String visitJoin_clause(PlSqlParser.Join_clauseContext ctx) {
         visitTable_ref_aux(ctx.table_ref_aux());
+
+        // Expression Generate
+        Expression table2 = this.expressions.pop();
+        Expression table1 = this.expressions.pop();
+        Expression joinExpression = Expression.production(table1,table2);
+        this.expressions.push(joinExpression);
 
         String joinType = "";
         if (ctx.CROSS() != null)

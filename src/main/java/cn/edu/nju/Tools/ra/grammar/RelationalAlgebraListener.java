@@ -186,6 +186,18 @@ public interface RelationalAlgebraListener extends ParseTreeListener {
 	 */
 	void exitAttributeList(RelationalAlgebraParser.AttributeListContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code atomCondlist}
+	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
+	 * @param ctx the parse tree
+	 */
+	void enterAtomCondlist(RelationalAlgebraParser.AtomCondlistContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code atomCondlist}
+	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
+	 * @param ctx the parse tree
+	 */
+	void exitAtomCondlist(RelationalAlgebraParser.AtomCondlistContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code bracketsCondlist}
 	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
 	 * @param ctx the parse tree
@@ -222,6 +234,18 @@ public interface RelationalAlgebraListener extends ParseTreeListener {
 	 */
 	void exitComparedCondlist(RelationalAlgebraParser.ComparedCondlistContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code funcCondlist}
+	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
+	 * @param ctx the parse tree
+	 */
+	void enterFuncCondlist(RelationalAlgebraParser.FuncCondlistContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code funcCondlist}
+	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
+	 * @param ctx the parse tree
+	 */
+	void exitFuncCondlist(RelationalAlgebraParser.FuncCondlistContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code andCondlist}
 	 * labeled alternative in {@link RelationalAlgebraParser#condlist}.
 	 * @param ctx the parse tree
@@ -245,6 +269,16 @@ public interface RelationalAlgebraListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitOrCondlist(RelationalAlgebraParser.OrCondlistContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link RelationalAlgebraParser#function}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction(RelationalAlgebraParser.FunctionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link RelationalAlgebraParser#function}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction(RelationalAlgebraParser.FunctionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code equal}
 	 * labeled alternative in {@link RelationalAlgebraParser#comparator}.
@@ -353,6 +387,18 @@ public interface RelationalAlgebraListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitNumberFromCompared(RelationalAlgebraParser.NumberFromComparedContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code functionFromCompared}
+	 * labeled alternative in {@link RelationalAlgebraParser#compared}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionFromCompared(RelationalAlgebraParser.FunctionFromComparedContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code functionFromCompared}
+	 * labeled alternative in {@link RelationalAlgebraParser#compared}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionFromCompared(RelationalAlgebraParser.FunctionFromComparedContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code relationIdentifier}
 	 * labeled alternative in {@link RelationalAlgebraParser#relation}.

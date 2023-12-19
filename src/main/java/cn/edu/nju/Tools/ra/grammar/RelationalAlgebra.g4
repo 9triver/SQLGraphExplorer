@@ -25,12 +25,18 @@ attrlist:   attribute										# attributeFromAttrlist
 	|   attribute ',' attrlist								# attributeList
 ;
 
-condlist:	condlist BOOLEAN_OR condlist					# orCondlist
-	|	condlist BOOLEAN_AND condlist						# andCondlist
-	|	'NOT' condlist										# notCondlist
-	|	'(' condlist ')'									# bracketsCondlist
-	|	compared comparator compared						# comparedCondlist
+condlist:
+        condlist BOOLEAN_OR condlist					      # orCondlist
+	|	condlist BOOLEAN_AND condlist						  # andCondlist
+	|	'NOT' condlist										  # notCondlist
+	|	'(' condlist ')'									  # bracketsCondlist
+	|	compared comparator compared						  # comparedCondlist
+    |   function                                              # funcCondlist
+    |   (STRING | IDENTIFIER | DECIMAL | PUNCTUATION)*        # atomCondlist
 ;
+
+function:
+        funcName=IDENTIFIER '(' condlist (',' condlist)* ')';
 
 comparator: EQUAL				# equal
 	| NOT_EQUAL					# nonEqual
@@ -43,6 +49,7 @@ comparator: EQUAL				# equal
 compared:   attribute		# attributeFromCompared
 	|   STRING				# stringFromCompared
 	|   NUMBER				# numberFromCompared
+	|   function            # functionFromCompared
 ;
 
 relation:   IDENTIFIER		# relationIdentifier
@@ -79,6 +86,8 @@ STRING:			'"' (.)*? '"' | '\'' (.)*? '\'';
 // IDENTIFIER OPTIONALLY LIKE 'TABLE.ATTR'
 IDENTIFIER:  	[a-zA-Z]+([0-9] | [a-zA-Z] | '_')* ('.' ([a-zA-Z]+([0-9] | [a-zA-Z] | '_')*)+ )?;
 NUMBER:    		[0-9]+;
+DECIMAL    :    '-'? [0-9]+ ( '.' [0-9]+ )? ;
+PUNCTUATION:    ','|'.'|'\''|'/'|';'|'['|']'|'-'|'+'|'\\'|'@'|'#'|'$'|'%'|'^'|'&'|'*'|'('|')'|'`'|'~'|'{'|'}';
 WHITESPACES:   	[ \t\r\n]+ -> skip;
 
 // COMMENTS

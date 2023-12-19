@@ -1,8 +1,9 @@
 package cn.edu.nju.graph;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Node {
+public class Node implements Serializable{
     public NodeType nodeType;
     public String name;
 
