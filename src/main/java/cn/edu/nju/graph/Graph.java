@@ -66,6 +66,8 @@ public class Graph implements Serializable{
             return new CKTuples(new KTuple(this, this.getTuple()), new Constraint(""));
         }
         public Graph.Column getColumn(String columnName) {
+            if(!this.columnNameMapper.containsKey(columnName))
+                this.columnNameMapper.put(columnName, new Column(this, columnName));
             return this.columnNameMapper.get(columnName);
         }
 
@@ -117,7 +119,7 @@ public class Graph implements Serializable{
             String []results = columnName.split(":|\\.");
             if(results.length != 2)
                 return Pair.of(null,null);
-            table = graph.getTable(results[0]);
+            table = graph.getTable(PlSqlVisitor.getRealTableName(results[0]));
             return Pair.of(table, table.getColumn(results[1]));
         }
 
@@ -307,7 +309,7 @@ public class Graph implements Serializable{
     int tempTableCount = 0;
 
     public Node addTempTable() {
-        String tableName = "Temp-Table-" + tempTableCount;
+        String tableName = "Temp_Table_" + tempTableCount;
         tempTableCount++;
         createTable(tableName);
         return new Node(NodeType.TABLE, tableName);

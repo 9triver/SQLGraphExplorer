@@ -1,0 +1,112 @@
+/*
+ 修改自：PE5_YGB.sql
+ */
+create table LEDGERREPORT (
+    ID VARCHAR2(255),
+    TERM VARCHAR2(255),
+    LEDGERREPORTTEMPLATE_ID VARCHAR2(255),
+    INSTITUTION_ID VARCHAR2(255)
+) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
+    initial 64K next 1M minextents 1 maxextents unlimited
+);
+
+create table REPORTTEMPLATE (
+    ID VARCHAR2(255),
+    TABLENAME VARCHAR2(255)
+) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
+    initial 64K next 1M minextents 1 maxextents unlimited
+);
+
+create table INSTITUTION (
+    ID VARCHAR2(255),
+    INSTITUTIONID VARCHAR2(255)
+) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
+    initial 64K next 1M minextents 1 maxextents unlimited
+);
+
+create table EAST5_YGB (
+    JRXKZH VARCHAR2(255),
+    NBJGH VARCHAR2(255),
+    YHJGMC VARCHAR2(255),
+    GH VARCHAR2(255),
+    XM VARCHAR2(255),
+    GJ VARCHAR2(255),
+    ZJLB VARCHAR2(255),
+    ZJHM VARCHAR2(255),
+    LXDH VARCHAR2(255),
+    SSBM VARCHAR2(255),
+    GWBH VARCHAR2(255),
+    GWMC VARCHAR2(255),
+    SFGG VARCHAR2(255),
+    PFRQ VARCHAR2(255),
+    RZRQ VARCHAR2(255),
+    YGLX VARCHAR2(255),
+    YGZT VARCHAR2(255),
+    BBZ VARCHAR2(255),
+    CJRQ VARCHAR2(255)
+) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
+    initial 64K next 1M minextents 1 maxextents unlimited
+);
+
+INSERT INTO
+    E5_YGB (
+        REPORTID,
+        JRXKZH,
+        NBJGH,
+        YHJGMC,
+        GH,
+        XM,
+        GJHDQ,
+        ZJLB,
+        ZJHM,
+        LXDH,
+        SSBM,
+        GWBH,
+        GWMC,
+        SFGG,
+        PFRQ,
+        RZRQ,
+        YGLX,
+        YGZT,
+        BBZ,
+        CJRQ
+    )
+SELECT
+    TEMP_TABLE_0.ID AS REPORTID,
+    EAST5_YGB.JRXKZH AS JRXKZH,
+    EAST5_YGB.NBJGH NBJGH,
+    EAST5_YGB.YHJGMC YHJGMC,
+    EAST5_YGB.GH GH,
+    EAST5_YGB.XM XM,
+    EAST5_YGB.GJHDQ GJHDQ,
+    EAST5_YGB.ZJLB ZJLB,
+    EAST5_YGB.ZJHM ZJHM,
+    EAST5_YGB.LXDH LXDH,
+    EAST5_YGB.SSBM SSBM,
+    EAST5_YGB.GWBH GWBH,
+    EAST5_YGB.GWMC GWMC,
+    EAST5_YGB.SFGG SFGG,
+    EAST5_YGB.PFRQ PFRQ,
+    EAST5_YGB.RZRQ RZRQ,
+    EAST5_YGB.YGLX YGLX,
+    EAST5_YGB.YGZT YGZT,
+    EAST5_YGB.BBZ BBZ,
+    EAST5_YGB.CJRQ CJRQ
+FROM
+    EAST5_YGB
+    INNER JOIN (
+        SELECT
+            LEDGERREPORT.ID AS ID,
+            REPORTTEMPLATE.TABLENAME AS TABLE_NAME,
+            INSTITUTION.INSTITUTIONID AS INSTITUTIONID,
+            LEDGERREPORT.TERM AS TERM
+        FROM
+            LEDGERREPORT
+            LEFT JOIN REPORTTEMPLATE ON LEDGERREPORT.LEDGERREPORTTEMPLATE_ID = REPORTTEMPLATE.ID
+            LEFT JOIN INSTITUTION ON LEDGERREPORT.INSTITUTION_ID = INSTITUTION.ID
+        WHERE
+            LEDGERREPORT.TERM = V_DATE
+            AND REPORTTEMPLATE.TABLENAME = V_LOG.TABLNO
+    ) TEMP_TABLE_0 ON (TEMP_TABLE_0.TABLE_NAME = V_LOG.TABLNO)
+WHERE
+    EAST5_YGB.CJRQ = V_DATE;

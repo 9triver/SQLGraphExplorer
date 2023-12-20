@@ -36,8 +36,10 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         this.graph = new Graph(curDstTableName);
     }
 
+    List<String> inverseSqls = new ArrayList<>();
     @Override
     public String visitSql_script(PlSqlParser.Sql_scriptContext ctx) {
+        inverseSqls.clear();
         tableSrc.add(new Node(NodeType.TABLE, this.curDstTableName));
         String ret = visitChildren(ctx);
 
@@ -74,6 +76,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         CKTuples inverseResults = expression.inverse(pSet).simplifyConstraints();
         logger.info("sql: " + select_statement_context);
         logger.info("inverse: " + inverseResults.toSql());
+        this.inverseSqls.addAll(inverseResults.toSql());
 
         return select_statement_context;
     }
@@ -950,6 +953,10 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             if(this.graph.existColumn(srcTableName, columnName))
                 return srcTableName;
         return "";
+    }
+
+    public List<String> getInverseSqls() {
+        return inverseSqls;
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
