@@ -1,5 +1,6 @@
 package cn.edu.nju.expression;
 
+import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
