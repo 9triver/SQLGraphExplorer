@@ -309,15 +309,39 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     }
 
     @Override
+    public String visitLogical_expression(PlSqlParser.Logical_expressionContext ctx) {
+        if(ctx.unary_logical_expression() != null)
+            return visitUnary_logical_expression(ctx.unary_logical_expression());
+        else if(ctx.AND() != null)
+            return visitLogical_expression(ctx.logical_expression(0)) + " AND " + visitLogical_expression(ctx.logical_expression(1));
+        else if(ctx.OR() != null)
+            return visitLogical_expression(ctx.logical_expression(0)) + " OR " + visitLogical_expression(ctx.logical_expression(1));
+        return '('+Tools.getFullContext(ctx)+')';
+    }
+
+    @Override
+    public String visitRelational_expression(PlSqlParser.Relational_expressionContext ctx) {
+        if(ctx.compound_expression() != null)
+            return visitCompound_expression(ctx.compound_expression());
+        else
+            return visitRelational_expression(ctx.relational_expression(0))+
+                    ctx.relational_operator().getText()+
+                    visitRelational_expression(ctx.relational_expression(1));
+    }
+
+    @Override
     public String visitGeneral_element(PlSqlParser.General_elementContext ctx) {
         if(ctx.general_element_part().size() == 2) { // Table.Column
-            String fullColumnName = ctx.general_element_part(0).getText() + ":" + ctx.general_element_part(1).getText();
+            String tableName = ctx.general_element_part(0).getText();
+            String columnName = ctx.general_element_part(1).getText();
+            String fullColumnName =  PlSqlVisitor.getRealTableName(tableName) + ":" + columnName;
             this.columnSrc.add(new Node(NodeType.COLUMN, fullColumnName));
+            fullColumnName = PlSqlVisitor.getRealTableName(tableName) + "." + columnName;
             return fullColumnName;
         }
         else if(ctx.general_element_part().size() == 1) { // Column or Function
             PlSqlParser.General_element_partContext generalElementPartContext = ctx.general_element_part(0);
-            String text = generalElementPartContext.getText();
+            String text = visitGeneral_element_part(generalElementPartContext);
             if(generalElementPartContext.function_argument() == null) { // Column
                 text = this.findSrcTable(text) + ":" + text;
                 this.columnSrc.add(new Node(NodeType.COLUMN, text));
@@ -354,6 +378,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         // 不再继续向下访问
         return Tools.getFullContext(ctx.expression());
+//        return visitExpression(ctx.expression());
     }
 
     @Override

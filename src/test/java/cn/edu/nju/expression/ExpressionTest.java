@@ -1,5 +1,6 @@
 package cn.edu.nju.expression;
 
+import cn.edu.nju.Main;
 import cn.edu.nju.PlSqlVisitor;
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
@@ -13,16 +14,21 @@ import grammar.PlSqlParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.apache.log4j.Logger;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ExpressionTest {
+    public static Logger logger = Logger.getLogger(ExpressionTest.class);
     Graph graph;
     Expression expression1, expression2;
     @Before
@@ -347,5 +353,78 @@ public class ExpressionTest {
             visitor = new PlSqlVisitor(dstTableName);
         visitor.visitSql_script(rootContext);
         return visitor;
+    }
+
+
+    @Test
+    public void test_EAST51_YGB(){
+        try {
+            ExpressionTest.testExpression("EAST51_YGB");
+        } catch (IOException e) {
+            logger.error("IOException: " + e.getMessage());
+        } catch (URISyntaxException e) {
+            logger.error("URISyntaxException: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void test_PE5_YGB(){
+        try {
+            ExpressionTest.testExpression("PE5_YGB");
+        } catch (IOException e) {
+            logger.error("IOException: " + e.getMessage());
+        } catch (URISyntaxException e) {
+            logger.error("URISyntaxException: " + e.getMessage());
+        }
+    }
+    @Test
+    public void test_PEAST5_YGB(){
+        try {
+            ExpressionTest.testExpression("PEAST5_YGB");
+        } catch (IOException e) {
+            logger.error("IOException: " + e.getMessage());
+        } catch (URISyntaxException e) {
+            logger.error("URISyntaxException: " + e.getMessage());
+        }
+    }
+
+    public static void testExpression(String fileName) throws IOException, URISyntaxException {
+        String filePath = ExpressionTest.class.getClassLoader().
+                getResource("data/modify/" + fileName + ".sql").toURI().getPath();
+        File file = new File(filePath);
+        BufferedReader inputBuffer = new BufferedReader(
+                new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+
+        ANTLRInputStream input = new ANTLRInputStream(inputBuffer);
+        PlSqlLexer lexer = new PlSqlLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        PlSqlParser parser = new PlSqlParser(tokens);
+        PlSqlParser.Sql_scriptContext rootContext = parser.sql_script();
+        PlSqlVisitor visitor = new PlSqlVisitor(fileName);
+
+        visitor.visitSql_script(rootContext);
+        List<String> resultSqls = visitor.getInverseSqls();
+
+        System.out.println("------------------------------------------------------------------------------------------");
+        System.out.println(fileName + ":");
+        for(String resultSql : resultSqls)
+            System.out.println(resultSql);
+
+        ExpressionTest.writeIntoFile(resultSqls, fileName);
+    }
+    public static void writeIntoFile(List<String> context, String fileName) throws IOException, URISyntaxException {
+        String rootPath = ExpressionTest.class.getResource("/").toURI().getPath();
+        String dirPath = "../../src/main/resources/data/output/";
+        String fullFilePath = rootPath + dirPath + fileName + ".sql";
+        File file = new File(fullFilePath);
+
+        if (!file.exists() && !file.createNewFile())
+            return ;
+
+        FileWriter writer = new FileWriter(file);
+
+        writer.write(String.join("", context));
+        writer.flush();
+        writer.close();
     }
 }

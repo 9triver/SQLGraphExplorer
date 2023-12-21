@@ -87,12 +87,25 @@ public class CKTuple {
         this.constraint.simplify(this.kTuple.getTable());
     }
 
+    Map<String,String> parameters = new HashMap<>();
     public String toSql() {
         // TODO : CKTuple -> sql
-        return Tools.translateFromRA2Sql(this.toRA());
+        StringBuilder buf = new StringBuilder();
+        String procedureName = "INVERSE_"+this.kTuple.getTable().tableName;
+        String procedureBody = Tools.translateFromRA2Sql(this.toRA());
+        buf.append("CREATE OR REPLACE PROCEDURE ").append(procedureName).append("(\n");
+        for(String key : parameters.keySet()) {
+            String value = parameters.get(key);
+            buf.append(value).append(" IN VARCHAR2(255),\n");
+            procedureBody = procedureBody.replaceAll(key,value);
+        }
+        buf.delete(buf.length()-",\n".length(),buf.length());
+        buf.append("\n) IS\nBEGIN\n").append(procedureBody).append("\nEND ").append(procedureName).append(";");
+        return buf.toString();
     }
 
     private String toRA() {
+        this.parameters.clear();
         StringBuilder
                 ra = new StringBuilder(),
                 matchCondition = new StringBuilder(),
@@ -107,6 +120,7 @@ public class CKTuple {
                 projectionList.append(fullColumnSchemaName).append(",");
                 if(fullColumnName.equals(fullColumnSchemaName))
                     continue;
+                parameters.put(fullColumnName, "PARA_"+columnNode.getColumn().columnName);
                 matchCondition.append(fullColumnSchemaName).append("=").append(fullColumnName).append(" AND ");
             }
         }
