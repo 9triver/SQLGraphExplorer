@@ -5,6 +5,13 @@ import cn.edu.nju.tools.condition.grammar.spliter.SpliterParser;
 import cn.edu.nju.tools.condition.grammar.spliter.SpliterParserBaseVisitor;
 
 
+/**
+ * @className：Spliter
+ * @version: 1.0.0
+ * @description：分离器
+ * @author: Xin
+ * @date: 2023-12-25 15:50:20
+ */
 public class Spliter extends SpliterParserBaseVisitor<String> {
     @Override
     public String visitParse(SpliterParser.ParseContext ctx) {
