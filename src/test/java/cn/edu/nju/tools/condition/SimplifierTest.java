@@ -68,6 +68,22 @@ public class SimplifierTest {
                         graph.getTable("B")));
     }
 
+    @Test
+    public void testRedundant() {
+        // table
+        Graph graph = new Graph();
+        Graph.Table table = graph.createTable("LEDGERREPORT");
+        graph.addColumns("LEDGERREPORT","ID","TERM");
+
+        Assert.assertEquals(
+                "((LEDGERREPORT.ID=PARA_ID) AND (LEDGERREPORT.TERM=PARA_TERM) AND (LEDGERREPORT.TERM=V_DATE))",
+                test("(LEDGERREPORT.ID = PARA_ID)\n" +
+                "  AND (LEDGERREPORT.TERM = PARA_TERM)\n" +
+                "  AND (LEDGERREPORT.TERM = V_DATE)\n" +
+                "  AND (LEDGERREPORT.TERM = V_DATE)", table)
+        );
+    }
+
     private String test(String context) {
         String ret = Tools.simplify(context);
         logger.info(ret);
