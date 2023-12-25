@@ -7,10 +7,27 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * @className：EdgeJSON
+ * @version: 1.0.0
+ * @description：边json
+ * @author: Xin
+ * @date: 2023-12-25 15:33:09
+ */
 public class EdgeJSON {
     private String source;
     private String target;
     private String value;
+
+    /**
+     * EdgeJSON构造函数
+     *
+     * @param source 来源
+     * @param target 目标
+     * @param value  价值
+     * @author: Xin
+     * @date: 2023-12-25 15:33:17
+     */
     public EdgeJSON(String source, String target, String value) {
         this.source = source;
         this.target = target;

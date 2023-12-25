@@ -7,15 +7,39 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * @className：NodeJSON
+ * @version: 1.0.0
+ * @description：节点json
+ * @author: Xin
+ * @date: 2023-12-25 15:35:21
+ */
 public class NodeJSON {
     private String id;
     private Value value;
 
+    /**
+     * NodeJSON构造函数
+     *
+     * @param id    id
+     * @param title 标题
+     * @param texts 文本
+     * @author: Xin
+     * @date: 2023-12-25 15:35:01
+     */
     public NodeJSON(String id, String title, String ...texts) {
         this.id = id;
         this.value = new Value(title, texts);
     }
 
+    /**
+     * 添加表格
+     *
+     * @param table 表格
+     * @return {@link Set }<{@link NodeJSON }>
+     * @author: Xin
+     * @date: 2023-12-25 15:35:09
+     */
     public static Set<NodeJSON> addTable(Graph.Table table) {
         Set<NodeJSON> ret = new HashSet<>();
         ret.add(new NodeJSON(
@@ -31,6 +55,15 @@ public class NodeJSON {
 
         return ret;
     }
+
+    /**
+     * 添加节点
+     *
+     * @param node 节点
+     * @return {@link NodeJSON }
+     * @author: Xin
+     * @date: 2023-12-25 15:35:24
+     */
     public static NodeJSON addNode(Node node) {
         return new NodeJSON(
                 String.valueOf(node.name.hashCode()),
@@ -39,6 +72,14 @@ public class NodeJSON {
         );
     }
 
+    /**
+     * 等于
+     *
+     * @param obj 对象
+     * @return boolean
+     * @author: Xin
+     * @date: 2023-12-25 15:35:26
+     */
     @Override
     public boolean equals(Object obj) {
         //自反性
@@ -51,6 +92,14 @@ public class NodeJSON {
         return this.id.equals(other.id) &&
                 this.value.equals(other.value);
     }
+
+    /**
+     * 散列码
+     *
+     * @return int
+     * @author: Xin
+     * @date: 2023-12-25 15:35:28
+     */
     @Override
     public int hashCode() {
         return Objects.hash(this.id, this.value);

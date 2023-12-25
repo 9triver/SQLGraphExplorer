@@ -1,6 +1,5 @@
 package cn.edu.nju.tools.ra.adt;
 
-import java.sql.ResultSet;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;

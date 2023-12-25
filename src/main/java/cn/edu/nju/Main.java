@@ -9,9 +9,17 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
+    /**
+     * Main函数
+     *
+     * @param args args
+     * @throws IOException        IOException
+     * @throws URISyntaxException URISyntaxException
+     * @author: Xin
+     * @date: 2023-12-25 15:54:28
+     */
     public static void main(String[] args) throws IOException, URISyntaxException {
         String[] testFiles = {"EAST51_YGB", "PE5_YGB", "PEAST5_YGB"};
         for(String fileName : testFiles) {

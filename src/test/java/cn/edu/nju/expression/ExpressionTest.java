@@ -1,6 +1,5 @@
 package cn.edu.nju.expression;
 
-import cn.edu.nju.Main;
 import cn.edu.nju.PlSqlVisitor;
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
@@ -15,7 +14,6 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.log4j.Logger;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +29,7 @@ public class ExpressionTest {
     public static Logger logger = Logger.getLogger(ExpressionTest.class);
     Graph graph;
     Expression expression1, expression2;
+
     @Before
     public void initial() {
         // tables
@@ -42,57 +41,63 @@ public class ExpressionTest {
         Graph.Table r3 = graph.createTable("R3");
         graph.addColumns("R3", "A", "C");
         Graph.Table a1 = graph.createTable("A1");
-        graph.addColumns("A1","A11","A12","A13","A14","A15","A16","B11");
+        graph.addColumns("A1", "A11", "A12", "A13", "A14", "A15", "A16", "B11");
         Graph.Table a2 = graph.createTable("A2");
-        graph.addColumns("A2","A21","A22","A23","A24","A25","A26","B21");
+        graph.addColumns("A2", "A21", "A22", "A23", "A24", "A25", "A26", "B21");
         Graph.Table b = graph.createTable("B");
-        graph.addColumns("B","B01","B02","B03","B04");
+        graph.addColumns("B", "B01", "B02", "B03", "B04");
         Graph.Table c = graph.createTable("C");
-        graph.addColumns("C","GH","XM","GJ");
+        graph.addColumns("C", "GH", "XM", "GJ");
 
         // expression1
         Expression er1 = Expression.table(r1);
         Expression er2 = Expression.table(r2);
-        Expression e = Expression.production(er1,er2);
-        e = Expression.selection(new Constraint("B=b"),e);
-        e = Expression.projection(r3.allScheme(),e);
+        Expression e = Expression.production(er1, er2);
+        e = Expression.selection(new Constraint("B=b"), e);
+        e = Expression.projection(r3.allSchema(), e);
         this.expression1 = e;
         // expression2
         Expression ea1 = Expression.table(a1);
         Expression ea2 = Expression.table(a2);
         Expression eb = Expression.table(b);
 
-        Expression e1 = Expression.production(ea1,eb);
-        e1 = Expression.selection(new Constraint("A1.B11 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"),e1);
-        e1 = Expression.selection(new Constraint("LENGTH(NVL(A1.A11,'')) > 0 AND A1.A14 <= '#{ETL_DT}' AND A1.A15 > '#{ETL_DT}'"),e1);
-        e1 = Expression.projection(a1.scheme("A11","A12","A13"), e1);
+        Expression e1 = Expression.production(ea1, eb);
+        e1 = Expression.selection(new Constraint("A1.B11 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"),
+                e1);
+        e1 = Expression.selection(
+                new Constraint("LENGTH(NVL(A1.A11,'')) > 0 AND A1.A14 <= '#{ETL_DT}' AND A1.A15 > '#{ETL_DT}'"), e1);
+        e1 = Expression.projection(a1.schema("A11", "A12", "A13"), e1);
         RenameMap renameMap1 = new RenameMap();
         renameMap1.add(a1.getColumn("A11"), c.getColumn("GH"));
         renameMap1.add(a1.getColumn("A12"), c.getColumn("XM"));
         renameMap1.add(a1.getColumn("A13"), c.getColumn("GJ"));
         e1 = Expression.rename(renameMap1, e1);
 
-        Expression e2 = Expression.production(ea2,eb);
-        e2 = Expression.selection(new Constraint("A2.B21 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"), e2);
-        e2 = Expression.selection(new Constraint("LENGTH(NVL(A2.A21,'')) > 0 AND A2.A24 <= '#{ETL_DT}' AND A2.A25 > '#{ETL_DT}' AND A2.A26 <> '0101'"), e2);
-        e2 = Expression.projection(a2.scheme("A21","A22","A23"), e2);
+        Expression e2 = Expression.production(ea2, eb);
+        e2 = Expression.selection(new Constraint("A2.B21 = B.B01 AND B.B02 <= '#{ETL_DT}' AND B.B03 > '#{ETL_DT}'"),
+                e2);
+        e2 = Expression.selection(new Constraint(
+                "LENGTH(NVL(A2.A21,'')) > 0 AND A2.A24 <= '#{ETL_DT}' AND A2.A25 > '#{ETL_DT}' AND A2.A26 <> '0101'"),
+                e2);
+        e2 = Expression.projection(a2.schema("A21", "A22", "A23"), e2);
         RenameMap renameMap2 = new RenameMap();
         renameMap2.add(a2.getColumn("A21"), c.getColumn("GH"));
         renameMap2.add(a2.getColumn("A22"), c.getColumn("XM"));
         renameMap2.add(a2.getColumn("A23"), c.getColumn("GJ"));
         e2 = Expression.rename(renameMap2, e2);
 
-        this.expression2 = Expression.union(e1,e2);
+        this.expression2 = Expression.union(e1, e2);
     }
+
     @Test
-    public void testScheme1() {
-        Scheme answer = graph.getTable("R3").allScheme();
-        Scheme result = this.expression1.scheme();
+    public void testSchema1() {
+        Schema answer = graph.getTable("R3").allSchema();
+        Schema result = this.expression1.schema();
         Assert.assertEquals(result, answer);
 
-        answer=graph.getTable("R1").allScheme();
-        answer.add(graph.getTable("R2").allScheme());
-        result=this.expression1.getE1().scheme();
+        answer = graph.getTable("R1").allSchema();
+        answer.add(graph.getTable("R2").allSchema());
+        result = this.expression1.getExpression1().schema();
         Assert.assertEquals(result, answer);
     }
 
@@ -121,18 +126,18 @@ public class ExpressionTest {
         Constraint constraint1 = ckTuple1.getConstraint();
         Constraint constraint2 = ckTuple2.getConstraint();
 
-        Assert.assertEquals("B=b",constraint1.toString());
-        Assert.assertEquals("B=b",constraint2.toString());
-        Assert.assertEquals("R1",kTuple1.getTable().tableName);
-        Assert.assertEquals("R2",kTuple2.getTable().tableName);
-        Assert.assertEquals(r1.allScheme(),kTuple1.allScheme());
-        Assert.assertEquals(r2.allScheme(),kTuple2.allScheme());
+        Assert.assertEquals("B=b", constraint1.toString());
+        Assert.assertEquals("B=b", constraint2.toString());
+        Assert.assertEquals("R1", kTuple1.getTable().tableName);
+        Assert.assertEquals("R2", kTuple2.getTable().tableName);
+        Assert.assertEquals(r1.allSchema(), kTuple1.allSchema());
+        Assert.assertEquals(r2.allSchema(), kTuple2.allSchema());
         Assert.assertEquals(exceptedKTuple1, kTuple1);
         Assert.assertEquals(exceptedKTuple2, kTuple2);
 
         // check Sqls
         List<String> resultSqls = results.toSql();
-        Assert.assertEquals(2 ,resultSqls.size());
+        Assert.assertEquals(2, resultSqls.size());
         Assert.assertEquals("SELECT R1.A, R1.B FROM R1 WHERE (R1.A = R3.A) AND (B = b);", resultSqls.get(0));
         Assert.assertEquals("SELECT R2.C, R2.B FROM R2 WHERE (R2.C = R3.C) AND (B = b);", resultSqls.get(1));
     }
@@ -169,16 +174,18 @@ public class ExpressionTest {
         CKTuples results = this.expression2.inverse(target).simplifyConstraints();
 
         // check CKTuples
-        Assert.assertEquals(results.getCkTuples().size(),4);
-        for(CKTuple ckTuple : results.getCkTuples()) {
+        Assert.assertEquals(results.getCkTuples().size(), 4);
+        for (CKTuple ckTuple : results.getCkTuples()) {
             KTuple kTuple = ckTuple.getKTuple();
             Constraint constraint = ckTuple.getConstraint();
             String tableName = kTuple.getTable().tableName;
 
             switch (tableName) {
                 case "A1" -> {
-                    Assert.assertEquals(a1.allScheme(), kTuple.allScheme());
-                    Assert.assertEquals("(((LENGTH((NVL((A1.A11),(''))))>0) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))", constraint.toString());
+                    Assert.assertEquals(a1.allSchema(), kTuple.allSchema());
+                    Assert.assertEquals(
+                            "(((LENGTH((NVL((A1.A11),(''))))>0) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))",
+                            constraint.toString());
                     KTuple exceptedKTuple = new KTuple(a1).addTupleNode(
                             new ColumnNode(a11, gh),
                             new ColumnNode(a12, xm),
@@ -186,17 +193,18 @@ public class ExpressionTest {
                             new ColumnNode(a14, a14),
                             new ColumnNode(a15, a15),
                             new ColumnNode(a16, a16),
-                            new ColumnNode(b11, b11)
-                            );
-                    Assert.assertEquals(exceptedKTuple.getTable(),kTuple.getTable());
+                            new ColumnNode(b11, b11));
+                    Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
                     Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                    for(TupleBaseNode t : kTuple.getTuple())
-                        if(!exceptedKTuple.getTuple().contains(t))
+                    for (TupleBaseNode t : kTuple.getTuple())
+                        if (!exceptedKTuple.getTuple().contains(t))
                             Assert.fail();
                 }
                 case "A2" -> {
-                    Assert.assertEquals(a2.allScheme(), kTuple.allScheme());
-                    Assert.assertEquals("((((LENGTH((NVL((A2.A21),(''))))>0) AND (A2.A24<='#{ETL_DT}')) AND (A2.A25>'#{ETL_DT}')) AND (A2.A26<>'0101'))", constraint.toString());
+                    Assert.assertEquals(a2.allSchema(), kTuple.allSchema());
+                    Assert.assertEquals(
+                            "((((LENGTH((NVL((A2.A21),(''))))>0) AND (A2.A24<='#{ETL_DT}')) AND (A2.A25>'#{ETL_DT}')) AND (A2.A26<>'0101'))",
+                            constraint.toString());
                     KTuple exceptedKTuple = new KTuple(a2).addTupleNode(
                             new ColumnNode(a21, gh),
                             new ColumnNode(a22, xm),
@@ -204,27 +212,25 @@ public class ExpressionTest {
                             new ColumnNode(a24, a24),
                             new ColumnNode(a25, a25),
                             new ColumnNode(a26, a26),
-                            new ColumnNode(b21, b21)
-                    );
-                    Assert.assertEquals(exceptedKTuple.getTable(),kTuple.getTable());
+                            new ColumnNode(b21, b21));
+                    Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
                     Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                    for(TupleBaseNode t : kTuple.getTuple())
-                        if(!exceptedKTuple.getTuple().contains(t))
+                    for (TupleBaseNode t : kTuple.getTuple())
+                        if (!exceptedKTuple.getTuple().contains(t))
                             Assert.fail();
                 }
                 case "B" -> {
-                    Assert.assertEquals(b.allScheme(), kTuple.allScheme());
+                    Assert.assertEquals(b.allSchema(), kTuple.allSchema());
                     Assert.assertEquals("((B.B02<='#{ETL_DT}') AND (B.B03>'#{ETL_DT}'))", constraint.toString());
                     KTuple exceptedKTuple = new KTuple(b).addTupleNode(
                             new ColumnNode(b01, b01),
                             new ColumnNode(b02, b02),
                             new ColumnNode(b03, b03),
-                            new ColumnNode(b04, b04)
-                    );
-                    Assert.assertEquals(exceptedKTuple.getTable(),kTuple.getTable());
+                            new ColumnNode(b04, b04));
+                    Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
                     Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                    for(TupleBaseNode t : kTuple.getTuple())
-                        if(!exceptedKTuple.getTuple().contains(t))
+                    for (TupleBaseNode t : kTuple.getTuple())
+                        if (!exceptedKTuple.getTuple().contains(t))
                             Assert.fail();
                 }
                 default -> Assert.fail();
@@ -233,9 +239,13 @@ public class ExpressionTest {
 
         // check Sqls
         List<String> resultSqls = results.toSql();
-        Assert.assertEquals(2 ,resultSqls.size());
-        Assert.assertEquals("SELECT A1.A11, A1.A13, A1.B11, A1.A15, A1.A14, A1.A16, A1.A12 FROM A1 WHERE (A1.A11 = C.GH) AND (A1.A13 = C.GJ) AND (A1.A12 = C.XM) AND (LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}') AND (A1.A15 > '#{ETL_DT}');", resultSqls.get(0));
-        Assert.assertEquals("SELECT A2.A22, A2.A21, A2.A23, A2.B21, A2.A25, A2.A24, A2.A26 FROM A2 WHERE (A2.A22 = C.XM) AND (A2.A21 = C.GH) AND (A2.A23 = C.GJ) AND (LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}') AND (A2.A25 > '#{ETL_DT}') AND (A2.A26 <> '0101');", resultSqls.get(1));
+        Assert.assertEquals(2, resultSqls.size());
+        Assert.assertEquals(
+                "SELECT A1.A11, A1.A13, A1.B11, A1.A15, A1.A14, A1.A16, A1.A12 FROM A1 WHERE (A1.A11 = C.GH) AND (A1.A13 = C.GJ) AND (A1.A12 = C.XM) AND (LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}') AND (A1.A15 > '#{ETL_DT}');",
+                resultSqls.get(0));
+        Assert.assertEquals(
+                "SELECT A2.A22, A2.A21, A2.A23, A2.B21, A2.A25, A2.A24, A2.A26 FROM A2 WHERE (A2.A22 = C.XM) AND (A2.A21 = C.GH) AND (A2.A23 = C.GJ) AND (LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}') AND (A2.A25 > '#{ETL_DT}') AND (A2.A26 <> '0101');",
+                resultSqls.get(1));
     }
 
     @Test
@@ -259,13 +269,12 @@ public class ExpressionTest {
                 "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
                 ");\n";
         String selectSql = "SELECT A,C FROM R1 JOIN R2 WHERE B=b;";
-        PlSqlVisitor visitor = testExpression(createR1Sql+createR2Sql+createR3Sql+selectSql,"R3");
+        PlSqlVisitor visitor = testExpression(createR1Sql + createR2Sql + createR3Sql + selectSql, "R3");
     }
 
     @Test
     public void testExpression1() {
-        String createA1Sql =
-                "create table A1 (\n" +
+        String createA1Sql = "create table A1 (\n" +
                 "  A11 VARCHAR2(255),\n" +
                 "  A12 VARCHAR2(255),\n" +
                 "  A13 VARCHAR2(255),\n" +
@@ -276,8 +285,7 @@ public class ExpressionTest {
                 ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
                 "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
                 ");\n";
-        String createA2Sql =
-                "create table A2 (\n" +
+        String createA2Sql = "create table A2 (\n" +
                 "  A21 VARCHAR2(255),\n" +
                 "  A22 VARCHAR2(255),\n" +
                 "  A23 VARCHAR2(255),\n" +
@@ -288,8 +296,7 @@ public class ExpressionTest {
                 ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
                 "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
                 ");\n";
-        String createBSql =
-                "create table B (\n" +
+        String createBSql = "create table B (\n" +
                 "  B01 VARCHAR2(255),\n" +
                 "  B02 VARCHAR2(255),\n" +
                 "  B03 VARCHAR2(255),\n" +
@@ -297,16 +304,14 @@ public class ExpressionTest {
                 ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
                 "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
                 ");\n";
-        String createCSql =
-                "create table C (\n" +
+        String createCSql = "create table C (\n" +
                 "  GH VARCHAR2(255),\n" +
                 "  XM VARCHAR2(255),\n" +
                 "  GJ VARCHAR2(255)\n" +
                 ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
                 "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
                 ");\n";
-        String selectUnionSql =
-                "SELECT\n" +
+        String selectUnionSql = "SELECT\n" +
                 "  A1.A11 AS GH, /*工号*/\n" +
                 "  A1.A12 AS XM, /*姓名*/\n" +
                 "  A1.A13 AS GJ  /*国籍*/\n" +
@@ -338,7 +343,8 @@ public class ExpressionTest {
                 "  AND A2.A24 <= '#{ETL_DT}'\n" +
                 "  AND A2.A25 > '#{ETL_DT}'\n" +
                 "  AND A2.A26 <> '0101';";
-        PlSqlVisitor visitor = testExpression(createA1Sql+createA2Sql+createBSql+createCSql+selectUnionSql,"C");
+        PlSqlVisitor visitor = testExpression(createA1Sql + createA2Sql + createBSql + createCSql + selectUnionSql,
+                "C");
     }
 
     private PlSqlVisitor testExpression(String sql, String dstTableName) {
@@ -347,7 +353,7 @@ public class ExpressionTest {
         PlSqlParser parser = new PlSqlParser(tokens);
         PlSqlParser.Sql_scriptContext rootContext = parser.sql_script();
         PlSqlVisitor visitor;
-        if(dstTableName==null)
+        if (dstTableName == null)
             visitor = new PlSqlVisitor();
         else
             visitor = new PlSqlVisitor(dstTableName);
@@ -355,9 +361,8 @@ public class ExpressionTest {
         return visitor;
     }
 
-
     @Test
-    public void test_EAST51_YGB(){
+    public void test_EAST51_YGB() {
         try {
             ExpressionTest.testExpression("EAST51_YGB");
         } catch (IOException e) {
@@ -368,7 +373,7 @@ public class ExpressionTest {
     }
 
     @Test
-    public void test_PE5_YGB(){
+    public void test_PE5_YGB() {
         try {
             ExpressionTest.testExpression("PE5_YGB");
         } catch (IOException e) {
@@ -377,8 +382,9 @@ public class ExpressionTest {
             logger.error("URISyntaxException: " + e.getMessage());
         }
     }
+
     @Test
-    public void test_PEAST5_YGB(){
+    public void test_PEAST5_YGB() {
         try {
             ExpressionTest.testExpression("PEAST5_YGB");
         } catch (IOException e) {
@@ -389,8 +395,8 @@ public class ExpressionTest {
     }
 
     public static void testExpression(String fileName) throws IOException, URISyntaxException {
-        String filePath = ExpressionTest.class.getClassLoader().
-                getResource("data/modify/" + fileName + ".sql").toURI().getPath();
+        String filePath = ExpressionTest.class.getClassLoader().getResource("data/modify/" + fileName + ".sql").toURI()
+                .getPath();
         File file = new File(filePath);
         BufferedReader inputBuffer = new BufferedReader(
                 new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
@@ -405,13 +411,15 @@ public class ExpressionTest {
         visitor.visitSql_script(rootContext);
         List<String> resultSqls = visitor.getInverseSqls();
 
-        System.out.println("------------------------------------------------------------------------------------------");
+        System.out
+                .println("------------------------------------------------------------------------------------------");
         System.out.println(fileName + ":");
-        for(String resultSql : resultSqls)
+        for (String resultSql : resultSqls)
             System.out.println(resultSql);
 
         ExpressionTest.writeIntoFile(resultSqls, fileName);
     }
+
     public static void writeIntoFile(List<String> context, String fileName) throws IOException, URISyntaxException {
         String rootPath = ExpressionTest.class.getResource("/").toURI().getPath();
         String dirPath = "../../src/main/resources/data/output/";
@@ -419,7 +427,7 @@ public class ExpressionTest {
         File file = new File(fullFilePath);
 
         if (!file.exists() && !file.createNewFile())
-            return ;
+            return;
 
         FileWriter writer = new FileWriter(file);
 

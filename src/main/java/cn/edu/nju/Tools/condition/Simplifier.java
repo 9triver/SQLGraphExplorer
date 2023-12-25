@@ -9,9 +9,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @className：Simplifier
+ * @version: 1.0.0
+ * @description：简化器
+ * @author: Xin
+ * @date: 2023-12-25 15:49:48
+ */
 public class Simplifier extends SimplifierParserBaseVisitor<String> {
     private final Set<String> targetFullColumnNames = new HashSet<>();
 
+    /**
+     * 设置目标列名
+     *
+     * @param targetTable 目标表格
+     * @author: Xin
+     * @date: 2023-12-25 15:49:53
+     */
     public void setTargetColumnName(Graph.Table targetTable) {
         targetFullColumnNames.clear();
         if(targetTable == null) return;
@@ -148,6 +162,7 @@ public class Simplifier extends SimplifierParserBaseVisitor<String> {
     @Override
     public String visitColExpression(SimplifierParser.ColExpressionContext ctx) {
         String fullColumnName = Tools.getFullContext(ctx);
+        fullColumnName = Tools.getRealFullColumnName(fullColumnName);
         if(!this.targetFullColumnNames.contains(fullColumnName))
             fullColumnName = "@#$%TRUE%$#@";
         return fullColumnName;

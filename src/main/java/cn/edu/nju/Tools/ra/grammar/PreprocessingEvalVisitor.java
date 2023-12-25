@@ -1,7 +1,5 @@
 package cn.edu.nju.tools.ra.grammar;
 
-import cn.edu.nju.tools.Tools;
-
 import java.util.List;
 
 /**

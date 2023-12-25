@@ -4,13 +4,22 @@ import cn.edu.nju.graph.Graph;
 
 import java.util.Objects;
 
-public class FunctionNode extends TupleBaseNode{
+/**
+ * @className：FunctionNode
+ * @version: 1.0.0
+ * @description： 函数节点
+ * @author: Xin
+ * @date: 2023-12-25 15:04:38
+ */
+public class FunctionNode extends TupleBaseNode {
     private String functionName;
     private TupleBaseNode argument;
-    public FunctionNode(Graph.Column columnScheme, String functionName, TupleBaseNode argument) {
-        super(columnScheme);
-        this.functionName=functionName;
-        this.argument=argument;
+
+
+    public FunctionNode(Graph.Column columnSchema, String functionName, TupleBaseNode argument) {
+        super(columnSchema);
+        this.functionName = functionName;
+        this.argument = argument;
     }
 
     public String getFunctionName() {
@@ -23,9 +32,12 @@ public class FunctionNode extends TupleBaseNode{
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
         FunctionNode that = (FunctionNode) o;
         return Objects.equals(functionName, that.functionName) && Objects.equals(argument, that.argument);
     }

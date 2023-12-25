@@ -63,79 +63,79 @@ create table EAST51_YGB (
 /*过滤人员状态为：'正常在岗'的人员信息*/
 --取人力资源系统中的在职人员的基本信息
 SELECT
-    HRS_HRS_USRA01.A0144 AS GH,
+    A.A0144 AS GH,
     /*取A0144:员工编号作为工号*/
-    HRS_HRS_USRA01.A0101 AS XM,
+    A.A0101 AS XM,
     /*姓名*/
-    HRS_HRS_USRA01.A01CA AS GJ,
+    A.A01CA AS GJ,
     /*取A01CA:国籍作为国籍字段，在EAST5表做码值映射判断，如A01CA='CHN',为'中国'*/
-    HRS_HRS_USRA01.A0130 AS ZJLB,
+    A.A0130 AS ZJLB,
     /*取A0130：个人证件类型，作为证件类别，在EAST5表做码值映射，如当A0130='101'时为'居民身份证'*/
-    HRS_HRS_USRA01.A0177 AS ZJHM,
+    A.A0177 AS ZJHM,
     /*取A0177:个人证件号码作为证件号码*/
-    HRS_HRS_USRA01.A0148 AS LXDH,
+    A.A0148 AS LXDH,
     /*取A0148:手机号码作为联系电话*/
-    HRS_HRS_USRA01.A01CV AS SSBM,
+    A.A01CV AS SSBM,
     /*所属部门*/
-    HRS_HRS_USRA01.A01BK AS GWBH,
+    A.A01BK AS GWBH,
     /*取A01BK:职位编码作为岗位编号*/
-    HRS_HRS_USRA01.A01AD AS GWMC,
+    A.A01AD AS GWMC,
     /*岗位名称*/
-    HRS_HRS_USRA01.A01AH AS YGLX,
+    A.A01AH AS YGLX,
     /*员工类型,在EAST5表做码值映射，如A01AH='I'为'正式员工'*/
-    HRS_HRS_USRA01.A0182 AS YGZT
+    A.A0182 AS YGZT
     /*取A0182:人员状态作为员工状态，在EAST5表做码值映射，如A0182 IN ('0101','0105')，状态为'在岗'*/
 FROM
-    HRS_HRS_USRA01
+    HRS_HRS_USRA01 A
     /*在职人员基本信息*/
-    JOIN HRS_HRS_B01
+    JOIN HRS_HRS_B01 B
     /*机构基本情况*/
-    ON HRS_HRS_USRA01.B0110 = HRS_HRS_B01.B0110
-    AND HRS_HRS_B01.HYREN_S_DATE <= '#{ETL_DT}'
-    AND HRS_HRS_B01.HYREN_E_DATE > '#{ETL_DT}'
+    ON A.B0110 = B.B0110
+    AND B.HYREN_S_DATE <= '#{ETL_DT}'
+    AND B.HYREN_E_DATE > '#{ETL_DT}'
 WHERE
-    LENGTH (NVL (HRS_HRS_USRA01.A0144, '')) > 0
+    LENGTH (NVL (A.A0144, '')) > 0
     /*员工编号有值的数据*/
-    AND HRS_HRS_USRA01.HYREN_S_DATE <= '#{ETL_DT}'
-    AND HRS_HRS_USRA01.HYREN_E_DATE > '#{ETL_DT}'
+    AND A.HYREN_S_DATE <= '#{ETL_DT}'
+    AND A.HYREN_E_DATE > '#{ETL_DT}'
 UNION
 ALL --从减员人员基本信息表中获取除了状态为'非正常在岗'的人员信息
 SELECT
-    HRS_HRS_RETA01.A0144 AS GH,
+    A.A0144 AS GH,
     /*取A0144:员工编号作为工号*/
-    HRS_HRS_RETA01.A0101 AS XM,
+    A.A0101 AS XM,
     /*姓名*/
-    HRS_HRS_RETA01.A01CA AS GJ,
+    A.A01CA AS GJ,
     /*国籍*/
-    HRS_HRS_RETA01.A0130 AS ZJLB,
+    A.A0130 AS ZJLB,
     /*取A0130：个人证件类型，作为证件类别，在EAST5表做码值映射，如当A0130='101'时为'居民身份证'*/
-    HRS_HRS_RETA01.A0177 AS ZJHM,
+    A.A0177 AS ZJHM,
     /*取A0177:个人证件号码作为证件号码*/
-    HRS_HRS_RETA01.A0148 AS LXDH,
+    A.A0148 AS LXDH,
     /*取A0148:手机号码作为联系电话*/
-    HRS_HRS_RETA01.A01CV AS SSBM,
+    A.A01CV AS SSBM,
     /*所属部门*/
-    HRS_HRS_RETA01.A01BK AS GWBH,
+    A.A01BK AS GWBH,
     /*取A01BK:职位编码作为岗位编号*/
-    HRS_HRS_RETA01.A01AD AS GWMC,
+    A.A01AD AS GWMC,
     /*岗位名称*/
-    HRS_HRS_RETA01.A01AH AS YGLX,
+    A.A01AH AS YGLX,
     /*员工类型,在EAST5表做码值映射，如A01AH='I'为'正式员工'*/
-    HRS_HRS_RETA01.A0182 AS YGZT
+    A.A0182 AS YGZT
     /*取A0182:人员状态作为员工状态，在EAST5表做码值映射，如A0182 IN ('0101','0105')，状态为'在岗'*/
 FROM
-    HRS_HRS_RETA01
-    JOIN HRS_HRS_B01
+    HRS_HRS_RETA01 A
+    JOIN HRS_HRS_B01 B
     /*机构基本情况*/
-    ON HRS_HRS_RETA01.B0110 = HRS_HRS_B01.B0110
-    AND HRS_HRS_B01.HYREN_S_DATE <= '#{ETL_DT}'
-    AND HRS_HRS_B01.HYREN_E_DATE > '#{ETL_DT}'
+    ON A.B0110 = B.B0110
+    AND B.HYREN_S_DATE <= '#{ETL_DT}'
+    AND B.HYREN_E_DATE > '#{ETL_DT}'
 WHERE
-    LENGTH (NVL (HRS_HRS_RETA01.A0144, '')) > 0
+    LENGTH (NVL (A.A0144, '')) > 0
     /*员工编号有值的数据*/
-    AND HRS_HRS_RETA01.HYREN_S_DATE <= '#{ETL_DT}'
-    AND HRS_HRS_RETA01.HYREN_E_DATE > '#{ETL_DT}'
-    AND HRS_HRS_RETA01.A0182 <> '0101';
+    AND A.HYREN_S_DATE <= '#{ETL_DT}'
+    AND A.HYREN_E_DATE > '#{ETL_DT}'
+    AND A.A0182 <> '0101';
 
 /*过滤人员状态为：'正常在岗'的人员信息*/
 -- results
