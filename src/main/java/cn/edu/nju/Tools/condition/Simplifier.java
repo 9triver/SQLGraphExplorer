@@ -86,9 +86,15 @@ public class Simplifier extends SimplifierParserBaseVisitor<String> {
 
     @Override
     public String visitAndBasicExpression(SimplifierParser.AndBasicExpressionContext ctx) {
-        StringBuilder ret = new StringBuilder(visit(ctx.parenExpression(0)));
+        Set<String> hashSet = new HashSet<>();
+        String parenExpressionContext = visit(ctx.parenExpression(0));
+        hashSet.add(parenExpressionContext);
+        StringBuilder ret = new StringBuilder(parenExpressionContext);
         for(int i = 1; i < ctx.parenExpression().size(); ++i) {
-            ret.append(" AND ").append(visit(ctx.parenExpression(i)));
+            parenExpressionContext = visit(ctx.parenExpression(i));
+            if(!hashSet.contains(parenExpressionContext))
+                ret.append(" AND ").append(parenExpressionContext);
+            hashSet.add(parenExpressionContext);
         }
 
         return bracked(ret.toString());
@@ -96,9 +102,15 @@ public class Simplifier extends SimplifierParserBaseVisitor<String> {
 
     @Override
     public String visitOrBasicExpression(SimplifierParser.OrBasicExpressionContext ctx) {
-        StringBuilder ret = new StringBuilder(visit(ctx.parenExpression(0)));
+        Set<String> hashSet = new HashSet<>();
+        String parenExpressionContext = visit(ctx.parenExpression(0));
+        hashSet.add(parenExpressionContext);
+        StringBuilder ret = new StringBuilder(parenExpressionContext);
         for(int i = 1; i < ctx.parenExpression().size(); ++i) {
-            ret.append(" OR ").append(visit(ctx.parenExpression(i)));
+            parenExpressionContext = visit(ctx.parenExpression(i));
+            if(!hashSet.contains(parenExpressionContext))
+                ret.append(" OR ").append(parenExpressionContext);
+            hashSet.add(parenExpressionContext);
         }
 
         return bracked(ret.toString());
