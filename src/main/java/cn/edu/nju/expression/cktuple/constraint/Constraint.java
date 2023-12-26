@@ -54,6 +54,7 @@ public class Constraint {
         if(constraint1.context.isBlank()) return new Constraint(constraint2);
         if(constraint2.context.isBlank()) return new Constraint(constraint1);
         if(constraint1.context.equals(constraint2.context)) return new Constraint(constraint1);
+
         return new Constraint("("+constraint1+") AND ("+constraint2+")");
     }
 

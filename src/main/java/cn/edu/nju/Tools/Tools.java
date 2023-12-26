@@ -30,7 +30,7 @@ import java.util.List;
 public class Tools {
     private static final Logger logger = Logger.getLogger(Tools.class);
 
-    private static TableAlias tableAlias = new TableAlias();
+    private static final TableAlias tableAlias = new TableAlias();
 
     /**
      * 克隆对象
@@ -106,7 +106,9 @@ public class Tools {
      */
     public static String simplify(String context, Graph.Table targetTable) {
         Tools.targetTable = targetTable;
-        return simplify(context);
+        String ret = simplify(context);
+        logger.debug(ret);
+        return ret;
     }
 
     /**
@@ -199,7 +201,7 @@ public class Tools {
     }
 
 
-    private static RelationalAlgebraInterpreter interpreter = new RelationalAlgebraInterpreter(new Database("defaultDatabase"));
+    private static final RelationalAlgebraInterpreter interpreter = new RelationalAlgebraInterpreter(new Database("defaultDatabase"));
 
     /**
      * 将关系代数翻译为sql语句

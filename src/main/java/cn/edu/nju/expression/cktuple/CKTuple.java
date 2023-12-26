@@ -7,6 +7,7 @@ import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.tools.Tools;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
@@ -18,6 +19,7 @@ import java.util.*;
  * @date: 2023-12-25 15:05:35
  */
 public class CKTuple {
+    public static Logger logger = Logger.getLogger(CKTuple.class);
     private final KTuple kTuple;
     private final Constraint constraint;
 
@@ -238,6 +240,7 @@ public class CKTuple {
         projectionList.insert(0, "[").append("]");
 
         Constraint combinedConstraint = Constraint.and(new Constraint(matchCondition.toString()), this.constraint);
+        logger.info("combinedConstraint: " + combinedConstraint);
         return ra.append("project").append(projectionList).append("(select[").append(combinedConstraint).append("](")
                 .append(srcTable.toString()).append("));").toString();
     }
