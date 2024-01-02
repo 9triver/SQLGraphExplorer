@@ -3,6 +3,7 @@ package cn.edu.nju.expression.cktuple;
 import cn.edu.nju.expression.RenameMap;
 import cn.edu.nju.expression.Schema;
 import cn.edu.nju.expression.cktuple.constraint.Constraint;
+import cn.edu.nju.update.UpdateType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -166,6 +167,16 @@ public class CKTuples {
         return new CKTuples(ckTuplesTmp);
     }
 
+
+    /**
+     * 重命名
+     *
+     * @param ckTuples  ck元组
+     * @param renameMap 重命名映射
+     * @return {@link CKTuples }
+     * @author: Xin
+     * @date: 2024-01-02 20:25:52
+     */
     public static CKTuples rename(CKTuples ckTuples, RenameMap renameMap) {
         List<CKTuple> ckTuplesTmp = new ArrayList<>();
         for (CKTuple p : ckTuples.ckTuples)
@@ -173,12 +184,26 @@ public class CKTuples {
         return new CKTuples(ckTuplesTmp);
     }
 
+    /**
+     * 简化Constraint
+     *
+     * @return {@link CKTuples }
+     * @author: Xin
+     * @date: 2024-01-02 20:26:15
+     */
     public CKTuples simplifyConstraints() {
         for (CKTuple p : this.ckTuples)
             p.simplifyConstraint();
         return this;
     }
 
+    /**
+     * 转换为Sql
+     *
+     * @return {@link List }<{@link String }>
+     * @author: Xin
+     * @date: 2024-01-02 20:26:26
+     */
     public List<String> toSql() {
         List<String> sqls = new ArrayList<>();
         for (CKTuple ckTuple : this.ckTuples) {
@@ -190,7 +215,33 @@ public class CKTuples {
         return sqls;
     }
 
+    /**
+     * 数量
+     *
+     * @return int
+     * @author: Xin
+     * @date: 2024-01-02 20:26:40
+     */
     public int size() {
         return this.ckTuples.size();
+    }
+
+    public boolean isStronglyDeterministic(UpdateType updateType) {
+        return switch (updateType) {
+            case INSERT -> this.size() == 1;
+            case DELETE -> this.isUnary();
+        };
+    }
+
+    public boolean isWeaklyDeterministic() {
+        //TODO: 理论上尚未给出算法
+        return true;
+    }
+
+    public boolean isUnary() {
+        for(CKTuple ckTuple : this.ckTuples)
+            if(!ckTuple.isUnary())
+                return false;
+        return true;
     }
 }

@@ -4,10 +4,8 @@ import cn.edu.nju.expression.Schema;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @className：KTuple
@@ -43,6 +41,20 @@ public class KTuple {
     public KTuple(Graph.Table table, Set<TupleBaseNode> tuple) {
         this.table = table;
         this.tuple = tuple;
+    }
+
+
+    /**
+     * KTuple构造函数
+     *
+     * @param table          表格
+     * @param tupleBaseNodes 元组基础节点
+     * @author: Xin
+     * @date: 2024-01-02 21:19:33
+     */
+    public KTuple(Graph.Table table, TupleBaseNode... tupleBaseNodes) {
+        this.table = table;
+        this.tuple = Arrays.stream(tupleBaseNodes).collect(Collectors.toSet());
     }
 
     /**
@@ -120,6 +132,25 @@ public class KTuple {
      */
     public Set<TupleBaseNode> getTuple() {
         return tuple;
+    }
+
+    /**
+     * 是一元的
+     *
+     * @return boolean
+     * @author: Xin
+     * @date: 2024-01-02 20:42:44
+     */
+    public boolean isUnary() {
+        int count = 0;
+        for(TupleBaseNode tupleBaseNode : tuple) {
+            if(tupleBaseNode.isEmpty())
+                continue;
+            count++;
+            if(count > 1) return false;
+        }
+
+        return count == 1;
     }
 
     /**

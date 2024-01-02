@@ -71,6 +71,24 @@ public abstract class TupleBaseNode implements Serializable {
     }
 
     /**
+     * 是否为空
+     *
+     * @return boolean
+     * @author: Xin
+     * @date: 2024-01-02 20:40:45
+     */
+    public boolean isEmpty() {
+        if(this instanceof FunctionNode) {
+            // TODO: undefined in theory
+            return true;
+        } else if (this instanceof ColumnNode) {
+            return ((ColumnNode) this).isEmpty();
+        }
+
+        return true;
+    }
+
+    /**
      * 等于
      *
      * @param o o

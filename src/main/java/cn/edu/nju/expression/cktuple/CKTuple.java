@@ -266,4 +266,43 @@ public class CKTuple {
     public Constraint getConstraint() {
         return constraint;
     }
+
+    /**
+     * 是一元的
+     *
+     * @return boolean
+     * @author: Xin
+     * @date: 2024-01-02 20:43:47
+     */
+    public boolean isUnary() {
+        return this.kTuple.isUnary();
+    }
+
+    /**
+     * 等于
+     *
+     * @param o o
+     * @return boolean
+     * @author: Xin
+     * @date: 2024-01-02 20:43:42
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CKTuple ckTuple = (CKTuple) o;
+        return Objects.equals(kTuple, ckTuple.kTuple) && Objects.equals(constraint, ckTuple.constraint) && Objects.equals(parameters, ckTuple.parameters);
+    }
+
+    /**
+     * 散列码
+     *
+     * @return int
+     * @author: Xin
+     * @date: 2024-01-02 20:43:44
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(kTuple, constraint, parameters);
+    }
 }

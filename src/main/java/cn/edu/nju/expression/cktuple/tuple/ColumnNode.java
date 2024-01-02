@@ -39,6 +39,17 @@ public class ColumnNode extends TupleBaseNode {
         return this.column;
     }
 
+    /**
+     * 是否为空
+     *
+     * @return boolean
+     * @author: Xin
+     * @date: 2024-01-02 20:41:05
+     */
+    @Override
+    public boolean isEmpty() {
+        return this.columnSchema.equals(this.column);
+    }
 
     /**
      * 等于
