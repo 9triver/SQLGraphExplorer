@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * @className：KTuple
  * @version: 1.0.0
- * @description：千倍
+ * @description：K-元组
  * @author: Xin
  * @date: 2023-12-25 15:12:22
  */
@@ -139,22 +139,17 @@ public class KTuple implements Serializable {
     }
 
     /**
-     * 是一元的
+     * 是否为空
      *
      * @return boolean
      * @author: Xin
-     * @date: 2024-01-02 20:42:44
+     * @date: 2024-01-04 20:28:42
      */
-    public boolean isUnary() {
-        int count = 0;
-        for(TupleBaseNode tupleBaseNode : tuple) {
-            if(tupleBaseNode.isEmpty())
-                continue;
-            count++;
-            if(count > 1) return false;
-        }
-
-        return count == 1;
+    public boolean isEmpty() {
+        for(TupleBaseNode tupleBaseNode : tuple)
+            if(!tupleBaseNode.isEmpty())
+                return false;
+        return true;
     }
 
     /**

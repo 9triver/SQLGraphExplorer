@@ -10,9 +10,9 @@ import java.util.Objects;
 /**
  * @className：TupleBaseNode
  * @version: 1.0.0
- * @description： 元组的基节点
+ * @description：元组基础节点
  * @author: Xin
- * @date: 2023-12-25 15:04:49
+ * @date: 2024-01-04 20:02:00
  */
 public abstract class TupleBaseNode implements Serializable {
     protected Graph.Column columnSchema;

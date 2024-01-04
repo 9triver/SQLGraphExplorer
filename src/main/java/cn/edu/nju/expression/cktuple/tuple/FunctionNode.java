@@ -2,6 +2,7 @@ package cn.edu.nju.expression.cktuple.tuple;
 
 import cn.edu.nju.graph.Graph;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Objects;
  * @author: Xin
  * @date: 2023-12-25 15:04:38
  */
-public class FunctionNode extends TupleBaseNode {
+public class FunctionNode extends TupleBaseNode implements Serializable {
     private String functionName;
     private TupleBaseNode argument;
 

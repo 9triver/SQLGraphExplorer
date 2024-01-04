@@ -10,6 +10,7 @@ import cn.edu.nju.tools.Tools;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -19,7 +20,7 @@ import java.util.*;
  * @author: Xin
  * @date: 2024-01-04 16:02:48
  */
-public class CKTuple {
+public class CKTuple implements Serializable {
     public static Logger logger = Logger.getLogger(CKTuple.class);
     private List<KTuple> kTuples = new ArrayList<>();
     private Map<KTuple,Constraint> constraints = new HashMap<>();
@@ -339,10 +340,13 @@ public class CKTuple {
      * @date: 2024-01-02 20:43:47
      */
     public boolean isUnary() {
-        for(KTuple kTuple : this.kTuples)
-            if(!kTuple.isUnary())
-                return false;
-        return true;
+        int count = 0;
+        for(KTuple kTuple : this.kTuples) {
+            if (kTuple.isEmpty()) continue;
+            count++;
+            if(count > 1) return false;
+        }
+        return count == 0;
     }
 
     /**

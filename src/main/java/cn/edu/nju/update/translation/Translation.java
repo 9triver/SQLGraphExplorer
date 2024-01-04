@@ -1,15 +1,17 @@
 package cn.edu.nju.update.translation;
 
 import cn.edu.nju.expression.Expression;
+import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
 import cn.edu.nju.expression.cktuple.KTuple;
 import cn.edu.nju.graph.Graph;
+import cn.edu.nju.tools.Tools;
 import cn.edu.nju.update.UpdateType;
 import cn.edu.nju.update.viewUpdate.ViewUpdate;
+import org.checkerframework.checker.units.qual.K;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
 public class Translation {
     private List<Update> updates = new ArrayList<>();
@@ -27,12 +29,12 @@ public class Translation {
         UpdateType updateType = viewUpdate.getUpdateType();
         KTuple kTuple = viewUpdate.getkTuple();
         Expression expression = viewUpdate.getExpression();
-        CKTuples inverseSet = expression.inverse(kTuple.getTable().getCKTuples());
+        CKTuples inverseSet = expression.inverse(kTuple.getTable().getCKTuples()).simplifyConstraints();
 
         if(inverseSet.isStronglyDeterministic(updateType)) {
             return switch (updateType) {
-                case INSERT -> Translation.inverseStronglyViewInsert(viewUpdate);
-                case DELETE -> Translation.inverseStronglyViewDelete(viewUpdate);
+                case INSERT -> Translation.inverseStronglyViewInsert(inverseSet);
+                case DELETE -> Translation.inverseStronglyViewDelete(inverseSet);
             };
         } else if (inverseSet.isWeaklyDeterministic()) {
             // TODO: 理论上没给出算法
@@ -47,34 +49,65 @@ public class Translation {
     /**
      * 对强确定性的视图插入求逆
      *
-     * @param viewUpdate 视图更新
+     * @param inverseSet inverse的结果集
      * @return {@link Translation }
      * @author: Xin
-     * @date: 2024-01-02 21:31:50
+     * @date: 2024-01-04 19:50:39
      */
-    private static Translation inverseStronglyViewInsert(ViewUpdate viewUpdate) {
-        KTuple kTuple = viewUpdate.getkTuple();
-        Expression expression = viewUpdate.getExpression();
-        CKTuples inverseSet = expression.inverse(kTuple.getTable().getCKTuples());
+    private static Translation inverseStronglyViewInsert(CKTuples inverseSet) {
+        assert inverseSet.size()==1;
 
-        // TODO:
-        return null;
+        Translation translation = new Translation();
+        CKTuple ckTuple = inverseSet.getCkTuples().get(0);
+        for(KTuple kTuple : ckTuple.getkTuples())
+            translation.addUpdate(UpdateType.INSERT, kTuple.getTable(), kTuple);
+
+        return translation;
     }
 
     /**
      * 对强确定性的视图删除求逆
      *
-     * @param viewUpdate 视图更新
+     * @param inverseSet inverse的结果集
      * @return {@link Translation }
      * @author: Xin
-     * @date: 2024-01-02 21:32:13
+     * @date: 2024-01-04 19:51:04
      */
-    private static Translation inverseStronglyViewDelete(ViewUpdate viewUpdate) {
-        KTuple kTuple = viewUpdate.getkTuple();
-        Expression expression = viewUpdate.getExpression();
-        CKTuples inverseSet = expression.inverse(kTuple.getTable().getCKTuples());
+    private static Translation inverseStronglyViewDelete(CKTuples inverseSet) {
+        assert inverseSet != null;
+        assert inverseSet.isUnary();
 
-        // TODO:
-        return null;
+        try{
+            inverseSet = Tools.clone(inverseSet);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Map<Graph.Table, List<KTuple>> tau = new HashMap<>();
+        while (!inverseSet.isEmpty()) {
+            CKTuple ckTuple = inverseSet.getCkTuples().get(0);
+            for(KTuple kTuple : ckTuple.getkTuples()) {
+                if(kTuple.isEmpty()) continue;
+                Graph.Table table = kTuple.getTable();
+
+                // update tau
+                if(!tau.containsKey(table))
+                    tau.put(table,new ArrayList<>());
+                tau.get(table).add(kTuple);
+                // update inverseSet
+                inverseSet.delete(ckTuple);
+                break;
+            }
+        }
+
+        Translation translation = new Translation();
+        for(Map.Entry<Graph.Table, List<KTuple>> entry : tau.entrySet()) {
+            Graph.Table table = entry.getKey();
+            List<KTuple> kTuples = entry.getValue();
+            translation.addUpdate(UpdateType.DELETE, table, kTuples.toArray(new KTuple[0]));
+        }
+
+        return translation;
     }
 }

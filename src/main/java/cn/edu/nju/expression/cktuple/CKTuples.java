@@ -5,6 +5,7 @@ import cn.edu.nju.expression.Schema;
 import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.update.UpdateType;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,7 +17,7 @@ import java.util.stream.Stream;
  * @author: Xin
  * @date: 2023-12-25 15:07:34
  */
-public class CKTuples {
+public class CKTuples implements Serializable {
     private final List<CKTuple> ckTuples;
 
     /**
@@ -244,5 +245,27 @@ public class CKTuples {
             if(!ckTuple.isUnary())
                 return false;
         return true;
+    }
+
+    /**
+     * 是否为空
+     *
+     * @return boolean
+     * @author: Xin
+     * @date: 2024-01-04 20:44:40
+     */
+    public boolean isEmpty() {
+        return this.ckTuples.isEmpty();
+    }
+
+    /**
+     * 删去
+     *
+     * @param ckTuple ck元组
+     * @author: Xin
+     * @date: 2024-01-04 20:44:43
+     */
+    public void delete(CKTuple ckTuple) {
+        this.ckTuples.remove(ckTuple);
     }
 }
