@@ -245,7 +245,11 @@ public class CKTuple {
         for(KTuple kTuple : this.kTuples) {
             StringBuilder buf = new StringBuilder();
             String procedureName = "INVERSE_" + kTuple.getTable().tableName;
-            String procedureBody = Tools.translateFromRA2Sql(this.toRA(kTuple));
+
+            String ra = this.toRA(kTuple);
+            if(ra == null) continue;
+            String procedureBody = Tools.translateFromRA2Sql(ra);
+
             buf.append("CREATE OR REPLACE PROCEDURE ").append(procedureName).append("(\n");
             for (String key : parameters.keySet()) {
                 String value = parameters.get(key);
@@ -268,7 +272,7 @@ public class CKTuple {
      * @author: Xin
      * @date: 2024-01-04 15:59:23
      */
-    private String toRA(KTuple kTuple) {
+    private String toRA(KTuple kTuple) throws NullPointerException{
         this.parameters.clear();
         StringBuilder ra = new StringBuilder(),
                 matchCondition = new StringBuilder(),
@@ -295,7 +299,7 @@ public class CKTuple {
         matchCondition.insert(0, "(").append(")");
         projectionList.insert(0, "[").append("]");
 
-        Constraint combinedConstraint = Constraint.and(new Constraint(matchCondition.toString()), this.mainConstraint);
+        Constraint combinedConstraint = Constraint.and(new Constraint(matchCondition.toString()), this.getConstraint(kTuple));
         logger.info("combinedConstraint: " + combinedConstraint);
         return ra.append("project").append(projectionList).append("(select[").append(combinedConstraint).append("](")
                 .append(srcTable.toString()).append("));").toString();
@@ -321,6 +325,10 @@ public class CKTuple {
      */
     public Constraint getMainConstraint() {
         return mainConstraint;
+    }
+
+    public Constraint getConstraint(KTuple kTuple) {
+        return this.constraints.get(kTuple);
     }
 
     /**

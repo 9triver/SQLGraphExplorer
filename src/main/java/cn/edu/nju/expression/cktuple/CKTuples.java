@@ -210,6 +210,7 @@ public class CKTuples {
             try {
                 sqls.addAll(ckTuple.toSql());
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return sqls;
