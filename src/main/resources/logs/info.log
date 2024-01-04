@@ -572,3 +572,15 @@ INFO:combinedConstraint: ((EAST5_YGB.LXDH=E5_YGB.LXDH AND EAST5_YGB.SFGG=E5_YGB.
 INFO:combinedConstraint: ((EAST5_YGB.LXDH=E5_YGB.LXDH AND EAST5_YGB.SFGG=E5_YGB.SFGG AND EAST5_YGB.BBZ=E5_YGB.BBZ AND EAST5_YGB.SSBM=E5_YGB.SSBM AND EAST5_YGB.ZJLB=E5_YGB.ZJLB AND EAST5_YGB.GH=E5_YGB.GH AND EAST5_YGB.ZJHM=E5_YGB.ZJHM AND EAST5_YGB.RZRQ=E5_YGB.RZRQ AND EAST5_YGB.YHJGMC=E5_YGB.YHJGMC AND EAST5_YGB.YGZT=E5_YGB.YGZT AND EAST5_YGB.GWBH=E5_YGB.GWBH AND EAST5_YGB.GWMC=E5_YGB.GWMC AND EAST5_YGB.CJRQ=E5_YGB.CJRQ AND EAST5_YGB.JRXKZH=E5_YGB.JRXKZH AND EAST5_YGB.YGLX=E5_YGB.YGLX AND EAST5_YGB.PFRQ=E5_YGB.PFRQ AND EAST5_YGB.XM=E5_YGB.XM AND EAST5_YGB.GJHDQ=E5_YGB.GJHDQ AND EAST5_YGB.NBJGH=E5_YGB.NBJGH)) AND ((EAST5_YGB.CJRQ=V_DATE))
 2023-12-26 13:02:48 下午 [Thread: main][ Class:cn.edu.nju.expression.cktuple.CKTuple >> Method: cn.edu.nju.expression.cktuple.CKTuple.toRA(CKTuple.java:243) ]
 INFO:combinedConstraint: ((EAST5_YGB.LXDH=E5_YGB.LXDH AND EAST5_YGB.SFGG=E5_YGB.SFGG AND EAST5_YGB.BBZ=E5_YGB.BBZ AND EAST5_YGB.SSBM=E5_YGB.SSBM AND EAST5_YGB.ZJLB=E5_YGB.ZJLB AND EAST5_YGB.GH=E5_YGB.GH AND EAST5_YGB.ZJHM=E5_YGB.ZJHM AND EAST5_YGB.RZRQ=E5_YGB.RZRQ AND EAST5_YGB.YHJGMC=E5_YGB.YHJGMC AND EAST5_YGB.YGZT=E5_YGB.YGZT AND EAST5_YGB.GWBH=E5_YGB.GWBH AND EAST5_YGB.GWMC=E5_YGB.GWMC AND EAST5_YGB.CJRQ=E5_YGB.CJRQ AND EAST5_YGB.JRXKZH=E5_YGB.JRXKZH AND EAST5_YGB.YGLX=E5_YGB.YGLX AND EAST5_YGB.PFRQ=E5_YGB.PFRQ AND EAST5_YGB.XM=E5_YGB.XM AND EAST5_YGB.GJHDQ=E5_YGB.GJHDQ AND EAST5_YGB.NBJGH=E5_YGB.NBJGH)) AND ((EAST5_YGB.CJRQ=V_DATE))
+2024-01-04 16:58:20 下午 [Thread: main][ Class:cn.edu.nju.expression.cktuple.CKTuple >> Method: cn.edu.nju.expression.cktuple.CKTuple.toRA(CKTuple.java:299) ]
+INFO:combinedConstraint: ((R1.A=R3.A)) AND (B=b)
+2024-01-04 16:58:20 下午 [Thread: main][ Class:cn.edu.nju.expression.cktuple.CKTuple >> Method: cn.edu.nju.expression.cktuple.CKTuple.toRA(CKTuple.java:299) ]
+INFO:combinedConstraint: ((R2.C=R3.C)) AND (B=b)
+2024-01-04 16:58:40 下午 [Thread: main][ Class:cn.edu.nju.expression.cktuple.CKTuple >> Method: cn.edu.nju.expression.cktuple.CKTuple.toRA(CKTuple.java:299) ]
+INFO:combinedConstraint: ((R1.A=R3.A)) AND (B=b)
+2024-01-04 16:58:40 下午 [Thread: main][ Class:cn.edu.nju.expression.cktuple.CKTuple >> Method: cn.edu.nju.expression.cktuple.CKTuple.toRA(CKTuple.java:299) ]
+INFO:combinedConstraint: ((R2.C=R3.C)) AND (B=b)
+2024-01-04 17:01:16 下午 [Thread: main][ Class:cn.edu.nju.expression.cktuple.CKTuple >> Method: cn.edu.nju.expression.cktuple.CKTuple.toRA(CKTuple.java:299) ]
+INFO:combinedConstraint: ((R1.A=R3.A)) AND (B=b)
+2024-01-04 17:01:16 下午 [Thread: main][ Class:cn.edu.nju.expression.cktuple.CKTuple >> Method: cn.edu.nju.expression.cktuple.CKTuple.toRA(CKTuple.java:299) ]
+INFO:combinedConstraint: ((R2.C=R3.C)) AND (B=b)

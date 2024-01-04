@@ -2,6 +2,7 @@ package cn.edu.nju.expression;
 
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
+import cn.edu.nju.expression.cktuple.KTuple;
 import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.graph.Graph.Table;
 import org.apache.log4j.Logger;
@@ -181,9 +182,13 @@ public class Expression {
         assert result != null;
         logger.debug("opType: " + this.opType);
         logger.debug("size: " + result.size());
-        List<String> tableNames = new ArrayList<>();
-        for (CKTuple ckTuple : result.getCkTuples())
-            tableNames.add(ckTuple.getKTuple().getTable().tableName);
+        List<List<String>> tableNames = new ArrayList<>();
+        for (CKTuple ckTuple : result.getCkTuples()) {
+            List<String> tmp = new ArrayList<>();
+            for (KTuple kTuple : ckTuple.getkTuples())
+                tmp.add(kTuple.getTable().tableName);
+            tableNames.add(tmp);
+        }
         logger.debug("tables: " + tableNames);
         return result;
     }

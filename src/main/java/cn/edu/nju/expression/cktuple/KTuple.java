@@ -3,7 +3,11 @@ package cn.edu.nju.expression.cktuple;
 import cn.edu.nju.expression.Schema;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
+import cn.edu.nju.tools.Tools;
+import org.checkerframework.checker.units.qual.K;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,7 +18,7 @@ import java.util.stream.Collectors;
  * @author: Xin
  * @date: 2023-12-25 15:12:22
  */
-public class KTuple {
+public class KTuple implements Serializable {
     private Graph.Table table;
     private Set<TupleBaseNode> tuple;
 

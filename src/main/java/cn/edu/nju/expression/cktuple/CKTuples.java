@@ -7,6 +7,7 @@ import cn.edu.nju.update.UpdateType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @className：CKTuples
@@ -28,7 +29,7 @@ public class CKTuples {
      */
     public CKTuples(KTuple kTuple, Constraint constraint) {
         this.ckTuples = new ArrayList<>();
-        this.ckTuples.add(new CKTuple(kTuple, constraint));
+        this.ckTuples.add(new CKTuple(Stream.of(kTuple).toList(), constraint));
     }
 
     /**
@@ -41,8 +42,7 @@ public class CKTuples {
      */
     public CKTuples(List<KTuple> kTuples, Constraint constraint) {
         this.ckTuples = new ArrayList<>();
-        for (KTuple kTuple : kTuples)
-            this.ckTuples.add(new CKTuple(kTuple, constraint));
+        this.ckTuples.add(new CKTuple(kTuples, constraint));
     }
 
     /**
@@ -112,7 +112,7 @@ public class CKTuples {
         List<CKTuple> ckTuplesTmp = new ArrayList<>();
         for (CKTuple p1 : ckTuples1.ckTuples)
             for (CKTuple p2 : ckTuples2.ckTuples)
-                ckTuplesTmp.addAll(CKTuple.append(p1, p2));
+                ckTuplesTmp.add(CKTuple.append(p1, p2));
         return new CKTuples(ckTuplesTmp);
     }
 
@@ -208,7 +208,7 @@ public class CKTuples {
         List<String> sqls = new ArrayList<>();
         for (CKTuple ckTuple : this.ckTuples) {
             try {
-                sqls.add(ckTuple.toSql());
+                sqls.addAll(ckTuple.toSql());
             } catch (Exception e) {
             }
         }

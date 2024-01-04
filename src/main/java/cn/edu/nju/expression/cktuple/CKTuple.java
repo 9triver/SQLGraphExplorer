@@ -9,43 +9,55 @@ import cn.edu.nju.graph.Graph;
 import cn.edu.nju.tools.Tools;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
  * @className：CKTuple
  * @version: 1.0.0
- * @description： cktuple
+ * @description：cktuple
  * @author: Xin
- * @date: 2023-12-25 15:05:35
+ * @date: 2024-01-04 16:02:48
  */
 public class CKTuple {
     public static Logger logger = Logger.getLogger(CKTuple.class);
-    private final KTuple kTuple;
-    private final Constraint constraint;
+    private List<KTuple> kTuples = new ArrayList<>();
+    private Map<KTuple,Constraint> constraints = new HashMap<>();
+    private Constraint mainConstraint;
 
     /**
      * cktuple复制构造函数
      *
-     * @param ckTuple ck元组
+     * @param other ck元组
      * @author: Xin
      * @date: 2023-12-25 15:05:48
      */
-    public CKTuple(CKTuple ckTuple) {
-        this.kTuple = ckTuple.kTuple;
-        this.constraint = ckTuple.constraint;
+    public CKTuple(CKTuple other) {
+        try {
+            for(KTuple kTuple : other.kTuples)
+                this.kTuples.add(Tools.clone(kTuple));
+            this.mainConstraint = Tools.clone(other.mainConstraint);
+            for(Map.Entry<KTuple, Constraint> entry : other.constraints.entrySet()) {
+                KTuple key = entry.getKey();
+                Constraint value = entry.getValue();
+                this.constraints.put(Tools.clone(key),Tools.clone(value));
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * cktuple构造函数
      *
-     * @param kTuple     k元组
-     * @param constraint 限制
+     * @param kTuples     k元组
+     * @param mainConstraint 主限制
      * @author: Xin
      * @date: 2023-12-25 15:05:51
      */
-    public CKTuple(KTuple kTuple, Constraint constraint) {
-        this.kTuple = kTuple;
-        this.constraint = constraint;
+    public CKTuple(List<KTuple> kTuples, Constraint mainConstraint) {
+        this.kTuples = kTuples;
+        this.mainConstraint = mainConstraint;
     }
 
 
@@ -59,18 +71,23 @@ public class CKTuple {
      * @date: 2023-12-25 15:05:56
      */
     public static CKTuple rename(CKTuple ckTuple, RenameMap renameMap) {
-        Constraint constraint = ckTuple.constraint;
-        Set<TupleBaseNode> tuple = ckTuple.kTuple.getTuple();
-        Graph.Table table = ckTuple.kTuple.getTable();
-        Set<TupleBaseNode> results = new HashSet<>();
+        Constraint mainConstraint = ckTuple.mainConstraint;
+        List<KTuple> resultKTuples = new ArrayList<>();
 
-        for (TupleBaseNode t : tuple) {
-            Graph.Column srcSchema = renameMap.getSrc(t.getColumnSchema());
-            if (srcSchema != null)
-                results.add(t.setNewColumnSchema(srcSchema));
+        for (KTuple kTuple : ckTuple.kTuples) {
+            Set<TupleBaseNode> tuple = kTuple.getTuple();
+            Graph.Table table = kTuple.getTable();
+            Set<TupleBaseNode> results = new HashSet<>();
+
+            for (TupleBaseNode t : tuple) {
+                Graph.Column srcSchema = renameMap.getSrc(t.getColumnSchema());
+                if (srcSchema != null)
+                    results.add(t.setNewColumnSchema(srcSchema));
+            }
+            resultKTuples.add(new KTuple(table, results));
         }
 
-        return new CKTuple(new KTuple(table, results), constraint);
+        return new CKTuple(resultKTuples, mainConstraint);
     }
 
     /**
@@ -83,16 +100,21 @@ public class CKTuple {
      * @date: 2023-12-25 15:06:00
      */
     public static CKTuple projection(CKTuple ckTuple, Schema relationSchema) {
-        Constraint constraint = ckTuple.constraint;
-        Set<TupleBaseNode> tuple = ckTuple.kTuple.getTuple();
-        Graph.Table table = ckTuple.kTuple.getTable();
-        Set<TupleBaseNode> results = new HashSet<>();
+        Constraint mainConstraint = ckTuple.mainConstraint;
+        List<KTuple> resultKTuples = new ArrayList<>();
 
-        for (TupleBaseNode t : tuple) {
-            if (relationSchema.containColumn(t.getColumnSchema()))
-                results.add(t);
+        for (KTuple kTuple : ckTuple.kTuples) {
+            Set<TupleBaseNode> tuple = kTuple.getTuple();
+            Graph.Table table = kTuple.getTable();
+            Set<TupleBaseNode> results = new HashSet<>();
+
+            for (TupleBaseNode t : tuple) {
+                if (relationSchema.containColumn(t.getColumnSchema()))
+                    results.add(t);
+            }
+            resultKTuples.add(new KTuple(table, results));
         }
-        return new CKTuple(new KTuple(table, results), constraint);
+        return new CKTuple(resultKTuples, mainConstraint);
     }
 
     /**
@@ -105,25 +127,30 @@ public class CKTuple {
      * @date: 2023-12-25 15:06:04
      */
     public static CKTuple extension(CKTuple ckTuple, Schema relationSchema) {
-        Constraint constraint = ckTuple.constraint;
-        Set<TupleBaseNode> tuple = ckTuple.kTuple.getTuple();
-        Graph.Table table = ckTuple.kTuple.getTable();
-        Set<TupleBaseNode> results = new HashSet<>();
+        Constraint mainConstraint = ckTuple.mainConstraint;
+        List<KTuple> resultKTuples = new ArrayList<>();
 
-        for (Graph.Column s : relationSchema.getColumns()) {
-            boolean exist = false;
-            for (TupleBaseNode t : tuple) {
-                if (t.getColumnSchemaName().equals(s.columnName)) {
-                    exist = true;
-                    results.add(t.setNewColumnSchema(s));
-                    break;
+        for (KTuple kTuple : ckTuple.kTuples) {
+            Set<TupleBaseNode> tuple = kTuple.getTuple();
+            Graph.Table table = kTuple.getTable();
+            Set<TupleBaseNode> results = new HashSet<>();
+
+            for (Graph.Column s : relationSchema.getColumns()) {
+                boolean exist = false;
+                for (TupleBaseNode t : tuple) {
+                    if (t.getColumnSchemaName().equals(s.columnName)) {
+                        exist = true;
+                        results.add(t.setNewColumnSchema(s));
+                        break;
+                    }
                 }
+                if (!exist)
+                    results.add(new ColumnNode(s, s));
             }
-            if (!exist)
-                results.add(new ColumnNode(s, s));
+            resultKTuples.add(new KTuple(table, results));
         }
 
-        return new CKTuple(new KTuple(table, results), constraint);
+        return new CKTuple(resultKTuples, mainConstraint);
     }
 
 
@@ -136,11 +163,19 @@ public class CKTuple {
      * @author: Xin
      * @date: 2023-12-25 15:06:08
      */
-    public static List<CKTuple> append(CKTuple ckTuple1, CKTuple ckTuple2) {
-        List<CKTuple> ret = new ArrayList<>();
-        ret.add(new CKTuple(ckTuple1.kTuple, Constraint.and(ckTuple1.constraint, ckTuple2.constraint)));
-        ret.add(new CKTuple(ckTuple2.kTuple, Constraint.and(ckTuple1.constraint, ckTuple2.constraint)));
-        return ret;
+    public static CKTuple append(CKTuple ckTuple1, CKTuple ckTuple2) {
+        List<KTuple> kTuples = new ArrayList<>();
+        Constraint mainConstraint =  Constraint.and(ckTuple1.mainConstraint, ckTuple2.mainConstraint);
+        try {
+            for (KTuple kTuple : ckTuple1.kTuples)
+                kTuples.add(Tools.clone(kTuple));
+            for (KTuple kTuple : ckTuple2.kTuples)
+                kTuples.add(Tools.clone(kTuple));
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return new CKTuple(kTuples,mainConstraint);
     }
 
     /**
@@ -153,7 +188,7 @@ public class CKTuple {
      * @date: 2023-12-25 15:06:11
      */
     public static CKTuple andConstraint(CKTuple ckTuple, Constraint constraint) {
-        return new CKTuple(ckTuple.kTuple, Constraint.and(ckTuple.constraint, constraint));
+        return new CKTuple(ckTuple.kTuples, Constraint.and(ckTuple.mainConstraint, constraint));
     }
 
     /**
@@ -165,9 +200,16 @@ public class CKTuple {
      * @date: 2023-12-25 15:06:17
      */
     public static CKTuple atom(CKTuple ckTuple) {
-        Set<TupleBaseNode> tuple = ckTuple.kTuple.getTuple();
-        Graph.Table targetTable = tuple.iterator().next().getColumnSchema().table;
-        return new CKTuple(new KTuple(targetTable, tuple), ckTuple.constraint);
+        Constraint mainConstraint = ckTuple.mainConstraint;
+        List<KTuple> resultKTuples = new ArrayList<>();
+
+        for (KTuple kTuple : ckTuple.kTuples) {
+            Set<TupleBaseNode> tuple = kTuple.getTuple();
+            Graph.Table targetTable = tuple.iterator().next().getColumnSchema().table;
+
+            resultKTuples.add(new KTuple(targetTable, tuple));
+        }
+        return new CKTuple(resultKTuples, mainConstraint);
     }
 
     /**
@@ -177,7 +219,15 @@ public class CKTuple {
      * @date: 2023-12-25 15:06:19
      */
     public void simplifyConstraint() {
-        this.constraint.simplify(this.kTuple.getTable());
+        try {
+            for(KTuple kTuple : this.kTuples) {
+                Constraint subConstraint = Tools.clone(this.mainConstraint);
+                subConstraint.simplify(kTuple.getTable());
+                this.constraints.put(kTuple, subConstraint);
+            }
+        } catch (IOException | ClassNotFoundException e){
+            e.printStackTrace();
+        }
     }
 
     Map<String, String> parameters = new HashMap<>();
@@ -189,36 +239,42 @@ public class CKTuple {
      * @author: Xin
      * @date: 2023-12-25 15:06:25
      */
-    public String toSql() {
+    public List<String> toSql() {
         // TODO : CKTuple -> sql
-        StringBuilder buf = new StringBuilder();
-        String procedureName = "INVERSE_" + this.kTuple.getTable().tableName;
-        String procedureBody = Tools.translateFromRA2Sql(this.toRA());
-        buf.append("CREATE OR REPLACE PROCEDURE ").append(procedureName).append("(\n");
-        for (String key : parameters.keySet()) {
-            String value = parameters.get(key);
-            buf.append(value).append(" IN VARCHAR2(255),\n");
-            procedureBody = procedureBody.replaceAll(key, value);
+        List<String> sqls = new ArrayList<>();
+        for(KTuple kTuple : this.kTuples) {
+            StringBuilder buf = new StringBuilder();
+            String procedureName = "INVERSE_" + kTuple.getTable().tableName;
+            String procedureBody = Tools.translateFromRA2Sql(this.toRA(kTuple));
+            buf.append("CREATE OR REPLACE PROCEDURE ").append(procedureName).append("(\n");
+            for (String key : parameters.keySet()) {
+                String value = parameters.get(key);
+                buf.append(value).append(" IN VARCHAR2(255),\n");
+                procedureBody = procedureBody.replaceAll(key, value);
+            }
+            buf.delete(buf.length() - ",\n".length(), buf.length());
+            buf.append("\n) IS\nBEGIN\n").append(procedureBody).append("\nEND ").append(procedureName).append(";");
+
+            sqls.add(buf.toString());
         }
-        buf.delete(buf.length() - ",\n".length(), buf.length());
-        buf.append("\n) IS\nBEGIN\n").append(procedureBody).append("\nEND ").append(procedureName).append(";");
-        return buf.toString();
+        return sqls;
     }
 
     /**
      * CKTuple -> Relational Algebra
      *
+     * @param kTuple k元组
      * @return {@link String }
      * @author: Xin
-     * @date: 2023-12-25 15:06:49
+     * @date: 2024-01-04 15:59:23
      */
-    private String toRA() {
+    private String toRA(KTuple kTuple) {
         this.parameters.clear();
         StringBuilder ra = new StringBuilder(),
                 matchCondition = new StringBuilder(),
                 projectionList = new StringBuilder();
-        Graph.Table srcTable = this.kTuple.getTable();
-        Set<TupleBaseNode> tuple = this.kTuple.getTuple();
+        Graph.Table srcTable = kTuple.getTable();
+        Set<TupleBaseNode> tuple = kTuple.getTuple();
         for (TupleBaseNode node : tuple) {
             if (node instanceof ColumnNode columnNode) {
                 String fullColumnName = columnNode.getColumn().toString();
@@ -239,32 +295,32 @@ public class CKTuple {
         matchCondition.insert(0, "(").append(")");
         projectionList.insert(0, "[").append("]");
 
-        Constraint combinedConstraint = Constraint.and(new Constraint(matchCondition.toString()), this.constraint);
+        Constraint combinedConstraint = Constraint.and(new Constraint(matchCondition.toString()), this.mainConstraint);
         logger.info("combinedConstraint: " + combinedConstraint);
         return ra.append("project").append(projectionList).append("(select[").append(combinedConstraint).append("](")
                 .append(srcTable.toString()).append("));").toString();
     }
 
     /**
-     * 获取ktuple
+     * 获取ktuples
      *
-     * @return {@link KTuple }
+     * @return {@link List }<{@link KTuple }>
      * @author: Xin
-     * @date: 2023-12-25 15:07:16
+     * @date: 2024-01-04 16:00:08
      */
-    public KTuple getKTuple() {
-        return kTuple;
+    public List<KTuple> getkTuples() {
+        return kTuples;
     }
 
     /**
-     * 获取约束
+     * 获取主限制
      *
      * @return {@link Constraint }
      * @author: Xin
-     * @date: 2023-12-25 15:07:27
+     * @date: 2024-01-04 16:00:24
      */
-    public Constraint getConstraint() {
-        return constraint;
+    public Constraint getMainConstraint() {
+        return mainConstraint;
     }
 
     /**
@@ -275,7 +331,10 @@ public class CKTuple {
      * @date: 2024-01-02 20:43:47
      */
     public boolean isUnary() {
-        return this.kTuple.isUnary();
+        for(KTuple kTuple : this.kTuples)
+            if(!kTuple.isUnary())
+                return false;
+        return true;
     }
 
     /**
@@ -284,14 +343,14 @@ public class CKTuple {
      * @param o o
      * @return boolean
      * @author: Xin
-     * @date: 2024-01-02 20:43:42
+     * @date: 2024-01-04 16:01:37
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CKTuple ckTuple = (CKTuple) o;
-        return Objects.equals(kTuple, ckTuple.kTuple) && Objects.equals(constraint, ckTuple.constraint) && Objects.equals(parameters, ckTuple.parameters);
+        return Objects.equals(kTuples, ckTuple.kTuples) && Objects.equals(constraints, ckTuple.constraints) && Objects.equals(mainConstraint, ckTuple.mainConstraint) && Objects.equals(parameters, ckTuple.parameters);
     }
 
     /**
@@ -299,10 +358,10 @@ public class CKTuple {
      *
      * @return int
      * @author: Xin
-     * @date: 2024-01-02 20:43:44
+     * @date: 2024-01-04 16:01:39
      */
     @Override
     public int hashCode() {
-        return Objects.hash(kTuple, constraint, parameters);
+        return Objects.hash(kTuples, constraints, mainConstraint, parameters);
     }
 }

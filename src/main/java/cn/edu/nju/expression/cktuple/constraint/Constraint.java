@@ -3,6 +3,7 @@ package cn.edu.nju.expression.cktuple.constraint;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.tools.Tools;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @author: Xin
  * @date: 2023-12-25 15:02:55
  */
-public class Constraint {
+public class Constraint implements Serializable {
     private String context;
 
 

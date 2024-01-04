@@ -116,18 +116,15 @@ public class ExpressionTest {
         CKTuples results = this.expression1.inverse(target);
 
         // Check CKTuples
-        Assert.assertEquals(2, results.getCkTuples().size());
+        Assert.assertEquals(1, results.getCkTuples().size());
         CKTuple ckTuple1 = results.getCkTuples().get(0);
-        CKTuple ckTuple2 = results.getCkTuples().get(1);
-        KTuple kTuple1 = ckTuple1.getKTuple();
-        KTuple kTuple2 = ckTuple2.getKTuple();
+        KTuple kTuple1 = ckTuple1.getkTuples().get(0);
+        KTuple kTuple2 = ckTuple1.getkTuples().get(1);
         KTuple exceptedKTuple1 = new KTuple(r1).addTupleNode(new ColumnNode(r1a, r3a), new ColumnNode(r1b, r1b));
         KTuple exceptedKTuple2 = new KTuple(r2).addTupleNode(new ColumnNode(r2b, r2b), new ColumnNode(r2c, r3c));
-        Constraint constraint1 = ckTuple1.getConstraint();
-        Constraint constraint2 = ckTuple2.getConstraint();
+        Constraint mainConstraint = ckTuple1.getMainConstraint();
 
-        Assert.assertEquals("B=b", constraint1.toString());
-        Assert.assertEquals("B=b", constraint2.toString());
+        Assert.assertEquals("B=b", mainConstraint.toString());
         Assert.assertEquals("R1", kTuple1.getTable().tableName);
         Assert.assertEquals("R2", kTuple2.getTable().tableName);
         Assert.assertEquals(r1.allSchema(), kTuple1.allSchema());
@@ -138,8 +135,19 @@ public class ExpressionTest {
         // check Sqls
         List<String> resultSqls = results.toSql();
         Assert.assertEquals(2, resultSqls.size());
-        Assert.assertEquals("SELECT R1.A, R1.B FROM R1 WHERE (R1.A = R3.A) AND (B = b);", resultSqls.get(0));
-        Assert.assertEquals("SELECT R2.C, R2.B FROM R2 WHERE (R2.C = R3.C) AND (B = b);", resultSqls.get(1));
+        Assert.assertEquals(
+                "CREATE OR REPLACE PROCEDURE INVERSE_R1(\n" +
+                "PARA_A IN VARCHAR2(255)\n" +
+                ") IS\n" +
+                "BEGIN\n" +
+                "SELECT R1.A, R1.B FROM R1 WHERE (R1.A = PARA_A) AND (B = b);\n" +
+                "END INVERSE_R1;", resultSqls.get(0));
+        Assert.assertEquals("CREATE OR REPLACE PROCEDURE INVERSE_R2(\n" +
+                "PARA_C IN VARCHAR2(255)\n" +
+                ") IS\n" +
+                "BEGIN\n" +
+                "SELECT R2.C, R2.B FROM R2 WHERE (R2.C = PARA_C) AND (B = b);\n" +
+                "END INVERSE_R2;", resultSqls.get(1));
     }
 
     @Test
@@ -176,64 +184,65 @@ public class ExpressionTest {
         // check CKTuples
         Assert.assertEquals(results.getCkTuples().size(), 4);
         for (CKTuple ckTuple : results.getCkTuples()) {
-            KTuple kTuple = ckTuple.getKTuple();
-            Constraint constraint = ckTuple.getConstraint();
-            String tableName = kTuple.getTable().tableName;
+            for(KTuple kTuple : ckTuple.getkTuples()) {
+                Constraint constraint = ckTuple.getMainConstraint();
+                String tableName = kTuple.getTable().tableName;
 
-            switch (tableName) {
-                case "A1" -> {
-                    Assert.assertEquals(a1.allSchema(), kTuple.allSchema());
-                    Assert.assertEquals(
-                            "(((LENGTH((NVL((A1.A11),(''))))>0) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))",
-                            constraint.toString());
-                    KTuple exceptedKTuple = new KTuple(a1).addTupleNode(
-                            new ColumnNode(a11, gh),
-                            new ColumnNode(a12, xm),
-                            new ColumnNode(a13, gj),
-                            new ColumnNode(a14, a14),
-                            new ColumnNode(a15, a15),
-                            new ColumnNode(a16, a16),
-                            new ColumnNode(b11, b11));
-                    Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
-                    Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                    for (TupleBaseNode t : kTuple.getTuple())
-                        if (!exceptedKTuple.getTuple().contains(t))
-                            Assert.fail();
+                switch (tableName) {
+                    case "A1" -> {
+                        Assert.assertEquals(a1.allSchema(), kTuple.allSchema());
+                        Assert.assertEquals(
+                                "(((LENGTH((NVL((A1.A11),(''))))>0) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))",
+                                constraint.toString());
+                        KTuple exceptedKTuple = new KTuple(a1).addTupleNode(
+                                new ColumnNode(a11, gh),
+                                new ColumnNode(a12, xm),
+                                new ColumnNode(a13, gj),
+                                new ColumnNode(a14, a14),
+                                new ColumnNode(a15, a15),
+                                new ColumnNode(a16, a16),
+                                new ColumnNode(b11, b11));
+                        Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
+                        Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
+                        for (TupleBaseNode t : kTuple.getTuple())
+                            if (!exceptedKTuple.getTuple().contains(t))
+                                Assert.fail();
+                    }
+                    case "A2" -> {
+                        Assert.assertEquals(a2.allSchema(), kTuple.allSchema());
+                        Assert.assertEquals(
+                                "((((LENGTH((NVL((A2.A21),(''))))>0) AND (A2.A24<='#{ETL_DT}')) AND (A2.A25>'#{ETL_DT}')) AND (A2.A26<>'0101'))",
+                                constraint.toString());
+                        KTuple exceptedKTuple = new KTuple(a2).addTupleNode(
+                                new ColumnNode(a21, gh),
+                                new ColumnNode(a22, xm),
+                                new ColumnNode(a23, gj),
+                                new ColumnNode(a24, a24),
+                                new ColumnNode(a25, a25),
+                                new ColumnNode(a26, a26),
+                                new ColumnNode(b21, b21));
+                        Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
+                        Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
+                        for (TupleBaseNode t : kTuple.getTuple())
+                            if (!exceptedKTuple.getTuple().contains(t))
+                                Assert.fail();
+                    }
+                    case "B" -> {
+                        Assert.assertEquals(b.allSchema(), kTuple.allSchema());
+                        Assert.assertEquals("((B.B02<='#{ETL_DT}') AND (B.B03>'#{ETL_DT}'))", constraint.toString());
+                        KTuple exceptedKTuple = new KTuple(b).addTupleNode(
+                                new ColumnNode(b01, b01),
+                                new ColumnNode(b02, b02),
+                                new ColumnNode(b03, b03),
+                                new ColumnNode(b04, b04));
+                        Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
+                        Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
+                        for (TupleBaseNode t : kTuple.getTuple())
+                            if (!exceptedKTuple.getTuple().contains(t))
+                                Assert.fail();
+                    }
+                    default -> Assert.fail();
                 }
-                case "A2" -> {
-                    Assert.assertEquals(a2.allSchema(), kTuple.allSchema());
-                    Assert.assertEquals(
-                            "((((LENGTH((NVL((A2.A21),(''))))>0) AND (A2.A24<='#{ETL_DT}')) AND (A2.A25>'#{ETL_DT}')) AND (A2.A26<>'0101'))",
-                            constraint.toString());
-                    KTuple exceptedKTuple = new KTuple(a2).addTupleNode(
-                            new ColumnNode(a21, gh),
-                            new ColumnNode(a22, xm),
-                            new ColumnNode(a23, gj),
-                            new ColumnNode(a24, a24),
-                            new ColumnNode(a25, a25),
-                            new ColumnNode(a26, a26),
-                            new ColumnNode(b21, b21));
-                    Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
-                    Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                    for (TupleBaseNode t : kTuple.getTuple())
-                        if (!exceptedKTuple.getTuple().contains(t))
-                            Assert.fail();
-                }
-                case "B" -> {
-                    Assert.assertEquals(b.allSchema(), kTuple.allSchema());
-                    Assert.assertEquals("((B.B02<='#{ETL_DT}') AND (B.B03>'#{ETL_DT}'))", constraint.toString());
-                    KTuple exceptedKTuple = new KTuple(b).addTupleNode(
-                            new ColumnNode(b01, b01),
-                            new ColumnNode(b02, b02),
-                            new ColumnNode(b03, b03),
-                            new ColumnNode(b04, b04));
-                    Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
-                    Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                    for (TupleBaseNode t : kTuple.getTuple())
-                        if (!exceptedKTuple.getTuple().contains(t))
-                            Assert.fail();
-                }
-                default -> Assert.fail();
             }
         }
 
