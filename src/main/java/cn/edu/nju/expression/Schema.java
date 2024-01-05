@@ -185,4 +185,8 @@ public class Schema {
                 ", columnNames=" + columnNames +
                 '}';
     }
+
+    public int size() {
+        return this.columns.size();
+    }
 }

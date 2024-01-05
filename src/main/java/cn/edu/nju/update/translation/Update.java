@@ -65,6 +65,28 @@ public class Update {
     }
 
     /**
+     * 获取K-元组
+     *
+     * @return {@link Set }<{@link KTuple }>
+     * @author: Xin
+     * @date: 2024-01-05 12:12:41
+     */
+    public Set<KTuple> getKTuples() {
+        return update.getLeft();
+    }
+
+    /**
+     * 获取表格
+     *
+     * @return {@link Graph.Table }
+     * @author: Xin
+     * @date: 2024-01-05 12:12:49
+     */
+    public Graph.Table getTable() {
+        return update.getRight();
+    }
+
+    /**
      * 等于
      *
      * @param o o

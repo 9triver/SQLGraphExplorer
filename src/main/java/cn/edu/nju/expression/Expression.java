@@ -258,4 +258,13 @@ public class Expression {
     public Expression getExpression2() {
         return expression2;
     }
+
+    @Override
+    public String toString() {
+        return "Expression{" +
+                "opType=" + opType +
+                ", expression1=" + expression1 +
+                ", expression2=" + expression2 +
+                '}';
+    }
 }

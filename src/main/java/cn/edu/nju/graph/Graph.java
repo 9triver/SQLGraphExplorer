@@ -108,6 +108,17 @@ public class Graph implements Serializable {
         }
 
         /**
+         * 获取K-元组
+         *
+         * @return {@link KTuple }
+         * @author: Xin
+         * @date: 2024-01-05 12:02:45
+         */
+        public KTuple getKTuple() {
+            return new KTuple(this,this.getTuple());
+        }
+
+        /**
          * 获取cktuples
          *
          * @return {@link CKTuples }
