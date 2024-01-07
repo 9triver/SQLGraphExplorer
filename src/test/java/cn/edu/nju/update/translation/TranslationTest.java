@@ -125,6 +125,48 @@ public class TranslationTest {
     }
 
     @Test
+    public void testInsert1() {
+        Graph.Table viewTable = this.graph.getTable("R123");
+        Assert.assertNotNull(viewTable);
+        Assert.assertEquals(2, viewTable.allSchema().size());
+
+        ViewUpdate insertViewUpdate = new ViewUpdate(UpdateType.INSERT, viewTable.getKTuple(), this.expression1);
+        Translation translation = Translation.inverseViewUpdate(insertViewUpdate);
+        Assert.assertNotNull(translation);
+        Assert.assertEquals(2, translation.size());
+
+        Update r1Update = translation.getUpdate(0);
+        Update r2Update = translation.getUpdate(1);
+        Assert.assertEquals(UpdateType.INSERT, r1Update.getUpdateType());
+        Assert.assertEquals(UpdateType.INSERT, r2Update.getUpdateType());
+        Assert.assertEquals("R1", r1Update.getTable().tableName);
+        Assert.assertEquals("R2", r2Update.getTable().tableName);
+        Assert.assertEquals(1, r1Update.getKTuples().size());
+        Assert.assertEquals(1, r2Update.getKTuples().size());
+
+        KTuple r1KTuple = r1Update.getKTuples().iterator().next();
+        KTuple r2KTuple = r2Update.getKTuples().iterator().next();
+        TupleBaseNode[] r1Tuple = r1KTuple.getTuple().toArray(new TupleBaseNode[0]);
+        TupleBaseNode[] r2Tuple = r2KTuple.getTuple().toArray(new TupleBaseNode[0]);
+
+        Assert.assertEquals(2, r1Tuple.length);
+        Assert.assertEquals(2, r2Tuple.length);
+        Assert.assertTrue(r1Tuple[0] instanceof ColumnNode);
+        Assert.assertTrue(r1Tuple[1] instanceof ColumnNode);
+        Assert.assertTrue(r2Tuple[0] instanceof ColumnNode);
+        Assert.assertTrue(r2Tuple[1] instanceof ColumnNode);
+
+        Assert.assertEquals("R1.A", r1Tuple[0].getColumnSchema().toString());
+        Assert.assertEquals("R123.A", ((ColumnNode) r1Tuple[0]).getColumn().toString());
+        Assert.assertEquals("R1.B", r1Tuple[1].getColumnSchema().toString());
+        Assert.assertEquals("R1.B", ((ColumnNode) r1Tuple[1]).getColumn().toString());
+
+        Assert.assertEquals("R2.B", r2Tuple[0].getColumnSchema().toString());
+        Assert.assertEquals("R2.B", ((ColumnNode) r2Tuple[0]).getColumn().toString());
+        Assert.assertEquals("R2.C", r2Tuple[1].getColumnSchema().toString());
+        Assert.assertEquals("R123.C", ((ColumnNode) r2Tuple[1]).getColumn().toString());
+    }
+    @Test
     public void testDelete1() {
         Graph.Table viewTable = this.graph.getTable("R123");
         Assert.assertNotNull(viewTable);
