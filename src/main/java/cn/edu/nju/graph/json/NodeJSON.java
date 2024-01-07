@@ -15,8 +15,8 @@ import java.util.Set;
  * @date: 2023-12-25 15:35:21
  */
 public class NodeJSON {
-    private String id;
-    private Value value;
+    private final String id;
+    private final Value value;
 
     /**
      * NodeJSON构造函数
@@ -62,7 +62,7 @@ public class NodeJSON {
      * @param node 节点
      * @return {@link NodeJSON }
      * @author: Xin
-     * @date: 2023-12-25 15:35:24
+     * @date: 2024-01-07 18:42:36
      */
     public static NodeJSON addNode(Node node) {
         return new NodeJSON(
@@ -75,22 +75,17 @@ public class NodeJSON {
     /**
      * 等于
      *
-     * @param obj 对象
+     * @param o o
      * @return boolean
      * @author: Xin
-     * @date: 2023-12-25 15:35:26
+     * @date: 2024-01-07 18:42:39
      */
     @Override
-    public boolean equals(Object obj) {
-        //自反性
-        if (this == obj) return true;
-        //任何对象不等于null，比较是否为同一类型
-        if (!(obj instanceof NodeJSON)) return false;
-        //强制类型转换
-        NodeJSON other = (NodeJSON) obj;
-        //比较属性值
-        return this.id.equals(other.id) &&
-                this.value.equals(other.value);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NodeJSON nodeJSON = (NodeJSON) o;
+        return Objects.equals(id, nodeJSON.id) && Objects.equals(value, nodeJSON.value);
     }
 
     /**
@@ -98,10 +93,10 @@ public class NodeJSON {
      *
      * @return int
      * @author: Xin
-     * @date: 2023-12-25 15:35:28
+     * @date: 2024-01-07 18:42:46
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.value);
+        return Objects.hash(id, value);
     }
 }

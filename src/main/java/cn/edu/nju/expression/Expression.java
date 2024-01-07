@@ -2,7 +2,7 @@ package cn.edu.nju.expression;
 
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
-import cn.edu.nju.expression.cktuple.KTuple;
+import cn.edu.nju.expression.cktuple.Tuple;
 import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.graph.Graph.Table;
 import org.apache.log4j.Logger;
@@ -38,7 +38,6 @@ public class Expression {
         this.opType = OpType.ATOM;
         this.table = table;
     }
-
 
     /**
      * 表达式构造函数
@@ -157,7 +156,6 @@ public class Expression {
         return new Expression(OpType.CARTESIAN_PRODUCTION, null, null, null, expression1, expression2);
     }
 
-
     /**
      * 核心代码：求逆函数
      *
@@ -171,8 +169,9 @@ public class Expression {
             case ATOM -> CKTuples.atom(ckTuples);
             case SELECTION -> expression1.inverse(CKTuples.selection(ckTuples, this.selectionCondition));
             case PROJECTION -> expression1.inverse(CKTuples.extension(ckTuples, expression1.schema()));
-            case CARTESIAN_PRODUCTION -> CKTuples.append(expression1.inverse(CKTuples.projection(ckTuples, expression1.schema())),
-                    expression2.inverse(CKTuples.projection(ckTuples, expression2.schema())));
+            case CARTESIAN_PRODUCTION ->
+                CKTuples.append(expression1.inverse(CKTuples.projection(ckTuples, expression1.schema())),
+                        expression2.inverse(CKTuples.projection(ckTuples, expression2.schema())));
             case INTERSECTION -> CKTuples.append(expression1.inverse(ckTuples), expression2.inverse(ckTuples));
             case UNION -> CKTuples.completion(expression1.inverse(ckTuples), expression2.inverse(ckTuples));
             case RENAME -> expression1.inverse(CKTuples.rename(ckTuples, this.renameMap));
@@ -185,8 +184,8 @@ public class Expression {
         List<List<String>> tableNames = new ArrayList<>();
         for (CKTuple ckTuple : result.getCkTuples()) {
             List<String> tmp = new ArrayList<>();
-            for (KTuple kTuple : ckTuple.getkTuples())
-                tmp.add(kTuple.getTable().tableName);
+            for (Tuple tuple : ckTuple.getKTuple())
+                tmp.add(tuple.getTable().tableName);
             tableNames.add(tmp);
         }
         logger.debug("tables: " + tableNames);

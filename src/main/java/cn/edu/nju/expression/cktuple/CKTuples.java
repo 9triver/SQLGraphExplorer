@@ -23,14 +23,14 @@ public class CKTuples implements Serializable {
     /**
      * CKTuples构造函数
      *
-     * @param kTuple     k元组
+     * @param tuple      元组
      * @param constraint 限制
      * @author: Xin
      * @date: 2023-12-25 15:07:37
      */
-    public CKTuples(KTuple kTuple, Constraint constraint) {
+    public CKTuples(Tuple tuple, Constraint constraint) {
         this.ckTuples = new ArrayList<>();
-        this.ckTuples.add(new CKTuple(Stream.of(kTuple).toList(), constraint));
+        this.ckTuples.add(new CKTuple(Stream.of(tuple).toList(), constraint));
     }
 
     /**
@@ -41,7 +41,7 @@ public class CKTuples implements Serializable {
      * @author: Xin
      * @date: 2023-12-25 15:07:48
      */
-    public CKTuples(List<KTuple> kTuples, Constraint constraint) {
+    public CKTuples(List<Tuple> kTuples, Constraint constraint) {
         this.ckTuples = new ArrayList<>();
         this.ckTuples.add(new CKTuple(kTuples, constraint));
     }
@@ -133,7 +133,6 @@ public class CKTuples implements Serializable {
         return new CKTuples(ckTuplesTmp);
     }
 
-
     /**
      * selection_{constraint}(ckTuples)
      *
@@ -167,7 +166,6 @@ public class CKTuples implements Serializable {
             ckTuplesTmp.add(CKTuple.atom(p));
         return new CKTuples(ckTuplesTmp);
     }
-
 
     /**
      * 重命名
@@ -236,13 +234,13 @@ public class CKTuples implements Serializable {
     }
 
     public boolean isWeaklyDeterministic() {
-        //TODO: 理论上尚未给出算法
+        // TODO: 理论上尚未给出算法
         return true;
     }
 
     public boolean isUnary() {
-        for(CKTuple ckTuple : this.ckTuples)
-            if(!ckTuple.isUnary())
+        for (CKTuple ckTuple : this.ckTuples)
+            if (!ckTuple.isUnary())
                 return false;
         return true;
     }

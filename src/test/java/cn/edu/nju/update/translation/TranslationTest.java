@@ -1,20 +1,16 @@
 package cn.edu.nju.update.translation;
 
 import cn.edu.nju.expression.Expression;
-import cn.edu.nju.expression.cktuple.KTuple;
+import cn.edu.nju.expression.cktuple.Tuple;
 import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.update.UpdateType;
 import cn.edu.nju.update.viewUpdate.ViewUpdate;
-import grammar.PlSqlParser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
-import java.util.Set;
 
 public class TranslationTest {
     private Graph graph;
@@ -68,11 +64,11 @@ public class TranslationTest {
         Assert.assertEquals(UpdateType.INSERT, deptUpdate.getUpdateType());
         Assert.assertEquals("EMP", empUpdate.getTable().tableName);
         Assert.assertEquals("DEPT", deptUpdate.getTable().tableName);
-        Assert.assertEquals(1, empUpdate.getKTuples().size());
-        Assert.assertEquals(1, deptUpdate.getKTuples().size());
+        Assert.assertEquals(1, empUpdate.getKTuple().size());
+        Assert.assertEquals(1, deptUpdate.getKTuple().size());
 
-        KTuple empKTuple = empUpdate.getKTuples().iterator().next();
-        KTuple deptKTuple = deptUpdate.getKTuples().iterator().next();
+        Tuple empKTuple = empUpdate.getKTuple().iterator().next();
+        Tuple deptKTuple = deptUpdate.getKTuple().iterator().next();
         TupleBaseNode[] empTuple = empKTuple.getTuple().toArray(new TupleBaseNode[0]);
         TupleBaseNode[] deptTuple = deptKTuple.getTuple().toArray(new TupleBaseNode[0]);
 
@@ -109,9 +105,9 @@ public class TranslationTest {
         Update empUpdate = translation.getUpdate(0);
         Assert.assertEquals(UpdateType.DELETE, empUpdate.getUpdateType());
         Assert.assertEquals("EMP", empUpdate.getTable().tableName);
-        Assert.assertEquals(1, empUpdate.getKTuples().size());
+        Assert.assertEquals(1, empUpdate.getKTuple().size());
 
-        KTuple empKTuple = empUpdate.getKTuples().iterator().next();
+        Tuple empKTuple = empUpdate.getKTuple().iterator().next();
         TupleBaseNode[] empTuple = empKTuple.getTuple().toArray(new TupleBaseNode[0]);
 
         Assert.assertEquals(2, empTuple.length);
@@ -141,11 +137,11 @@ public class TranslationTest {
         Assert.assertEquals(UpdateType.INSERT, r2Update.getUpdateType());
         Assert.assertEquals("R1", r1Update.getTable().tableName);
         Assert.assertEquals("R2", r2Update.getTable().tableName);
-        Assert.assertEquals(1, r1Update.getKTuples().size());
-        Assert.assertEquals(1, r2Update.getKTuples().size());
+        Assert.assertEquals(1, r1Update.getKTuple().size());
+        Assert.assertEquals(1, r2Update.getKTuple().size());
 
-        KTuple r1KTuple = r1Update.getKTuples().iterator().next();
-        KTuple r2KTuple = r2Update.getKTuples().iterator().next();
+        Tuple r1KTuple = r1Update.getKTuple().iterator().next();
+        Tuple r2KTuple = r2Update.getKTuple().iterator().next();
         TupleBaseNode[] r1Tuple = r1KTuple.getTuple().toArray(new TupleBaseNode[0]);
         TupleBaseNode[] r2Tuple = r2KTuple.getTuple().toArray(new TupleBaseNode[0]);
 
@@ -183,11 +179,11 @@ public class TranslationTest {
         Assert.assertEquals(UpdateType.DELETE, r3Update.getUpdateType());
         Assert.assertEquals("R1", r1Update.getTable().tableName);
         Assert.assertEquals("R3", r3Update.getTable().tableName);
-        Assert.assertEquals(1, r1Update.getKTuples().size());
-        Assert.assertEquals(1, r3Update.getKTuples().size());
+        Assert.assertEquals(1, r1Update.getKTuple().size());
+        Assert.assertEquals(1, r3Update.getKTuple().size());
 
-        KTuple r1KTuple = r1Update.getKTuples().iterator().next();
-        KTuple r3KTuple = r3Update.getKTuples().iterator().next();
+        Tuple r1KTuple = r1Update.getKTuple().iterator().next();
+        Tuple r3KTuple = r3Update.getKTuple().iterator().next();
         TupleBaseNode[] r1Tuple = r1KTuple.getTuple().toArray(new TupleBaseNode[0]);
         TupleBaseNode[] r3Tuple = r3KTuple.getTuple().toArray(new TupleBaseNode[0]);
 

@@ -4,6 +4,7 @@ import cn.edu.nju.graph.Graph;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -150,25 +151,31 @@ public class Schema {
     }
 
     /**
-     * 相等
+     * 等于
      *
-     * @param obj 对象
+     * @param o o
      * @return boolean
      * @author: Xin
-     * @date: 2023-12-25 15:32:45
+     * @date: 2024-01-07 18:40:10
      */
     @Override
-    public boolean equals(Object obj) {
-        // 自反性
-        if (this == obj)
-            return true;
-        // 任何对象不等于null，比较是否为同一类型
-        if (!(obj instanceof Schema))
-            return false;
-        // 强制类型转换
-        Schema other = (Schema) obj;
-        // 比较属性值
-        return this.columns.equals(other.columns) && this.columnNames.equals(other.columnNames);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Schema schema = (Schema) o;
+        return Objects.equals(columns, schema.columns) && Objects.equals(columnNames, schema.columnNames);
+    }
+
+    /**
+     * 散列码
+     *
+     * @return int
+     * @author: Xin
+     * @date: 2024-01-07 18:40:14
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(columns, columnNames);
     }
 
     /**

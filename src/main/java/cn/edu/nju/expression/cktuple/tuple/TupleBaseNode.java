@@ -44,6 +44,7 @@ public abstract class TupleBaseNode implements Serializable {
             e.printStackTrace();
         }
 
+        assert newTupleBaseNode != null;
         newTupleBaseNode.columnSchema = columnSchema;
         return newTupleBaseNode;
     }
@@ -82,7 +83,7 @@ public abstract class TupleBaseNode implements Serializable {
             // TODO: undefined in theory
             return true;
         } else if (this instanceof ColumnNode) {
-            return ((ColumnNode) this).isEmpty();
+            return this.isEmpty();
         }
 
         return true;

@@ -12,8 +12,8 @@ import java.util.Objects;
  * @date: 2023-12-25 15:35:33
  */
 public class Value {
-    private String title;
-    private List<Item> items;
+    private final String title;
+    private final List<Item> items;
 
     /**
      * Value构造函数
@@ -33,26 +33,17 @@ public class Value {
     /**
      * 等于
      *
-     * @param obj 对象
+     * @param o o
      * @return boolean
      * @author: Xin
-     * @date: 2023-12-25 15:35:50
+     * @date: 2024-01-07 18:43:09
      */
     @Override
-    public boolean equals(Object obj) {
-        //自反性
-        if (this == obj) return true;
-        //任何对象不等于null，比较是否为同一类型
-        if (!(obj instanceof Value)) return false;
-        //强制类型转换
-        Value other = (Value) obj;
-        //比较属性值
-        if(!this.title.equals(other.title) || this.items.size()!=other.items.size()) return false;
-        for(int i = 0; i < this.items.size(); ++i)
-            if(!this.items.get(i).equals(other.items.get(i)))
-                return false;
-
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Value value = (Value) o;
+        return Objects.equals(title, value.title) && Objects.equals(items, value.items);
     }
 
     /**
@@ -60,13 +51,10 @@ public class Value {
      *
      * @return int
      * @author: Xin
-     * @date: 2023-12-25 15:35:53
+     * @date: 2024-01-07 18:43:13
      */
     @Override
     public int hashCode() {
-        List<Object> objs = new ArrayList<>();
-        objs.add(this.title);
-        objs.addAll(this.items);
-        return Objects.hash(objs);
+        return Objects.hash(title, items);
     }
 }

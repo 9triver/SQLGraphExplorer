@@ -12,7 +12,7 @@ import com.google.common.collect.HashBiMap;
  * @date: 2023-12-25 15:26:02
  */
 public class RenameMap {
-    private BiMap<Graph.Column, Graph.Column> maps = HashBiMap.create();
+    private final BiMap<Graph.Column, Graph.Column> maps = HashBiMap.create();
 
 
     /**

@@ -1,6 +1,6 @@
 package cn.edu.nju.update.translation;
 
-import cn.edu.nju.expression.cktuple.KTuple;
+import cn.edu.nju.expression.cktuple.Tuple;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.update.UpdateType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -11,8 +11,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Update {
-    private UpdateType updateType;
-    private Pair<Set<KTuple>, Graph.Table> update;
+    private final UpdateType updateType;
+    private final Pair<Set<Tuple>, Graph.Table> update;
 
     /**
      * Translation中的更新(Update)的构造函数
@@ -23,7 +23,7 @@ public class Update {
      * @author: Xin
      * @date: 2024-01-02 21:11:27
      */
-    public Update(UpdateType updateType, Set<KTuple> kTuples, Graph.Table table) {
+    public Update(UpdateType updateType, Set<Tuple> kTuples, Graph.Table table) {
         this.updateType = updateType;
         this.update = Pair.of(kTuples,table);
     }
@@ -37,7 +37,7 @@ public class Update {
      * @author: Xin
      * @date: 2024-01-02 21:11:55
      */
-    public Update(UpdateType updateType, Graph.Table table, KTuple ... kTuples){
+    public Update(UpdateType updateType, Graph.Table table, Tuple... kTuples){
         this.updateType = updateType;
         this.update = Pair.of(Arrays.stream(kTuples).collect(Collectors.toSet()), table);
     }
@@ -56,22 +56,22 @@ public class Update {
     /**
      * 获取更新
      *
-     * @return {@link Pair }<{@link Set }<{@link KTuple }>, {@link Graph.Table }>
+     * @return {@link Pair }<{@link Set }<{@link Tuple }>, {@link Graph.Table }>
      * @author: Xin
      * @date: 2024-01-02 21:11:20
      */
-    public Pair<Set<KTuple>, Graph.Table> getUpdate() {
+    public Pair<Set<Tuple>, Graph.Table> getUpdate() {
         return update;
     }
 
     /**
      * 获取K-元组
      *
-     * @return {@link Set }<{@link KTuple }>
+     * @return {@link Set }<{@link Tuple }>
      * @author: Xin
      * @date: 2024-01-05 12:12:41
      */
-    public Set<KTuple> getKTuples() {
+    public Set<Tuple> getKTuple() {
         return update.getLeft();
     }
 

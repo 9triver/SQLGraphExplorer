@@ -3,60 +3,56 @@ package cn.edu.nju.expression.cktuple;
 import cn.edu.nju.expression.Schema;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
-import cn.edu.nju.tools.Tools;
-import org.checkerframework.checker.units.qual.K;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * @className：KTuple
+ * @className：Tuple
  * @version: 1.0.0
- * @description：K-元组
+ * @description：元组
  * @author: Xin
  * @date: 2023-12-25 15:12:22
  */
-public class KTuple implements Serializable {
-    private Graph.Table table;
-    private Set<TupleBaseNode> tuple;
+public class Tuple implements Serializable {
+    private final Graph.Table table;
+    private final Set<TupleBaseNode> tuple;
 
     /**
-     * KTuple构造函数
+     * Tuple构造函数
      *
      * @param table 表
      * @author: Xin
      * @date: 2023-12-25 15:12:25
      */
-    public KTuple(Graph.Table table) {
+    public Tuple(Graph.Table table) {
         this.table = table;
         this.tuple = new HashSet<>();
     }
 
     /**
-     * KTuple构造函数
+     * Tuple构造函数
      *
      * @param table 表
      * @param tuple 元组
      * @author: Xin
      * @date: 2023-12-25 15:12:40
      */
-    public KTuple(Graph.Table table, Set<TupleBaseNode> tuple) {
+    public Tuple(Graph.Table table, Set<TupleBaseNode> tuple) {
         this.table = table;
         this.tuple = tuple;
     }
 
-
     /**
-     * KTuple构造函数
+     * Tuple构造函数
      *
      * @param table          表格
      * @param tupleBaseNodes 元组基础节点
      * @author: Xin
      * @date: 2024-01-02 21:19:33
      */
-    public KTuple(Graph.Table table, TupleBaseNode... tupleBaseNodes) {
+    public Tuple(Graph.Table table, TupleBaseNode... tupleBaseNodes) {
         this.table = table;
         this.tuple = Arrays.stream(tupleBaseNodes).collect(Collectors.toSet());
     }
@@ -65,17 +61,17 @@ public class KTuple implements Serializable {
      * 添加元组节点
      *
      * @param tupleBaseNodes 元组基节点
-     * @return {@link KTuple }
+     * @return {@link Tuple }
      * @author: Xin
      * @date: 2023-12-25 15:13:19
      */
-    public KTuple addTupleNode(TupleBaseNode... tupleBaseNodes) {
+    public Tuple addTupleNode(TupleBaseNode... tupleBaseNodes) {
         Collections.addAll(this.tuple, tupleBaseNodes);
         return this;
     }
 
     /**
-     * 获取kTuple的模式
+     * 获取tuple的模式
      *
      * @return {@link Set }<{@link Graph.Column }>
      * @author: Xin
@@ -89,7 +85,7 @@ public class KTuple implements Serializable {
     }
 
     /**
-     * 获取kTuple的全模式
+     * 获取tuple的全模式
      *
      * @return {@link Schema }
      * @author: Xin
@@ -103,7 +99,7 @@ public class KTuple implements Serializable {
     }
 
     /**
-     * 获取kTuple的全模式名
+     * 获取tuple的全模式名
      *
      * @return {@link Set }<{@link String }>
      * @author: Xin
@@ -146,8 +142,8 @@ public class KTuple implements Serializable {
      * @date: 2024-01-04 20:28:42
      */
     public boolean isEmpty() {
-        for(TupleBaseNode tupleBaseNode : tuple)
-            if(!tupleBaseNode.isEmpty())
+        for (TupleBaseNode tupleBaseNode : tuple)
+            if (!tupleBaseNode.isEmpty())
                 return false;
         return true;
     }
@@ -166,8 +162,8 @@ public class KTuple implements Serializable {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        KTuple kTuple = (KTuple) o;
-        return Objects.equals(table, kTuple.table) && Objects.equals(tuple, kTuple.tuple);
+        Tuple otherTuple = (Tuple) o;
+        return Objects.equals(table, otherTuple.table) && Objects.equals(tuple, otherTuple.tuple);
     }
 
     /**

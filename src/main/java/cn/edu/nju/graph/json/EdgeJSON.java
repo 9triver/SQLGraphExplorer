@@ -15,9 +15,9 @@ import java.util.Set;
  * @date: 2023-12-25 15:33:09
  */
 public class EdgeJSON {
-    private String source;
-    private String target;
-    private String value;
+    private final String source;
+    private final String target;
+    private final String value;
 
     /**
      * EdgeJSON构造函数
@@ -34,12 +34,30 @@ public class EdgeJSON {
         this.value = value;
     }
 
+    /**
+     * 添加边
+     *
+     * @param src 源
+     * @param dst 目标
+     * @return {@link EdgeJSON }
+     * @author: Xin
+     * @date: 2024-01-07 18:41:03
+     */
     public static EdgeJSON addEdge(Node src, Node dst) {
         return new EdgeJSON(
                 String.valueOf(src.name.hashCode()),
                 String.valueOf(dst.name.hashCode()),
                 "");
     }
+
+    /**
+     * 添加表格
+     *
+     * @param table 表格
+     * @return {@link Set }<{@link EdgeJSON }>
+     * @author: Xin
+     * @date: 2024-01-07 18:40:59
+     */
     public static Set<EdgeJSON> addTable(Graph.Table table) {
         Set<EdgeJSON> ret = new HashSet<>();
 
@@ -52,21 +70,31 @@ public class EdgeJSON {
         return ret;
     }
 
+    /**
+     * 等于
+     *
+     * @param o o
+     * @return boolean
+     * @author: Xin
+     * @date: 2024-01-07 18:40:52
+     */
     @Override
-    public boolean equals(Object obj) {
-        //自反性
-        if (this == obj) return true;
-        //任何对象不等于null，比较是否为同一类型
-        if (!(obj instanceof EdgeJSON)) return false;
-        //强制类型转换
-        EdgeJSON other = (EdgeJSON) obj;
-        //比较属性值
-        return this.source.equals(other.source) &&
-                this.target.equals(other.target) &&
-                this.value.equals(other.value);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EdgeJSON edgeJSON = (EdgeJSON) o;
+        return Objects.equals(source, edgeJSON.source) && Objects.equals(target, edgeJSON.target) && Objects.equals(value, edgeJSON.value);
     }
+
+    /**
+     * 散列码
+     *
+     * @return int
+     * @author: Xin
+     * @date: 2024-01-07 18:40:55
+     */
     @Override
     public int hashCode() {
-        return Objects.hash(this.source, this.target, this.value);
+        return Objects.hash(source, target, value);
     }
 }

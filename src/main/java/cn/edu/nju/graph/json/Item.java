@@ -10,29 +10,25 @@ import java.util.Objects;
  * @date: 2023-12-25 15:34:19
  */
 public class Item {
-    private String text;
+    private final String text;
     public Item(String text) {
         this.text = text;
     }
 
     /**
-     * 相等
+     * 等于
      *
-     * @param obj 对象
+     * @param o o
      * @return boolean
      * @author: Xin
-     * @date: 2023-12-25 15:34:46
+     * @date: 2024-01-07 18:42:03
      */
     @Override
-    public boolean equals(Object obj) {
-        //自反性
-        if (this == obj) return true;
-        //任何对象不等于null，比较是否为同一类型
-        if (!(obj instanceof Item)) return false;
-        //强制类型转换
-        Item other = (Item) obj;
-        //比较属性值
-        return this.text.equals(other.text);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(text, item.text);
     }
 
     /**
@@ -40,10 +36,10 @@ public class Item {
      *
      * @return int
      * @author: Xin
-     * @date: 2023-12-25 15:34:52
+     * @date: 2024-01-07 18:42:05
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.text);
+        return Objects.hash(text);
     }
 }

@@ -1,7 +1,5 @@
 package cn.edu.nju;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
@@ -64,7 +62,6 @@ public class TableAlias implements Serializable {
         realTableNameMapper.put(aliasTableName, tableName);
         realTableNameMapper.put(tableName, tableName);
     }
-
 
     /**
      * 获取真实列全名

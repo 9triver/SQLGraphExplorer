@@ -2,7 +2,7 @@ package cn.edu.nju.graph;
 
 import cn.edu.nju.expression.Schema;
 import cn.edu.nju.expression.cktuple.CKTuples;
-import cn.edu.nju.expression.cktuple.KTuple;
+import cn.edu.nju.expression.cktuple.Tuple;
 import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
@@ -110,12 +110,12 @@ public class Graph implements Serializable {
         /**
          * 获取K-元组
          *
-         * @return {@link KTuple }
+         * @return {@link Tuple }
          * @author: Xin
          * @date: 2024-01-05 12:02:45
          */
-        public KTuple getKTuple() {
-            return new KTuple(this,this.getTuple());
+        public Tuple getKTuple() {
+            return new Tuple(this,this.getTuple());
         }
 
         /**
@@ -126,7 +126,7 @@ public class Graph implements Serializable {
          * @date: 2023-12-25 15:37:13
          */
         public CKTuples getCKTuples() {
-            return new CKTuples(new KTuple(this, this.getTuple()), new Constraint(""));
+            return new CKTuples(new Tuple(this, this.getTuple()), new Constraint(""));
         }
 
         /**

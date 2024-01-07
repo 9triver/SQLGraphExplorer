@@ -3,7 +3,7 @@ package cn.edu.nju.expression;
 import cn.edu.nju.PlSqlVisitor;
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
-import cn.edu.nju.expression.cktuple.KTuple;
+import cn.edu.nju.expression.cktuple.Tuple;
 import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
@@ -22,9 +22,7 @@ import org.junit.Test;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ExpressionTest {
     public static Logger logger = Logger.getLogger(ExpressionTest.class);
@@ -113,17 +111,17 @@ public class ExpressionTest {
         Graph.Column r2c = r2.getColumn("C");
         Graph.Column r3a = r3.getColumn("A");
         Graph.Column r3c = r3.getColumn("C");
-        CKTuples target = new CKTuples(new KTuple(r3, r3.getTuple()), new Constraint(""));
+        CKTuples target = new CKTuples(new Tuple(r3, r3.getTuple()), new Constraint(""));
         CKTuples results = this.expression1.inverse(target).simplifyConstraints();
 
         // Check CKTuples
         Assert.assertEquals(1, results.getCkTuples().size());
         CKTuple ckTuple1 = results.getCkTuples().get(0);
-        Assert.assertEquals(2, ckTuple1.getkTuples().size());
-        KTuple kTuple1 = ckTuple1.getkTuples().get(0);
-        KTuple kTuple2 = ckTuple1.getkTuples().get(1);
-        KTuple exceptedKTuple1 = new KTuple(r1).addTupleNode(new ColumnNode(r1a, r3a), new ColumnNode(r1b, r1b));
-        KTuple exceptedKTuple2 = new KTuple(r2).addTupleNode(new ColumnNode(r2b, r2b), new ColumnNode(r2c, r3c));
+        Assert.assertEquals(2, ckTuple1.getKTuple().size());
+        Tuple kTuple1 = ckTuple1.getKTuple().get(0);
+        Tuple kTuple2 = ckTuple1.getKTuple().get(1);
+        Tuple exceptedKTuple1 = new Tuple(r1).addTupleNode(new ColumnNode(r1a, r3a), new ColumnNode(r1b, r1b));
+        Tuple exceptedKTuple2 = new Tuple(r2).addTupleNode(new ColumnNode(r2b, r2b), new ColumnNode(r2c, r3c));
         Constraint mainConstraint = ckTuple1.getMainConstraint();
 
         Assert.assertEquals("B=b", mainConstraint.toString());
@@ -139,11 +137,12 @@ public class ExpressionTest {
         Assert.assertEquals(2, resultSqls.size());
         Assert.assertEquals(
                 "CREATE OR REPLACE PROCEDURE INVERSE_R1(\n" +
-                "PARA_A IN VARCHAR2(255)\n" +
-                ") IS\n" +
-                "BEGIN\n" +
-                "SELECT R1.A, R1.B FROM R1 WHERE (R1.A = PARA_A) AND (B = b);\n" +
-                "END INVERSE_R1;", resultSqls.get(0));
+                        "PARA_A IN VARCHAR2(255)\n" +
+                        ") IS\n" +
+                        "BEGIN\n" +
+                        "SELECT R1.A, R1.B FROM R1 WHERE (R1.A = PARA_A) AND (B = b);\n" +
+                        "END INVERSE_R1;",
+                resultSqls.get(0));
         Assert.assertEquals("CREATE OR REPLACE PROCEDURE INVERSE_R2(\n" +
                 "PARA_C IN VARCHAR2(255)\n" +
                 ") IS\n" +
@@ -180,24 +179,24 @@ public class ExpressionTest {
         Graph.Column xm = c.getColumn("XM");
         Graph.Column gj = c.getColumn("GJ");
 
-        CKTuples target = new CKTuples(new KTuple(c, c.getTuple()), new Constraint(""));
+        CKTuples target = new CKTuples(new Tuple(c, c.getTuple()), new Constraint(""));
         CKTuples results = this.expression2.inverse(target).simplifyConstraints();
 
         // check CKTuples
         Assert.assertEquals(results.getCkTuples().size(), 2);
         for (CKTuple ckTuple : results.getCkTuples()) {
-            Assert.assertEquals(ckTuple.getkTuples().size(), 2);
-            for(KTuple kTuple : ckTuple.getkTuples()) {
+            Assert.assertEquals(ckTuple.getKTuple().size(), 2);
+            for (Tuple tuple : ckTuple.getKTuple()) {
                 Constraint mainConstraint = ckTuple.getMainConstraint();
-                String tableName = kTuple.getTable().tableName;
+                String tableName = tuple.getTable().tableName;
 
                 switch (tableName) {
                     case "A1" -> {
-                        Assert.assertEquals(a1.allSchema(), kTuple.allSchema());
+                        Assert.assertEquals(a1.allSchema(), tuple.allSchema());
                         Assert.assertEquals(
                                 "(((LENGTH((NVL((A1.A11),(''))))>0) AND (A1.A14<='#{ETL_DT}')) AND (A1.A15>'#{ETL_DT}'))",
-                                ckTuple.getConstraint(kTuple).toString());
-                        KTuple exceptedKTuple = new KTuple(a1).addTupleNode(
+                                ckTuple.getConstraint(tuple).toString());
+                        Tuple exceptedKTuple = new Tuple(a1).addTupleNode(
                                 new ColumnNode(a11, gh),
                                 new ColumnNode(a12, xm),
                                 new ColumnNode(a13, gj),
@@ -205,18 +204,18 @@ public class ExpressionTest {
                                 new ColumnNode(a15, a15),
                                 new ColumnNode(a16, a16),
                                 new ColumnNode(b11, b11));
-                        Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
-                        Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                        for (TupleBaseNode t : kTuple.getTuple())
+                        Assert.assertEquals(exceptedKTuple.getTable(), tuple.getTable());
+                        Assert.assertEquals(exceptedKTuple.getTuple().size(), tuple.getTuple().size());
+                        for (TupleBaseNode t : tuple.getTuple())
                             if (!exceptedKTuple.getTuple().contains(t))
                                 Assert.fail();
                     }
                     case "A2" -> {
-                        Assert.assertEquals(a2.allSchema(), kTuple.allSchema());
+                        Assert.assertEquals(a2.allSchema(), tuple.allSchema());
                         Assert.assertEquals(
                                 "((((LENGTH((NVL((A2.A21),(''))))>0) AND (A2.A24<='#{ETL_DT}')) AND (A2.A25>'#{ETL_DT}')) AND (A2.A26<>'0101'))",
-                                ckTuple.getConstraint(kTuple).toString());
-                        KTuple exceptedKTuple = new KTuple(a2).addTupleNode(
+                                ckTuple.getConstraint(tuple).toString());
+                        Tuple exceptedKTuple = new Tuple(a2).addTupleNode(
                                 new ColumnNode(a21, gh),
                                 new ColumnNode(a22, xm),
                                 new ColumnNode(a23, gj),
@@ -224,25 +223,25 @@ public class ExpressionTest {
                                 new ColumnNode(a25, a25),
                                 new ColumnNode(a26, a26),
                                 new ColumnNode(b21, b21));
-                        Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
-                        Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                        for (TupleBaseNode t : kTuple.getTuple())
+                        Assert.assertEquals(exceptedKTuple.getTable(), tuple.getTable());
+                        Assert.assertEquals(exceptedKTuple.getTuple().size(), tuple.getTuple().size());
+                        for (TupleBaseNode t : tuple.getTuple())
                             if (!exceptedKTuple.getTuple().contains(t))
                                 Assert.fail();
                     }
                     case "B" -> {
-                        Assert.assertEquals(b.allSchema(), kTuple.allSchema());
+                        Assert.assertEquals(b.allSchema(), tuple.allSchema());
                         Assert.assertEquals(
                                 "((B.B02<='#{ETL_DT}') AND (B.B03>'#{ETL_DT}'))",
-                                ckTuple.getConstraint(kTuple).toString());
-                        KTuple exceptedKTuple = new KTuple(b).addTupleNode(
+                                ckTuple.getConstraint(tuple).toString());
+                        Tuple exceptedKTuple = new Tuple(b).addTupleNode(
                                 new ColumnNode(b01, b01),
                                 new ColumnNode(b02, b02),
                                 new ColumnNode(b03, b03),
                                 new ColumnNode(b04, b04));
-                        Assert.assertEquals(exceptedKTuple.getTable(), kTuple.getTable());
-                        Assert.assertEquals(exceptedKTuple.getTuple().size(), kTuple.getTuple().size());
-                        for (TupleBaseNode t : kTuple.getTuple())
+                        Assert.assertEquals(exceptedKTuple.getTable(), tuple.getTable());
+                        Assert.assertEquals(exceptedKTuple.getTuple().size(), tuple.getTuple().size());
+                        for (TupleBaseNode t : tuple.getTuple())
                             if (!exceptedKTuple.getTuple().contains(t))
                                 Assert.fail();
                     }
@@ -261,7 +260,8 @@ public class ExpressionTest {
                         "PARA_XM IN VARCHAR2(255)\n" +
                         ") IS\n" +
                         "BEGIN\n" +
-                        "SELECT A1.A11, A1.A13, A1.B11, A1.A15, A1.A14, A1.A16, A1.A12 FROM A1 WHERE (A1.A11 = PARA_GH) AND (A1.A13 = PARA_GJ) AND (A1.A12 = PARA_XM) AND (LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}') AND (A1.A15 > '#{ETL_DT}');\n" +
+                        "SELECT A1.A11, A1.A13, A1.B11, A1.A15, A1.A14, A1.A16, A1.A12 FROM A1 WHERE (A1.A11 = PARA_GH) AND (A1.A13 = PARA_GJ) AND (A1.A12 = PARA_XM) AND (LENGTH(NVL(A1.A11,'')) > 0) AND (A1.A14 <= '#{ETL_DT}') AND (A1.A15 > '#{ETL_DT}');\n"
+                        +
                         "END INVERSE_A1;",
                 resultSqls.get(0));
         Assert.assertEquals(
@@ -271,7 +271,8 @@ public class ExpressionTest {
                         "PARA_XM IN VARCHAR2(255)\n" +
                         ") IS\n" +
                         "BEGIN\n" +
-                        "SELECT A2.A22, A2.A21, A2.A23, A2.B21, A2.A25, A2.A24, A2.A26 FROM A2 WHERE (A2.A22 = PARA_XM) AND (A2.A21 = PARA_GH) AND (A2.A23 = PARA_GJ) AND (LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}') AND (A2.A25 > '#{ETL_DT}') AND (A2.A26 <> '0101');\n" +
+                        "SELECT A2.A22, A2.A21, A2.A23, A2.B21, A2.A25, A2.A24, A2.A26 FROM A2 WHERE (A2.A22 = PARA_XM) AND (A2.A21 = PARA_GH) AND (A2.A23 = PARA_GJ) AND (LENGTH(NVL(A2.A21,'')) > 0) AND (A2.A24 <= '#{ETL_DT}') AND (A2.A25 > '#{ETL_DT}') AND (A2.A26 <> '0101');\n"
+                        +
                         "END INVERSE_A2;",
                 resultSqls.get(1));
     }
@@ -428,7 +429,6 @@ public class ExpressionTest {
         expression1 = null;
         expression2 = null;
     }
-
 
     public static void testExpression(String fileName) throws IOException, URISyntaxException {
         String filePath = ExpressionTest.class.getClassLoader().getResource("data/modify/" + fileName + ".sql").toURI()

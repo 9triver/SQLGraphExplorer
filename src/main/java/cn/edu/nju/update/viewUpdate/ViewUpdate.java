@@ -1,32 +1,28 @@
 package cn.edu.nju.update.viewUpdate;
 
 import cn.edu.nju.expression.Expression;
-import cn.edu.nju.expression.cktuple.KTuple;
+import cn.edu.nju.expression.cktuple.Tuple;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.update.UpdateType;
 
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public class ViewUpdate {
-    private UpdateType updateType;
-    private KTuple kTuple;
-    private Expression expression;
+    private final UpdateType updateType;
+    private final Tuple tuple;
+    private final Expression expression;
 
     /**
      * 视图更新(ViewUpdate)构造函数
      *
      * @param updateType 更新类型
-     * @param kTuple     k元组
+     * @param tuple      k元组
      * @param expression 表达式
      * @author: Xin
      * @date: 2024-01-02 21:18:34
      */
-    public ViewUpdate(UpdateType updateType, KTuple kTuple, Expression expression) {
+    public ViewUpdate(UpdateType updateType, Tuple tuple, Expression expression) {
         this.updateType = updateType;
-        this.kTuple = kTuple;
+        this.tuple = tuple;
         this.expression = expression;
     }
 
@@ -40,9 +36,10 @@ public class ViewUpdate {
      * @author: Xin
      * @date: 2024-01-02 21:18:39
      */
-    public ViewUpdate(UpdateType updateType, Expression expression, Graph.Table targetTable, TupleBaseNode... tupleBaseNodes) {
+    public ViewUpdate(UpdateType updateType, Expression expression, Graph.Table targetTable,
+            TupleBaseNode... tupleBaseNodes) {
         this.updateType = updateType;
-        this.kTuple = new KTuple(targetTable, tupleBaseNodes);
+        this.tuple = new Tuple(targetTable, tupleBaseNodes);
         this.expression = expression;
     }
 
@@ -60,12 +57,12 @@ public class ViewUpdate {
     /**
      * 获取K-元组
      *
-     * @return {@link KTuple }
+     * @return {@link Tuple }
      * @author: Xin
      * @date: 2024-01-02 21:20:24
      */
-    public KTuple getkTuple() {
-        return kTuple;
+    public Tuple getkTuple() {
+        return tuple;
     }
 
     /**

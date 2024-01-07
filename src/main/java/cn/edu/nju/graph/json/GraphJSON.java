@@ -14,8 +14,8 @@ import java.util.Set;
  * @date: 2023-12-25 15:33:32
  */
 public class GraphJSON {
-    private Set<NodeJSON> nodes = new HashSet<>();
-    private Set<EdgeJSON> edges = new HashSet<>();
+    private final Set<NodeJSON> nodes = new HashSet<>();
+    private final Set<EdgeJSON> edges = new HashSet<>();
 
     /**
      * 添加表格

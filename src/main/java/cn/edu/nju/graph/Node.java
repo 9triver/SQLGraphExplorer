@@ -41,21 +41,17 @@ public class Node implements Serializable{
     /**
      * 等于
      *
-     * @param obj 对象
+     * @param o o
      * @return boolean
      * @author: Xin
-     * @date: 2023-12-25 15:49:16
+     * @date: 2024-01-07 18:43:53
      */
     @Override
-    public boolean equals(Object obj) {
-        //自反性
-        if (this == obj) return true;
-        //任何对象不等于null，比较是否为同一类型
-        if (!(obj instanceof Node)) return false;
-        //强制类型转换
-        Node other = (Node) obj;
-        //比较属性值
-        return this.nodeType == other.nodeType && this.name.equals(other.name);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return nodeType == node.nodeType && Objects.equals(name, node.name);
     }
 
     /**
@@ -63,10 +59,10 @@ public class Node implements Serializable{
      *
      * @return int
      * @author: Xin
-     * @date: 2023-12-25 15:49:22
+     * @date: 2024-01-07 18:43:55
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.nodeType, this.name);
+        return Objects.hash(nodeType, name);
     }
 }

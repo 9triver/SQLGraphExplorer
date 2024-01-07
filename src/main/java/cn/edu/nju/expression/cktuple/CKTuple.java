@@ -22,8 +22,8 @@ import java.util.*;
  */
 public class CKTuple implements Serializable {
     public static Logger logger = Logger.getLogger(CKTuple.class);
-    private List<KTuple> kTuples = new ArrayList<>();
-    private Map<KTuple,Constraint> constraints = new HashMap<>();
+    private List<Tuple> kTuple = new ArrayList<>();
+    private Map<Tuple, Constraint> constraints = new HashMap<>();
     private Constraint mainConstraint;
 
     /**
@@ -35,13 +35,13 @@ public class CKTuple implements Serializable {
      */
     public CKTuple(CKTuple other) {
         try {
-            for(KTuple kTuple : other.kTuples)
-                this.kTuples.add(Tools.clone(kTuple));
+            for (Tuple tuple : other.kTuple)
+                this.kTuple.add(Tools.clone(tuple));
             this.mainConstraint = Tools.clone(other.mainConstraint);
-            for(Map.Entry<KTuple, Constraint> entry : other.constraints.entrySet()) {
-                KTuple key = entry.getKey();
+            for (Map.Entry<Tuple, Constraint> entry : other.constraints.entrySet()) {
+                Tuple key = entry.getKey();
                 Constraint value = entry.getValue();
-                this.constraints.put(Tools.clone(key),Tools.clone(value));
+                this.constraints.put(Tools.clone(key), Tools.clone(value));
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -51,16 +51,15 @@ public class CKTuple implements Serializable {
     /**
      * cktuple构造函数
      *
-     * @param kTuples     k元组
+     * @param kTuple        k元组
      * @param mainConstraint 主限制
      * @author: Xin
      * @date: 2023-12-25 15:05:51
      */
-    public CKTuple(List<KTuple> kTuples, Constraint mainConstraint) {
-        this.kTuples = kTuples;
+    public CKTuple(List<Tuple> kTuple, Constraint mainConstraint) {
+        this.kTuple = kTuple;
         this.mainConstraint = mainConstraint;
     }
-
 
     /**
      * rename运算
@@ -73,22 +72,22 @@ public class CKTuple implements Serializable {
      */
     public static CKTuple rename(CKTuple ckTuple, RenameMap renameMap) {
         Constraint mainConstraint = ckTuple.mainConstraint;
-        List<KTuple> resultKTuples = new ArrayList<>();
+        List<Tuple> resultKTuple = new ArrayList<>();
 
-        for (KTuple kTuple : ckTuple.kTuples) {
-            Set<TupleBaseNode> tuple = kTuple.getTuple();
-            Graph.Table table = kTuple.getTable();
+        for (Tuple tuple : ckTuple.kTuple) {
+            Set<TupleBaseNode> fieldSet = tuple.getTuple();
+            Graph.Table table = tuple.getTable();
             Set<TupleBaseNode> results = new HashSet<>();
 
-            for (TupleBaseNode t : tuple) {
+            for (TupleBaseNode t : fieldSet) {
                 Graph.Column srcSchema = renameMap.getSrc(t.getColumnSchema());
                 if (srcSchema != null)
                     results.add(t.setNewColumnSchema(srcSchema));
             }
-            resultKTuples.add(new KTuple(table, results));
+            resultKTuple.add(new Tuple(table, results));
         }
 
-        return new CKTuple(resultKTuples, mainConstraint);
+        return new CKTuple(resultKTuple, mainConstraint);
     }
 
     /**
@@ -102,20 +101,20 @@ public class CKTuple implements Serializable {
      */
     public static CKTuple projection(CKTuple ckTuple, Schema relationSchema) {
         Constraint mainConstraint = ckTuple.mainConstraint;
-        List<KTuple> resultKTuples = new ArrayList<>();
+        List<Tuple> resultKTuple = new ArrayList<>();
 
-        for (KTuple kTuple : ckTuple.kTuples) {
-            Set<TupleBaseNode> tuple = kTuple.getTuple();
-            Graph.Table table = kTuple.getTable();
+        for (Tuple tuple : ckTuple.kTuple) {
+            Set<TupleBaseNode> fieldSet = tuple.getTuple();
+            Graph.Table table = tuple.getTable();
             Set<TupleBaseNode> results = new HashSet<>();
 
-            for (TupleBaseNode t : tuple) {
+            for (TupleBaseNode t : fieldSet) {
                 if (relationSchema.containColumn(t.getColumnSchema()))
                     results.add(t);
             }
-            resultKTuples.add(new KTuple(table, results));
+            resultKTuple.add(new Tuple(table, results));
         }
-        return new CKTuple(resultKTuples, mainConstraint);
+        return new CKTuple(resultKTuple, mainConstraint);
     }
 
     /**
@@ -129,16 +128,16 @@ public class CKTuple implements Serializable {
      */
     public static CKTuple extension(CKTuple ckTuple, Schema relationSchema) {
         Constraint mainConstraint = ckTuple.mainConstraint;
-        List<KTuple> resultKTuples = new ArrayList<>();
+        List<Tuple> resultKTuple = new ArrayList<>();
 
-        for (KTuple kTuple : ckTuple.kTuples) {
-            Set<TupleBaseNode> tuple = kTuple.getTuple();
-            Graph.Table table = kTuple.getTable();
+        for (Tuple tuple : ckTuple.kTuple) {
+            Set<TupleBaseNode> fieldSet = tuple.getTuple();
+            Graph.Table table = tuple.getTable();
             Set<TupleBaseNode> results = new HashSet<>();
 
             for (Graph.Column s : relationSchema.getColumns()) {
                 boolean exist = false;
-                for (TupleBaseNode t : tuple) {
+                for (TupleBaseNode t : fieldSet) {
                     if (t.getColumnSchemaName().equals(s.columnName)) {
                         exist = true;
                         results.add(t.setNewColumnSchema(s));
@@ -148,12 +147,11 @@ public class CKTuple implements Serializable {
                 if (!exist)
                     results.add(new ColumnNode(s, s));
             }
-            resultKTuples.add(new KTuple(table, results));
+            resultKTuple.add(new Tuple(table, results));
         }
 
-        return new CKTuple(resultKTuples, mainConstraint);
+        return new CKTuple(resultKTuple, mainConstraint);
     }
-
 
     /**
      * append运算
@@ -165,18 +163,18 @@ public class CKTuple implements Serializable {
      * @date: 2023-12-25 15:06:08
      */
     public static CKTuple append(CKTuple ckTuple1, CKTuple ckTuple2) {
-        List<KTuple> kTuples = new ArrayList<>();
-        Constraint mainConstraint =  Constraint.and(ckTuple1.mainConstraint, ckTuple2.mainConstraint);
+        List<Tuple> kTuple = new ArrayList<>();
+        Constraint mainConstraint = Constraint.and(ckTuple1.mainConstraint, ckTuple2.mainConstraint);
         try {
-            for (KTuple kTuple : ckTuple1.kTuples)
-                kTuples.add(Tools.clone(kTuple));
-            for (KTuple kTuple : ckTuple2.kTuples)
-                kTuples.add(Tools.clone(kTuple));
+            for (Tuple tuple : ckTuple1.kTuple)
+                kTuple.add(Tools.clone(tuple));
+            for (Tuple tuple : ckTuple2.kTuple)
+                kTuple.add(Tools.clone(tuple));
 
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return new CKTuple(kTuples,mainConstraint);
+        return new CKTuple(kTuple, mainConstraint);
     }
 
     /**
@@ -189,7 +187,7 @@ public class CKTuple implements Serializable {
      * @date: 2023-12-25 15:06:11
      */
     public static CKTuple andConstraint(CKTuple ckTuple, Constraint constraint) {
-        return new CKTuple(ckTuple.kTuples, Constraint.and(ckTuple.mainConstraint, constraint));
+        return new CKTuple(ckTuple.kTuple, Constraint.and(ckTuple.mainConstraint, constraint));
     }
 
     /**
@@ -202,15 +200,15 @@ public class CKTuple implements Serializable {
      */
     public static CKTuple atom(CKTuple ckTuple) {
         Constraint mainConstraint = ckTuple.mainConstraint;
-        List<KTuple> resultKTuples = new ArrayList<>();
+        List<Tuple> resultKTuple = new ArrayList<>();
 
-        for (KTuple kTuple : ckTuple.kTuples) {
-            Set<TupleBaseNode> tuple = kTuple.getTuple();
-            Graph.Table targetTable = tuple.iterator().next().getColumnSchema().table;
+        for (Tuple tuple : ckTuple.kTuple) {
+            Set<TupleBaseNode> fieldSet = tuple.getTuple();
+            Graph.Table targetTable = fieldSet.iterator().next().getColumnSchema().table;
 
-            resultKTuples.add(new KTuple(targetTable, tuple));
+            resultKTuple.add(new Tuple(targetTable, fieldSet));
         }
-        return new CKTuple(resultKTuples, mainConstraint);
+        return new CKTuple(resultKTuple, mainConstraint);
     }
 
     /**
@@ -221,12 +219,12 @@ public class CKTuple implements Serializable {
      */
     public void simplifyConstraint() {
         try {
-            for(KTuple kTuple : this.kTuples) {
+            for (Tuple tuple : this.kTuple) {
                 Constraint subConstraint = Tools.clone(this.mainConstraint);
-                subConstraint.simplify(kTuple.getTable());
-                this.constraints.put(kTuple, subConstraint);
+                subConstraint.simplify(tuple.getTable());
+                this.constraints.put(tuple, subConstraint);
             }
-        } catch (IOException | ClassNotFoundException e){
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -243,12 +241,13 @@ public class CKTuple implements Serializable {
     public List<String> toSql() {
         // TODO : CKTuple -> sql
         List<String> sqls = new ArrayList<>();
-        for(KTuple kTuple : this.kTuples) {
+        for (Tuple tuple : this.kTuple) {
             StringBuilder buf = new StringBuilder();
-            String procedureName = "INVERSE_" + kTuple.getTable().tableName;
+            String procedureName = "INVERSE_" + tuple.getTable().tableName;
 
-            String ra = this.toRA(kTuple);
-            if(ra == null) continue;
+            String ra = this.toRA(tuple);
+            if (ra == null)
+                continue;
             String procedureBody = Tools.translateFromRA2Sql(ra);
 
             buf.append("CREATE OR REPLACE PROCEDURE ").append(procedureName).append("(\n");
@@ -268,19 +267,19 @@ public class CKTuple implements Serializable {
     /**
      * CKTuple -> Relational Algebra
      *
-     * @param kTuple k元组
+     * @param tuple k元组
      * @return {@link String }
      * @author: Xin
      * @date: 2024-01-04 15:59:23
      */
-    private String toRA(KTuple kTuple) throws NullPointerException{
+    private String toRA(Tuple tuple) throws NullPointerException {
         this.parameters.clear();
         StringBuilder ra = new StringBuilder(),
                 matchCondition = new StringBuilder(),
                 projectionList = new StringBuilder();
-        Graph.Table srcTable = kTuple.getTable();
-        Set<TupleBaseNode> tuple = kTuple.getTuple();
-        for (TupleBaseNode node : tuple) {
+        Graph.Table srcTable = tuple.getTable();
+        Set<TupleBaseNode> fieldSet = tuple.getTuple();
+        for (TupleBaseNode node : fieldSet) {
             if (node instanceof ColumnNode columnNode) {
                 String fullColumnName = columnNode.getColumn().toString();
                 String fullColumnSchemaName = columnNode.getColumnSchema().toString();
@@ -300,21 +299,22 @@ public class CKTuple implements Serializable {
         matchCondition.insert(0, "(").append(")");
         projectionList.insert(0, "[").append("]");
 
-        Constraint combinedConstraint = Constraint.and(new Constraint(matchCondition.toString()), this.getConstraint(kTuple));
+        Constraint combinedConstraint = Constraint.and(new Constraint(matchCondition.toString()),
+                this.getConstraint(tuple));
         logger.info("combinedConstraint: " + combinedConstraint);
         return ra.append("project").append(projectionList).append("(select[").append(combinedConstraint).append("](")
                 .append(srcTable.toString()).append("));").toString();
     }
 
     /**
-     * 获取ktuples
+     * 获取KTuple
      *
-     * @return {@link List }<{@link KTuple }>
+     * @return {@link List }<{@link Tuple }>
      * @author: Xin
      * @date: 2024-01-04 16:00:08
      */
-    public List<KTuple> getkTuples() {
-        return kTuples;
+    public List<Tuple> getKTuple() {
+        return kTuple;
     }
 
     /**
@@ -328,8 +328,8 @@ public class CKTuple implements Serializable {
         return mainConstraint;
     }
 
-    public Constraint getConstraint(KTuple kTuple) {
-        return this.constraints.get(kTuple);
+    public Constraint getConstraint(Tuple tuple) {
+        return this.constraints.get(tuple);
     }
 
     /**
@@ -341,10 +341,12 @@ public class CKTuple implements Serializable {
      */
     public boolean isUnary() {
         int count = 0;
-        for(KTuple kTuple : this.kTuples) {
-            if (kTuple.isEmpty()) continue;
+        for (Tuple tuple : this.kTuple) {
+            if (tuple.isEmpty())
+                continue;
             count++;
-            if(count > 1) return false;
+            if (count > 1)
+                return false;
         }
         return count == 0;
     }
@@ -359,10 +361,14 @@ public class CKTuple implements Serializable {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         CKTuple ckTuple = (CKTuple) o;
-        return Objects.equals(kTuples, ckTuple.kTuples) && Objects.equals(constraints, ckTuple.constraints) && Objects.equals(mainConstraint, ckTuple.mainConstraint) && Objects.equals(parameters, ckTuple.parameters);
+        return Objects.equals(kTuple, ckTuple.kTuple) && Objects.equals(constraints, ckTuple.constraints)
+                && Objects.equals(mainConstraint, ckTuple.mainConstraint)
+                && Objects.equals(parameters, ckTuple.parameters);
     }
 
     /**
@@ -374,6 +380,6 @@ public class CKTuple implements Serializable {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(kTuples, constraints, mainConstraint, parameters);
+        return Objects.hash(kTuple, constraints, mainConstraint, parameters);
     }
 }

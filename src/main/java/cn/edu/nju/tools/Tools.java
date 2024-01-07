@@ -54,7 +54,7 @@ public class Tools {
     }
 
     /**
-     * 获取contex文本的全内容，包含空白符
+     * 获取context文本的全内容，包含空白符
      *
      * @param context 上下文
      * @return {@link String }
