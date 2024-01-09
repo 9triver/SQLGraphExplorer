@@ -138,7 +138,8 @@ public class Translation {
         Translation translation = new Translation();
         CKTuple ckTuple = inverseSet.getCkTuples().get(0);
         for (Tuple tuple : ckTuple.getKTuple())
-            translation.addUpdate(UpdateType.INSERT, tuple.getTable(), tuple);
+            if(!tuple.isEmpty())
+                translation.addUpdate(UpdateType.INSERT, tuple.getTable(), tuple);
 
         return translation;
     }
