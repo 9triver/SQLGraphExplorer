@@ -970,4 +970,8 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public List<String> getInverseSqls() {
         return inverseSqls;
     }
+
+    public Graph getGraph() {
+        return graph;
+    }
 }

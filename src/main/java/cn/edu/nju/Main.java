@@ -9,17 +9,9 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 public class Main {
-    /**
-     * Main函数
-     *
-     * @param args args
-     * @throws IOException        IOException
-     * @throws URISyntaxException URISyntaxException
-     * @author: Xin
-     * @date: 2023-12-25 15:54:28
-     */
     public static void main(String[] args) throws IOException, URISyntaxException {
         String[] testFiles = {"EAST51_YGB", "PE5_YGB", "PEAST5_YGB"};
         for(String fileName : testFiles) {
@@ -34,8 +26,8 @@ public class Main {
     }
 
     public static List<String> test(String dstTableName) throws IOException, URISyntaxException {
-        String filePath = Main.class.getClassLoader().
-                getResource("data/modify/" + dstTableName + ".sql").toURI().getPath();
+        String filePath = Objects.requireNonNull(Main.class.getClassLoader().
+                getResource("data/modify/" + dstTableName + ".sql")).toURI().getPath();
         File file = new File(filePath);
         BufferedReader inputBuffer = new BufferedReader(
                 new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));

@@ -1,18 +1,38 @@
 package cn.edu.nju.update.translation;
 
 import cn.edu.nju.expression.cktuple.Tuple;
+import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
+import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.update.UpdateType;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Update {
     private final UpdateType updateType;
     private final Pair<Set<Tuple>, Graph.Table> update;
+    public List<String> toSql() {
+//        DELETE FROM 表名称 WHERE 列名称 = 值
+        List<String> sqls = new ArrayList<>();
+        Set<Tuple> kTuple = update.getLeft();
+        Graph.Table table = update.getRight();
+        for(Tuple tuple : kTuple) {
+            StringBuilder updateSql = new StringBuilder();
+            updateSql.append(this.updateType.toString()).append(" FROM ").append(table.tableName).append(" WHERE ");
+            for(TupleBaseNode node : tuple.getTuple()) {
+                if(!(node instanceof ColumnNode columnNode))
+                    continue;
+                if(columnNode.isEmpty())
+                    continue;
+                updateSql.append(columnNode.getColumn()).append("=").append(columnNode.getColumnSchema()).append(" AND ");
+            }
+            updateSql.delete(updateSql.length()-" AND ".length(),updateSql.length()).append(";");
+            sqls.add(updateSql.toString());
+        }
+        return sqls;
+    }
 
     /**
      * Translation中的更新(Update)的构造函数

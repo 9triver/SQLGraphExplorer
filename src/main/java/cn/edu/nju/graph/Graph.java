@@ -1020,4 +1020,8 @@ public class Graph implements Serializable {
             default -> QUOTE + node.name + QUOTE;
         };
     }
+
+    public Map<String, Table> getTableNameMapper() {
+        return tableNameMapper;
+    }
 }

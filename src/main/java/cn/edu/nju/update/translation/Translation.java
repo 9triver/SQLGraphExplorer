@@ -15,6 +15,13 @@ import java.util.*;
 public class Translation {
     private final List<Update> updates = new ArrayList<>();
 
+    public Collection<String> toSql() {
+        List<String> sqls = new ArrayList<>();
+        for(Update update : updates)
+            sqls.addAll(update.toSql());
+        return sqls;
+    }
+
     /**
      * 添加更新
      *
