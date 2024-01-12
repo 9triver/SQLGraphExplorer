@@ -14,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.StageStyle;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -22,25 +24,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Gui extends Application {
-    Graph graph;
-    Map<String, VBox> hBoxHashMap = new HashMap<>();
+    private Graph graph;
+    private Map<String, VBox> hBoxHashMap = new HashMap<>();
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage stage) {
-        Scene scene = new Scene(new Group());
-        stage.setTitle("Table View Sample");
-        stage.setWidth(450);
-        stage.setHeight(550);
+    public void start(final Stage primaryStage) {
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setPrefHeight(300);
+        scrollPane.setPrefWidth(300);
+
+        Group group = new Group();
+        scrollPane.setContent(group);
+
+        Scene scene = new Scene(scrollPane);
+
+        primaryStage.setTitle("Table View Sample");
+        primaryStage.setWidth(450);
+        primaryStage.setHeight(550);
 
         VBox vBox = createInput(this, scene);
-        ((Group) scene.getRoot()).getChildren().addAll(vBox);
+        ((Group)((ScrollPane) scene.getRoot()).getContent()).getChildren().addAll(vBox);
 
-        stage.setScene(scene);
-        stage.show();
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
     private static VBox createInput(Gui gui, Scene scene) {
         HBox hb = new HBox();
@@ -65,8 +77,11 @@ public class Gui extends Application {
                 for(Map.Entry<String, Graph.Table> entry : gui.graph.getTableNameMapper().entrySet()) {
                     Graph.Table table = entry.getValue();
                     VBox vBox = new CustomVBox(table);
+                    vBox.setLayoutX(gui.xOffset);
+                    vBox.setLayoutY(gui.yOffset);
+                    gui.yOffset+=500;
                     gui.hBoxHashMap.put(table.tableName, vBox);
-                    ((Group) scene.getRoot()).getChildren().addAll(vBox);
+                    ((Group)((ScrollPane) scene.getRoot()).getContent()).getChildren().addAll(vBox);
                 }
             }
         });
