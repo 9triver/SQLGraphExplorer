@@ -9,6 +9,9 @@ import cn.edu.nju.tools.Tools;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.graph.Node;
 import cn.edu.nju.graph.NodeType;
+import cn.edu.nju.update.UpdateType;
+import cn.edu.nju.update.translation.Translation;
+import cn.edu.nju.update.viewUpdate.ViewUpdate;
 import com.google.common.collect.Lists;
 import grammar.PlSqlParser;
 import grammar.PlSqlParserBaseVisitor;
@@ -20,6 +23,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     private static final Logger logger = Logger.getLogger(PlSqlVisitor.class);
     private String curDstTableName = "";
     private final Graph graph;
+    private Translation insertTranslation, deleteTranslation;
 
     public PlSqlVisitor() {
         this.graph = new Graph();
@@ -70,6 +74,12 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         logger.info("sql: " + select_statement_context);
         logger.info("inverse: " + inverseResults.toSql());
         this.inverseSqls.addAll(inverseResults.toSql());
+
+        // View Update Inverse
+        ViewUpdate insertViewUpdate = new ViewUpdate(UpdateType.INSERT, targetTable.getKTuple(), expression);
+        this.insertTranslation = Translation.inverseViewUpdate(insertViewUpdate);
+        ViewUpdate deleteViewUpdate = new ViewUpdate(UpdateType.DELETE, targetTable.getKTuple(), expression);
+        this.deleteTranslation = Translation.inverseViewUpdate(deleteViewUpdate);
 
         return select_statement_context;
     }
@@ -973,5 +983,13 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
     public Graph getGraph() {
         return graph;
+    }
+
+    public Translation getInsertTranslation() {
+        return insertTranslation;
+    }
+
+    public Translation getDeleteTranslation() {
+        return deleteTranslation;
     }
 }

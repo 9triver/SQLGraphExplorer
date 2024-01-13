@@ -2,6 +2,7 @@ package cn.edu.nju.gui;
 
 import cn.edu.nju.PlSqlVisitor;
 import cn.edu.nju.graph.Graph;
+import com.google.common.base.Joiner;
 import grammar.PlSqlLexer;
 import grammar.PlSqlParser;
 import javafx.application.Application;
@@ -18,16 +19,23 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.StageStyle;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.apache.log4j.Logger;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Gui extends Application {
     private Graph graph;
     private Map<String, VBox> hBoxHashMap = new HashMap<>();
     private double xOffset = 0;
-    private double yOffset = 0;
+    private double yOffset = 300;
+    private VBox viewTable;
+    private List<String> insertSql = new ArrayList<>(), deleteSql = new ArrayList<>();
+
+    public static Logger logger = Logger.getLogger(Gui.class);
 
     public static void main(String[] args) {
         launch(args);
@@ -45,8 +53,8 @@ public class Gui extends Application {
         Scene scene = new Scene(scrollPane);
 
         primaryStage.setTitle("Table View Sample");
-        primaryStage.setWidth(450);
-        primaryStage.setHeight(550);
+        primaryStage.setWidth(1000);
+        primaryStage.setHeight(800);
 
         VBox vBox = createInput(this, scene);
         ((Group)((ScrollPane) scene.getRoot()).getContent()).getChildren().addAll(vBox);
@@ -56,16 +64,18 @@ public class Gui extends Application {
     }
     private static VBox createInput(Gui gui, Scene scene) {
         HBox hb = new HBox();
+        hb.setSpacing(3);
+        // 1.input
         TextArea input = new TextArea();
         input.setPromptText("Input");
         input.setMaxWidth(400);
         hb.getChildren().addAll(input);
-
+        // 2.dstTable
         TextField dstTable = new TextField();
         dstTable.setPromptText("Dest-Table Name");
         dstTable.setMaxWidth(400);
         hb.getChildren().addAll(dstTable);
-
+        // 3.button
         Button button = new Button("Generate");
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -76,17 +86,22 @@ public class Gui extends Application {
                 gui.graph = visitor.getGraph();
                 for(Map.Entry<String, Graph.Table> entry : gui.graph.getTableNameMapper().entrySet()) {
                     Graph.Table table = entry.getValue();
-                    VBox vBox = new CustomVBox(table);
+                    VBox vBox = new CustomVBox(table, dstTableName, gui);
                     vBox.setLayoutX(gui.xOffset);
                     vBox.setLayoutY(gui.yOffset);
-                    gui.yOffset+=500;
+                    gui.yOffset+=600;
                     gui.hBoxHashMap.put(table.tableName, vBox);
                     ((Group)((ScrollPane) scene.getRoot()).getContent()).getChildren().addAll(vBox);
+                    if(table.tableName.equals(dstTableName))
+                        gui.viewTable = vBox;
                 }
+                gui.insertSql = visitor.getInsertTranslation().toSql();
+                gui.deleteSql = visitor.getDeleteTranslation().toSql();
+                logger.info("Insert:\n"+Joiner.on("\n").join(gui.insertSql));
+                logger.info("Delete:\n"+Joiner.on("\n").join(gui.deleteSql));
             }
         });
         hb.getChildren().addAll(button);
-        hb.setSpacing(3);
 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
@@ -95,6 +110,7 @@ public class Gui extends Application {
 
         return vbox;
     }
+
 
     public static PlSqlVisitor sqlVisitor(String sql, String dstTableName) {
         ANTLRInputStream input=null;
@@ -112,5 +128,13 @@ public class Gui extends Application {
 
         visitor.visitSql_script(rootContext);
         return visitor;
+    }
+
+    public List<String> getInsertSql() {
+        return insertSql;
+    }
+
+    public List<String> getDeleteSql() {
+        return deleteSql;
     }
 }

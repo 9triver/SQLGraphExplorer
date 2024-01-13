@@ -14,22 +14,43 @@ public class Update {
     private final UpdateType updateType;
     private final Pair<Set<Tuple>, Graph.Table> update;
     public List<String> toSql() {
-//        DELETE FROM 表名称 WHERE 列名称 = 值
         List<String> sqls = new ArrayList<>();
         Set<Tuple> kTuple = update.getLeft();
         Graph.Table table = update.getRight();
-        for(Tuple tuple : kTuple) {
-            StringBuilder updateSql = new StringBuilder();
-            updateSql.append(this.updateType.toString()).append(" FROM ").append(table.tableName).append(" WHERE ");
-            for(TupleBaseNode node : tuple.getTuple()) {
-                if(!(node instanceof ColumnNode columnNode))
-                    continue;
-                if(columnNode.isEmpty())
-                    continue;
-                updateSql.append(columnNode.getColumn()).append("=").append(columnNode.getColumnSchema()).append(" AND ");
+        if(updateType == UpdateType.DELETE) { //DELETE FROM 表名称 WHERE 列名称 = 值
+            for (Tuple tuple : kTuple) {
+                StringBuilder updateSql = new StringBuilder();
+                updateSql.append("DELETE FROM ").append(table.tableName).append(" WHERE ");
+                for (TupleBaseNode node : tuple.getTuple()) {
+                    if (!(node instanceof ColumnNode columnNode))
+                        continue;
+                    if (columnNode.isEmpty())
+                        continue;
+                    updateSql.append(columnNode.getColumnSchema()).append("=").append(columnNode.getColumn()).append(" AND ");
+                }
+                updateSql.delete(updateSql.length() - " AND ".length(), updateSql.length()).append(";");
+                sqls.add(updateSql.toString());
             }
-            updateSql.delete(updateSql.length()-" AND ".length(),updateSql.length()).append(";");
-            sqls.add(updateSql.toString());
+        }
+        else if(updateType == UpdateType.INSERT) { //INSERT INTO table_name (列1, 列2,...) VALUES (值1, 值2,....)
+            for (Tuple tuple : kTuple) {
+                StringBuilder updateSql = new StringBuilder();
+                updateSql.append("INSERT INTO ").append(table.tableName);
+                StringBuilder columns = new StringBuilder("(");
+                StringBuilder values = new StringBuilder("(");
+                for (TupleBaseNode node : tuple.getTuple()) {
+                    if (!(node instanceof ColumnNode columnNode))
+                        continue;
+                    if (columnNode.isEmpty())
+                        continue;
+                    columns.append(columnNode.getColumnSchema()).append(", ");
+                    values.append(columnNode.getColumn()).append(", ");
+                }
+                columns.delete(columns.length()-", ".length(), columns.length()).append(")");
+                values.delete(values.length()-", ".length(), values.length()).append(")");
+                updateSql.append(columns).append(" VALUES ").append(values);
+                sqls.add(updateSql.toString());
+            }
         }
         return sqls;
     }
