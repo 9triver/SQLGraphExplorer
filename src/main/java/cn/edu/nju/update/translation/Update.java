@@ -5,6 +5,7 @@ import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
 import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.update.UpdateType;
+import com.google.common.base.Joiner;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
@@ -13,8 +14,26 @@ import java.util.stream.Collectors;
 public class Update {
     private final UpdateType updateType;
     private final Pair<Set<Tuple>, Graph.Table> update;
-    public List<String> toSql() {
+    public String toSql() {
+        String procedureName = "INVERSE_UPDATE_"+update.getRight().tableName;
+        Pair<List<String>, Map<String, String>> pair= this.getProcedureBody();
+        Map<String, String> parameters = pair.getRight();
+        String procedureBody = Joiner.on("\n").join(pair.getLeft());
+        StringBuilder buf = new StringBuilder();
+        buf.append("CREATE OR REPLACE PROCEDURE ").append(procedureName).append("(\n");
+        for (String key : parameters.keySet()) {
+            String value = parameters.get(key);
+            buf.append(value).append(" IN VARCHAR2(255),\n");
+            procedureBody = procedureBody.replaceAll(key, value);
+        }
+        buf.delete(buf.length() - ",\n".length(), buf.length());
+        buf.append("\n) IS\nBEGIN\n").append(procedureBody).append("\nEND ").append(procedureName).append(";");
+        return buf.toString();
+    }
+
+    private Pair<List<String>,Map<String,String>> getProcedureBody() {
         List<String> sqls = new ArrayList<>();
+        Map<String,String> parameters = new HashMap<>();
         Set<Tuple> kTuple = update.getLeft();
         Graph.Table table = update.getRight();
         if(updateType == UpdateType.DELETE) { //DELETE FROM 表名称 WHERE 列名称 = 值
@@ -27,6 +46,7 @@ public class Update {
                     if (columnNode.isEmpty())
                         continue;
                     updateSql.append(columnNode.getColumnSchema()).append("=").append(columnNode.getColumn()).append(" AND ");
+                    parameters.put(columnNode.getColumn().toString(), "PARA_" + columnNode.getColumn().columnName);
                 }
                 updateSql.delete(updateSql.length() - " AND ".length(), updateSql.length()).append(";");
                 sqls.add(updateSql.toString());
@@ -45,6 +65,7 @@ public class Update {
                         continue;
                     columns.append(columnNode.getColumnSchema()).append(", ");
                     values.append(columnNode.getColumn()).append(", ");
+                    parameters.put(columnNode.getColumn().toString(), "PARA_" + columnNode.getColumn().columnName);
                 }
                 columns.delete(columns.length()-", ".length(), columns.length()).append(")");
                 values.delete(values.length()-", ".length(), values.length()).append(")");
@@ -52,7 +73,7 @@ public class Update {
                 sqls.add(updateSql.toString());
             }
         }
-        return sqls;
+        return Pair.of(sqls,parameters);
     }
 
     /**

@@ -18,7 +18,7 @@ public class Translation {
     public List<String> toSql() {
         List<String> sqls = new ArrayList<>();
         for(Update update : updates)
-            sqls.addAll(update.toSql());
+            sqls.add(update.toSql());
         return sqls;
     }
 

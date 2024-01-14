@@ -15,8 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.StageStyle;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.apache.log4j.Logger;
@@ -32,7 +30,6 @@ public class Gui extends Application {
     private Map<String, VBox> hBoxHashMap = new HashMap<>();
     private double xOffset = 0;
     private double yOffset = 300;
-    private VBox viewTable;
     private List<String> insertSql = new ArrayList<>(), deleteSql = new ArrayList<>();
 
     public static Logger logger = Logger.getLogger(Gui.class);
@@ -92,8 +89,6 @@ public class Gui extends Application {
                     gui.yOffset+=600;
                     gui.hBoxHashMap.put(table.tableName, vBox);
                     ((Group)((ScrollPane) scene.getRoot()).getContent()).getChildren().addAll(vBox);
-                    if(table.tableName.equals(dstTableName))
-                        gui.viewTable = vBox;
                 }
                 gui.insertSql = visitor.getInsertTranslation().toSql();
                 gui.deleteSql = visitor.getDeleteTranslation().toSql();
