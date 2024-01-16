@@ -4,11 +4,14 @@ import cn.edu.nju.expression.Expression;
 import cn.edu.nju.expression.cktuple.CKTuple;
 import cn.edu.nju.expression.cktuple.CKTuples;
 import cn.edu.nju.expression.cktuple.Tuple;
+import cn.edu.nju.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.graph.Graph;
 import cn.edu.nju.tools.Tools;
 import cn.edu.nju.update.UpdateType;
 import cn.edu.nju.update.viewUpdate.ViewUpdate;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.*;
 
@@ -36,28 +39,28 @@ public class Translation {
     /**
      * 添加更新
      *
-     * @param updateType 更新类型
-     * @param kTuple    k元组
-     * @param table      表格
+     * @param updateType   更新类型
+     * @param table        表格
+     * @param updateTuples 更新元组
      * @author: Xin
-     * @date: 2024-01-07 18:45:21
+     * @date: 2024-01-15 12:21:14
      */
-    public void addUpdate(UpdateType updateType, Set<Tuple> kTuple, Graph.Table table) {
-        this.updates.add(new Update(updateType, kTuple, table));
+    public void addUpdate(UpdateType updateType, Graph.Table table, List<Pair<Tuple, Constraint>> updateTuples) {
+        this.updates.add(new Update(updateType, table, updateTuples));
     }
 
 
     /**
      * 添加更新
      *
-     * @param updateType 更新类型
-     * @param table      表格
-     * @param kTuple     k元组
+     * @param updateType   更新类型
+     * @param table        表格
+     * @param updateTuples 更新元组
      * @author: Xin
-     * @date: 2024-01-07 18:48:16
+     * @date: 2024-01-15 12:21:12
      */
-    public void addUpdate(UpdateType updateType, Graph.Table table, Tuple... kTuple) {
-        this.updates.add(new Update(updateType, table, kTuple));
+    public void addUpdate(UpdateType updateType, Graph.Table table, Pair<Tuple, Constraint>... updateTuples) {
+        this.updates.add(new Update(updateType, table, updateTuples));
     }
 
     /**
@@ -146,7 +149,7 @@ public class Translation {
         CKTuple ckTuple = inverseSet.getCkTuples().get(0);
         for (Tuple tuple : ckTuple.getKTuple())
             if(!tuple.isEmpty())
-                translation.addUpdate(UpdateType.INSERT, tuple.getTable(), tuple);
+                translation.addUpdate(UpdateType.INSERT, tuple.getTable(), Pair.of(tuple, ckTuple.getConstraint(tuple)));
 
         return translation;
     }
@@ -196,7 +199,7 @@ public class Translation {
             return null;
         }
 
-        Map<Graph.Table, List<Tuple>> tau = new HashMap<>();
+        Map<Graph.Table, List<Pair<Tuple, Constraint>>> tau = new HashMap<>();
         while (!inverseSet.isEmpty()) {
             CKTuple ckTuple = inverseSet.getCkTuples().get(0);
             for (Tuple tuple : ckTuple.getKTuple()) {
@@ -207,7 +210,7 @@ public class Translation {
                 // update tau
                 if (!tau.containsKey(table))
                     tau.put(table, new ArrayList<>());
-                tau.get(table).add(tuple);
+                tau.get(table).add(Pair.of(tuple, ckTuple.getConstraint(tuple)));
                 break;
             }
             // update inverseSet
@@ -215,10 +218,10 @@ public class Translation {
         }
 
         Translation translation = new Translation();
-        for (Map.Entry<Graph.Table, List<Tuple>> entry : tau.entrySet()) {
+        for (Map.Entry<Graph.Table, List<Pair<Tuple, Constraint>>> entry : tau.entrySet()) {
             Graph.Table table = entry.getKey();
-            List<Tuple> kTuple = entry.getValue();
-            translation.addUpdate(UpdateType.DELETE, table, kTuple.toArray(new Tuple[0]));
+            List<Pair<Tuple, Constraint>> kTuple = entry.getValue();
+            translation.addUpdate(UpdateType.DELETE, table, kTuple);
         }
 
         return translation;

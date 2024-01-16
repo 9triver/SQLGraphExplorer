@@ -47,8 +47,17 @@ public class CustomVBox extends VBox {
                     output.setText("Delete:\n"+ Joiner.on("\n").join(gui.getDeleteSql()));
                 }
             });
+            // 4. inverse
+            Button inverseButton = new Button("Inverse");
+            inverseButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    output.clear();
+                    output.setText("Inverse:\n"+ Joiner.on("\n").join(gui.getInverseSql()));
+                }
+            });
 
-            hBox.getChildren().addAll(insertUpdateButton, deleteUpdateButton,output);
+            hBox.getChildren().addAll(insertUpdateButton, deleteUpdateButton, inverseButton, output);
         }
     }
 

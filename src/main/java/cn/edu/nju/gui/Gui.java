@@ -30,8 +30,9 @@ public class Gui extends Application {
     private Map<String, VBox> hBoxHashMap = new HashMap<>();
     private double xOffset = 0;
     private double yOffset = 300;
-    private List<String> insertSql = new ArrayList<>(), deleteSql = new ArrayList<>();
-
+    private List<String> insertSql = null,
+            deleteSql = null,
+            inverseSql = null;
     public static Logger logger = Logger.getLogger(Gui.class);
 
     public static void main(String[] args) {
@@ -49,7 +50,7 @@ public class Gui extends Application {
 
         Scene scene = new Scene(scrollPane);
 
-        primaryStage.setTitle("Table View Sample");
+        primaryStage.setTitle("View Update");
         primaryStage.setWidth(1000);
         primaryStage.setHeight(800);
 
@@ -59,6 +60,7 @@ public class Gui extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
     private static VBox createInput(Gui gui, Scene scene) {
         HBox hb = new HBox();
         hb.setSpacing(3);
@@ -92,8 +94,10 @@ public class Gui extends Application {
                 }
                 gui.insertSql = visitor.getInsertTranslation().toSql();
                 gui.deleteSql = visitor.getDeleteTranslation().toSql();
+                gui.inverseSql = visitor.getInverseSqls();
                 logger.info("Insert:\n"+Joiner.on("\n").join(gui.insertSql));
                 logger.info("Delete:\n"+Joiner.on("\n").join(gui.deleteSql));
+                logger.info("Inverse:\n"+Joiner.on("\n").join(gui.inverseSql));
             }
         });
         hb.getChildren().addAll(button);
@@ -105,7 +109,6 @@ public class Gui extends Application {
 
         return vbox;
     }
-
 
     public static PlSqlVisitor sqlVisitor(String sql, String dstTableName) {
         ANTLRInputStream input=null;
@@ -131,5 +134,9 @@ public class Gui extends Application {
 
     public List<String> getDeleteSql() {
         return deleteSql;
+    }
+
+    public List<String> getInverseSql() {
+        return inverseSql;
     }
 }
