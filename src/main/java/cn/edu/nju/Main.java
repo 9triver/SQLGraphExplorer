@@ -1,9 +1,11 @@
 package cn.edu.nju;
 
-import grammar.PlSqlLexer;
-import grammar.PlSqlParser;
+import cn.edu.nju.core.PlSqlVisitor;
+import cn.edu.nju.core.grammar.PlSqlLexer;
+import cn.edu.nju.core.grammar.PlSqlParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.TokenSource;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -34,7 +36,7 @@ public class Main {
 
         ANTLRInputStream input = new ANTLRInputStream(inputBuffer);
         PlSqlLexer lexer = new PlSqlLexer(input);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        CommonTokenStream tokens = new CommonTokenStream((TokenSource) lexer);
         PlSqlParser parser = new PlSqlParser(tokens);
         PlSqlParser.Sql_scriptContext rootContext = parser.sql_script();
         PlSqlVisitor visitor = new PlSqlVisitor(dstTableName);

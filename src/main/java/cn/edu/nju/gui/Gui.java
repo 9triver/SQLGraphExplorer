@@ -1,10 +1,11 @@
 package cn.edu.nju.gui;
 
-import cn.edu.nju.PlSqlVisitor;
-import cn.edu.nju.graph.Graph;
+import cn.edu.nju.core.PlSqlVisitor;
+import cn.edu.nju.core.graph.Graph;
+import cn.edu.nju.gui.model.CustomVBox;
 import com.google.common.base.Joiner;
-import grammar.PlSqlLexer;
-import grammar.PlSqlParser;
+import cn.edu.nju.core.grammar.PlSqlLexer;
+import cn.edu.nju.core.grammar.PlSqlParser;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.TokenSource;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -119,7 +121,7 @@ public class Gui extends Application {
             e.printStackTrace();
         }
         PlSqlLexer lexer = new PlSqlLexer(input);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        CommonTokenStream tokens = new CommonTokenStream((TokenSource) lexer);
         PlSqlParser parser = new PlSqlParser(tokens);
         PlSqlParser.Sql_scriptContext rootContext = parser.sql_script();
         PlSqlVisitor visitor = new PlSqlVisitor(dstTableName);

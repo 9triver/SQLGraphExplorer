@@ -1,8 +1,8 @@
-package cn.edu.nju;
+package cn.edu.nju.core;
 
 import cn.edu.nju.graph.GraphDotTest;
-import grammar.PlSqlLexer;
-import grammar.PlSqlParser;
+import cn.edu.nju.core.grammar.PlSqlLexer;
+import cn.edu.nju.core.grammar.PlSqlParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Test;
