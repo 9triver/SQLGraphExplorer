@@ -2,6 +2,7 @@ package cn.edu.nju.gui.model;
 
 import cn.edu.nju.core.graph.Graph;
 import cn.edu.nju.gui.Gui;
+import cn.edu.nju.gui.controller.RootLayoutController;
 import cn.edu.nju.gui.model.data.*;
 import com.google.common.base.Joiner;
 import javafx.collections.FXCollections;
@@ -55,6 +56,47 @@ public class CustomVBox extends VBox {
                 public void handle(ActionEvent e) {
                     output.clear();
                     output.setText("Inverse:\n"+ Joiner.on("\n").join(gui.getInverseSql()));
+                }
+            });
+
+            hBox.getChildren().addAll(insertUpdateButton, deleteUpdateButton, inverseButton, output);
+        }
+    }
+
+    public CustomVBox(Graph.Table table, String dstTableName, RootLayoutController controller) {
+        super(CustomVBox.createVBox(table));
+        if(dstTableName.equals(table.tableName)) {
+            // 0. getHBox
+            VBox vBox = (VBox) this.getChildren().get(0);
+            HBox hBox = (HBox) vBox.getChildren().get(2);
+            // 1. output
+            TextArea output = new TextArea();
+            output.setPromptText("Output");
+            output.setMaxWidth(400);
+            // 2. insert
+            Button insertUpdateButton = (new Button("Insert Update"));
+            insertUpdateButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    output.setText("Insert:\n"+ Joiner.on("\n").join(controller.getInsertSql()));
+                }
+            });
+            // 3. delete
+            Button deleteUpdateButton = new Button("Delete Update");
+            deleteUpdateButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    output.clear();
+                    output.setText("Delete:\n"+ Joiner.on("\n").join(controller.getDeleteSql()));
+                }
+            });
+            // 4. inverse
+            Button inverseButton = new Button("Inverse");
+            inverseButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    output.clear();
+                    output.setText("Inverse:\n"+ Joiner.on("\n").join(controller.getInverseSql()));
                 }
             });
 

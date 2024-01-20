@@ -1,4 +1,4 @@
-package grammar;
+package cn.edu.nju.core.grammar;
 
 import org.antlr.v4.runtime.*;
 
