@@ -11,11 +11,9 @@ module cn.edu.nju {
 
 
     opens cn.edu.nju.core to javafx.fxml;
-    opens cn.edu.nju.gui to javafx.fxml;
     opens cn.edu.nju.gui.controller to javafx.fxml;
     opens cn.edu.nju.gui.model.data to javafx.base;
 
     exports cn.edu.nju;
     exports cn.edu.nju.core;
-    exports cn.edu.nju.gui;
 }
