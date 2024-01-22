@@ -1,6 +1,5 @@
-package cn.edu.nju.graph;
+package cn.edu.nju.core.graph;
 
-import cn.edu.nju.graph.json.GraphJSON;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

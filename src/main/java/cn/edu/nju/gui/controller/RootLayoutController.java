@@ -4,6 +4,7 @@ import cn.edu.nju.core.PlSqlVisitor;
 import cn.edu.nju.core.grammar.PlSqlLexer;
 import cn.edu.nju.core.grammar.PlSqlParser;
 import cn.edu.nju.core.graph.Graph;
+import cn.edu.nju.core.tools.Tools;
 import cn.edu.nju.gui.model.CustomVBox;
 import com.google.common.base.Joiner;
 import javafx.event.ActionEvent;
@@ -56,7 +57,7 @@ public class RootLayoutController {
     void generateTables(ActionEvent event) {
         String sql = inputSql.getText();
         String dstTableName = inputDstTable.getText();
-        PlSqlVisitor visitor = RootLayoutController.sqlVisitor(sql,dstTableName);
+        PlSqlVisitor visitor = Tools.parseSql(sql,dstTableName);
         graph = visitor.getGraph();
         for(Map.Entry<String, Graph.Table> entry : graph.getTableNameMapper().entrySet()) {
             Graph.Table table = entry.getValue();
@@ -73,24 +74,6 @@ public class RootLayoutController {
         logger.info("Insert:\n"+ Joiner.on("\n").join(insertSql));
         logger.info("Delete:\n"+Joiner.on("\n").join(deleteSql));
         logger.info("Inverse:\n"+Joiner.on("\n").join(inverseSql));
-    }
-
-    public static PlSqlVisitor sqlVisitor(String sql, String dstTableName) {
-        ANTLRInputStream input=null;
-        try{
-            BufferedReader inputBuffer = new BufferedReader(new StringReader(sql));
-            input = new ANTLRInputStream(inputBuffer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PlSqlLexer lexer = new PlSqlLexer(input);
-        CommonTokenStream tokens = new CommonTokenStream((TokenSource) lexer);
-        PlSqlParser parser = new PlSqlParser(tokens);
-        PlSqlParser.Sql_scriptContext rootContext = parser.sql_script();
-        PlSqlVisitor visitor = new PlSqlVisitor(dstTableName);
-
-        visitor.visitSql_script(rootContext);
-        return visitor;
     }
 
     public List<String> getInsertSql() {

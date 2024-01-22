@@ -1,11 +1,7 @@
-package cn.edu.nju.tools.ra;
+package cn.edu.nju.core.tools.ra;
 
-import cn.edu.nju.tools.ra.adt.Attribute;
-import cn.edu.nju.tools.ra.adt.DataType;
-import cn.edu.nju.tools.ra.adt.Database;
-import cn.edu.nju.tools.ra.adt.Table;
+import cn.edu.nju.core.tools.ra.adt.Database;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;

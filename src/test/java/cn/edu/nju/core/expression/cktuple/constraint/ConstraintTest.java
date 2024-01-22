@@ -1,4 +1,4 @@
-package cn.edu.nju.expression.cktuple.constraint;
+package cn.edu.nju.core.expression.cktuple.constraint;
 
 import org.junit.Assert;
 import org.junit.Test;

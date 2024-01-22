@@ -1,6 +1,6 @@
 package cn.edu.nju.core;
 
-import cn.edu.nju.graph.GraphJSONTest;
+import cn.edu.nju.core.graph.GraphDotTest;
 import cn.edu.nju.core.grammar.PlSqlLexer;
 import cn.edu.nju.core.grammar.PlSqlParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -11,7 +11,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
-public class YGB_JSON_Test {
+public class YGB_DOT_Test {
     @Test
     public void test_EAST51_YGB() throws IOException, URISyntaxException {
         test("EAST51_YGB");
@@ -53,7 +53,7 @@ public class YGB_JSON_Test {
 
 
     private void test(String name) throws IOException, URISyntaxException {
-        String filePath = cn.edu.nju.YGB_JSON_Test.class.getClassLoader().
+        String filePath = YGB_DOT_Test.class.getClassLoader().
                 getResource("data/" + name + ".sql").toURI().getPath();
         File file = new File(filePath);
         BufferedReader inputBuffer = new BufferedReader(
@@ -68,6 +68,6 @@ public class YGB_JSON_Test {
 
         visitor.visitSql_script(rootContext);
 
-        GraphJSONTest.writeIntoFile(visitor.toJSON(), name+"_Test");
+        GraphDotTest.writeIntoFile(visitor.toDot(), name+"_Test");
     }
 }

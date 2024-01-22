@@ -1,7 +1,7 @@
-package cn.edu.nju.tools.condition;
+package cn.edu.nju.core.tools.condition;
 
-import cn.edu.nju.graph.Graph;
-import cn.edu.nju.tools.Tools;
+import cn.edu.nju.core.graph.Graph;
+import cn.edu.nju.core.tools.Tools;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;

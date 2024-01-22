@@ -1,16 +1,15 @@
-package cn.edu.nju.update.translation;
+package cn.edu.nju.core.update.translation;
 
-import cn.edu.nju.expression.Expression;
-import cn.edu.nju.expression.RenameMap;
-import cn.edu.nju.expression.cktuple.Tuple;
-import cn.edu.nju.expression.cktuple.constraint.Constraint;
-import cn.edu.nju.expression.cktuple.tuple.ColumnNode;
-import cn.edu.nju.expression.cktuple.tuple.TupleBaseNode;
-import cn.edu.nju.graph.Graph;
-import cn.edu.nju.update.UpdateType;
-import cn.edu.nju.update.viewUpdate.ViewUpdate;
+import cn.edu.nju.core.expression.Expression;
+import cn.edu.nju.core.expression.RenameMap;
+import cn.edu.nju.core.expression.cktuple.Tuple;
+import cn.edu.nju.core.expression.cktuple.constraint.Constraint;
+import cn.edu.nju.core.expression.cktuple.tuple.ColumnNode;
+import cn.edu.nju.core.expression.cktuple.tuple.TupleBaseNode;
+import cn.edu.nju.core.graph.Graph;
+import cn.edu.nju.core.update.UpdateType;
+import cn.edu.nju.core.update.viewUpdate.ViewUpdate;
 import com.google.common.collect.ImmutableMap;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,8 +100,8 @@ public class TranslationTest {
         Update deptUpdate = translation.getUpdate(1);
         Assert.assertEquals(UpdateType.INSERT, empUpdate.getUpdateType());
         Assert.assertEquals(UpdateType.INSERT, deptUpdate.getUpdateType());
-        Assert.assertEquals("EMP", empUpdate.getTable().tableName);
-        Assert.assertEquals("DEPT", deptUpdate.getTable().tableName);
+        Assert.assertEquals("EMP", empUpdate.getUpdateTable().tableName);
+        Assert.assertEquals("DEPT", deptUpdate.getUpdateTable().tableName);
         Assert.assertEquals(1, empUpdate.getKTuple().size());
         Assert.assertEquals(1, deptUpdate.getKTuple().size());
 
@@ -147,7 +146,7 @@ public class TranslationTest {
 
         Update empUpdate = translation.getUpdate(0);
         Assert.assertEquals(UpdateType.DELETE, empUpdate.getUpdateType());
-        Assert.assertEquals("EMP", empUpdate.getTable().tableName);
+        Assert.assertEquals("EMP", empUpdate.getUpdateTable().tableName);
         Assert.assertEquals(1, empUpdate.getKTuple().size());
 
         Tuple empKTuple = empUpdate.getKTuple().iterator().next();
@@ -180,8 +179,8 @@ public class TranslationTest {
         Update r2Update = translation.getUpdate(1);
         Assert.assertEquals(UpdateType.INSERT, r1Update.getUpdateType());
         Assert.assertEquals(UpdateType.INSERT, r2Update.getUpdateType());
-        Assert.assertEquals("R1", r1Update.getTable().tableName);
-        Assert.assertEquals("R2", r2Update.getTable().tableName);
+        Assert.assertEquals("R1", r1Update.getUpdateTable().tableName);
+        Assert.assertEquals("R2", r2Update.getUpdateTable().tableName);
         Assert.assertEquals(1, r1Update.getKTuple().size());
         Assert.assertEquals(1, r2Update.getKTuple().size());
 
@@ -225,8 +224,8 @@ public class TranslationTest {
         Update r1Update = translation.getUpdate(1);
         Assert.assertEquals(UpdateType.DELETE, r1Update.getUpdateType());
         Assert.assertEquals(UpdateType.DELETE, r3Update.getUpdateType());
-        Assert.assertEquals("R1", r1Update.getTable().tableName);
-        Assert.assertEquals("R3", r3Update.getTable().tableName);
+        Assert.assertEquals("R1", r1Update.getUpdateTable().tableName);
+        Assert.assertEquals("R3", r3Update.getUpdateTable().tableName);
         Assert.assertEquals(1, r1Update.getKTuple().size());
         Assert.assertEquals(1, r3Update.getKTuple().size());
 
@@ -268,7 +267,7 @@ public class TranslationTest {
 
         Update a1Update = translation.getUpdate(0);
         Assert.assertEquals(UpdateType.INSERT, a1Update.getUpdateType());
-        Assert.assertEquals("A1", a1Update.getTable().tableName);
+        Assert.assertEquals("A1", a1Update.getUpdateTable().tableName);
         Assert.assertEquals(1, a1Update.getKTuple().size());
 
         Tuple a1KTuple = a1Update.getKTuple().iterator().next();
@@ -304,9 +303,9 @@ public class TranslationTest {
         Update a1Update = translation.getUpdate(1);
         Update a2Update = translation.getUpdate(0);
         Assert.assertEquals(UpdateType.DELETE, a1Update.getUpdateType());
-        Assert.assertEquals("A1", a1Update.getTable().tableName);
+        Assert.assertEquals("A1", a1Update.getUpdateTable().tableName);
         Assert.assertEquals(1, a1Update.getKTuple().size());
-        Assert.assertEquals("A2", a2Update.getTable().tableName);
+        Assert.assertEquals("A2", a2Update.getUpdateTable().tableName);
         Assert.assertEquals(1, a2Update.getKTuple().size());
 
         Tuple a1KTuple = a1Update.getKTuple().iterator().next();

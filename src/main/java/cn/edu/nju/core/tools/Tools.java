@@ -1,6 +1,9 @@
 package cn.edu.nju.core.tools;
 
+import cn.edu.nju.core.PlSqlVisitor;
 import cn.edu.nju.core.TableAlias;
+import cn.edu.nju.core.grammar.PlSqlLexer;
+import cn.edu.nju.core.grammar.PlSqlParser;
 import cn.edu.nju.core.graph.Graph;
 import cn.edu.nju.core.tools.condition.Simplifier;
 import cn.edu.nju.core.tools.condition.Spliter;
@@ -10,9 +13,7 @@ import cn.edu.nju.core.tools.condition.grammar.spliter.SpliterLexer;
 import cn.edu.nju.core.tools.condition.grammar.spliter.SpliterParser;
 import cn.edu.nju.core.tools.ra.RelationalAlgebraInterpreter;
 import cn.edu.nju.core.tools.ra.adt.Database;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.misc.Interval;
 import org.apache.log4j.Logger;
 
@@ -29,7 +30,6 @@ import java.util.List;
  */
 public class Tools {
     private static final Logger logger = Logger.getLogger(Tools.class);
-
     private static final TableAlias tableAlias = new TableAlias();
 
     /**
@@ -227,5 +227,23 @@ public class Tools {
     }
     public static String getRealFullColumnName(String fullColumnName) {
         return Tools.tableAlias.getRealFullColumnName(fullColumnName);
+    }
+
+    public static PlSqlVisitor parseSql(String sql, String dstTableName) {
+        ANTLRInputStream input=null;
+        try{
+            BufferedReader inputBuffer = new BufferedReader(new StringReader(sql));
+            input = new ANTLRInputStream(inputBuffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        PlSqlLexer lexer = new PlSqlLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream((TokenSource) lexer);
+        PlSqlParser parser = new PlSqlParser(tokens);
+        PlSqlParser.Sql_scriptContext rootContext = parser.sql_script();
+        PlSqlVisitor visitor = new PlSqlVisitor(dstTableName);
+
+        visitor.visitSql_script(rootContext);
+        return visitor;
     }
 }

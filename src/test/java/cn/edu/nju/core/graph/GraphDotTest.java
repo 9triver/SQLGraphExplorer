@@ -1,4 +1,4 @@
-package cn.edu.nju.graph;
+package cn.edu.nju.core.graph;
 
 import org.junit.After;
 import org.junit.Assert;
