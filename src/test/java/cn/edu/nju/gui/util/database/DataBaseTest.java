@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DataBaseTest {
@@ -19,8 +20,6 @@ public class DataBaseTest {
             "  A15 VARCHAR2(255),\n" +
             "  A16 VARCHAR2(255),\n" +
             "  B11 VARCHAR2(255)\n" +
-            ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
-            "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
             ");\n" +
             "create table A2 (\n" +
             "  A21 VARCHAR2(255),\n" +
@@ -30,23 +29,17 @@ public class DataBaseTest {
             "  A25 VARCHAR2(255),\n" +
             "  A26 VARCHAR2(255),\n" +
             "  B21 VARCHAR2(255)\n" +
-            ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
-            "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
             ");\n" +
             "create table B (\n" +
             "  B01 VARCHAR2(255),\n" +
             "  B02 VARCHAR2(255),\n" +
             "  B03 VARCHAR2(255),\n" +
             "  B04 VARCHAR2(255)\n" +
-            ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
-            "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
             ");\n" +
             "create table C (\n" +
             "  GH VARCHAR2(255),\n" +
             "  XM VARCHAR2(255),\n" +
             "  GJ VARCHAR2(255)\n" +
-            ") tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (\n" +
-            "  initial 64K next 1M minextents 1 maxextents unlimited\n" +
             ");\n" +
             "SELECT\n" +
             "  A1.A11 AS GH, /*工号*/\n" +
@@ -79,14 +72,26 @@ public class DataBaseTest {
             "  LENGTH (NVL (A2.A21, '')) > 0 /*员工编号有值的数据*/\n" +
             "  AND A2.A24 <= '#{ETL_DT}'\n" +
             "  AND A2.A25 > '#{ETL_DT}'\n" +
-            "  AND A2.A26 <> '0101';\n" +
-            "\n";
+            "  AND A2.A26 <> '0101';\n";
     @Test
-    public void test0() {
+    public void test0() throws SQLException {
         PlSqlVisitor visitor = Tools.parseSql(sql0,"C");
         DataBase dataBase = new DataBase("test", visitor.getGraph());
         Assert.assertNotNull(dataBase);
-        Assert.assertTrue(dataBase.execute(sql0));
-        Assert.assertEquals(1,dataBase.executeUpdate("INSERT A1 VALUES "));
+        Assert.assertFalse(dataBase.execute(sql0));
+        Assert.assertEquals(1,
+                dataBase.executeUpdate("INSERT INTO A1 " +
+                        "(A11, A12, A13, A14, A15, A16, B11) VALUES " +
+                        "('a11', 'a12', 'a13', 'a14', 'a15', 'a16', 'b11') "));
+        ResultSet resultSet = dataBase.getData("A1");
+        Assert.assertNotNull(resultSet);
+        Assert.assertTrue(resultSet.next());
+        Assert.assertEquals("a11",resultSet.getString("A11"));
+        Assert.assertEquals("a12",resultSet.getString("A12"));
+        Assert.assertEquals("a13",resultSet.getString("A13"));
+        Assert.assertEquals("a14",resultSet.getString("A14"));
+        Assert.assertEquals("a15",resultSet.getString("A15"));
+        Assert.assertEquals("a16",resultSet.getString("A16"));
+        Assert.assertEquals("b11",resultSet.getString("B11"));
     }
 }
