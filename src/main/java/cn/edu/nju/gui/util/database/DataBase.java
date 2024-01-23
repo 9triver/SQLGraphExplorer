@@ -1,8 +1,7 @@
 package cn.edu.nju.gui.util.database;
 
 import cn.edu.nju.core.graph.Graph;
-import cn.edu.nju.gui.model.data.Data;
-import cn.edu.nju.gui.model.data.Data1;
+import cn.edu.nju.gui.model.data.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
@@ -10,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class DataBase {
@@ -71,40 +71,10 @@ public class DataBase {
         return result;
     }
 
-    public void renderData(TableView table,String tableName) {
-        // TODO: 渲染数据
-        ObservableList<Data> data = FXCollections.observableArrayList();
-        ResultSet resultSet = null;
-        List<String> columns = graph.getAllColumns(tableName);
-        try {
-            resultSet = this.getData(tableName);
-            while(resultSet.next()) {
-                data.add();
-                table.setItems(data);
-            }
-        }catch(SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //增加数据
-    public void sqladd(TableView table, String name,
-                       String phone, String address) throws ClassNotFoundException {
-        jdbcload();
-        String sql = "insert into kh_table (kh_name, kh_phone, kh_address) values(?,?,?)";
-        try {
-            cont = DriverManager.getConnection(url, user, pwd);
-            pst = cont.prepareStatement("insert into kh_table (kh_name, kh_phone, kh_address) values(?,?,?)");
-            pst.setString(1, name);
-            pst.setString(2, phone);
-            pst.setString(3, address);
-            pst.execute();
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
-        date(table);
-    }
-
+    /*public void refreshAll(String tableName) {
+        tableView.getItems().clear();
+        loadData(tableView);
+    }*/
 
     public Graph getGraph() {
         return graph;
@@ -119,5 +89,110 @@ public class DataBase {
             e.printStackTrace();
         }
         return resultSet;
+    }
+    private void loadData1(TableView<Data1> table,String tableName) {
+        int columnSize = graph.getAllColumns(tableName).size();
+        if(columnSize != 1) return;
+        ResultSet resultSet = this.getData(tableName);
+        List<String> tuple = new ArrayList<>();
+        ObservableList<Data1> dataList = FXCollections.observableArrayList();
+        try {
+            while(resultSet.next()) {
+                for(int i = 0; i < columnSize; ++i)
+                    tuple.add(resultSet.getString(i));
+                dataList.add(new Data1(tuple));
+                table.setItems(dataList);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+    private void loadData2(TableView<Data2> table,String tableName) {
+        int columnSize = graph.getAllColumns(tableName).size();
+        if(columnSize != 2) return;
+        ResultSet resultSet = this.getData(tableName);
+        List<String> tuple = new ArrayList<>();
+        ObservableList<Data2> dataList = FXCollections.observableArrayList();
+        try {
+            while(resultSet.next()) {
+                for(int i = 0; i < columnSize; ++i)
+                    tuple.add(resultSet.getString(i));
+                dataList.add(new Data2(tuple));
+                table.setItems(dataList);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+    private void loadData3(TableView<Data3> table,String tableName) {
+        int columnSize = graph.getAllColumns(tableName).size();
+        if(columnSize != 1) return;
+        ResultSet resultSet = this.getData(tableName);
+        List<String> tuple = new ArrayList<>();
+        ObservableList<Data3> dataList = FXCollections.observableArrayList();
+        try {
+            while(resultSet.next()) {
+                for(int i = 0; i < columnSize; ++i)
+                    tuple.add(resultSet.getString(i));
+                dataList.add(new Data3(tuple));
+                table.setItems(dataList);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+    private void loadData4(TableView<Data4> table,String tableName) {
+        int columnSize = graph.getAllColumns(tableName).size();
+        if(columnSize != 1) return;
+        ResultSet resultSet = this.getData(tableName);
+        List<String> tuple = new ArrayList<>();
+        ObservableList<Data4> dataList = FXCollections.observableArrayList();
+        try {
+            while(resultSet.next()) {
+                for(int i = 0; i < columnSize; ++i)
+                    tuple.add(resultSet.getString(i));
+                dataList.add(new Data4(tuple));
+                table.setItems(dataList);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+    private void loadData5(TableView<Data5> table,String tableName) {
+        int columnSize = graph.getAllColumns(tableName).size();
+        if(columnSize != 1) return;
+        ResultSet resultSet = this.getData(tableName);
+        List<String> tuple = new ArrayList<>();
+        ObservableList<Data5> dataList = FXCollections.observableArrayList();
+        try {
+            while(resultSet.next()) {
+                for(int i = 0; i < columnSize; ++i)
+                    tuple.add(resultSet.getString(i));
+                dataList.add(new Data5(tuple));
+                table.setItems(dataList);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+    private void loadData6(TableView<Data6> table,String tableName) {
+        int columnSize = graph.getAllColumns(tableName).size();
+        if(columnSize != 1) return;
+        ResultSet resultSet = this.getData(tableName);
+        List<String> tuple = new ArrayList<>();
+        ObservableList<Data6> dataList = FXCollections.observableArrayList();
+        try {
+            while(resultSet.next()) {
+                for(int i = 0; i < columnSize; ++i)
+                    tuple.add(resultSet.getString(i));
+                dataList.add(new Data6(tuple));
+                table.setItems(dataList);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+    }
+    private void loadData7(TableView<Data7> table,String tableName) {
+        int columnSize = graph.getAllColumns(tableName).size();
+        if(columnSize != 1) return;
+        ResultSet resultSet = this.getData(tableName);
+        List<String> tuple = new ArrayList<>();
+        ObservableList<Data7> dataList = FXCollections.observableArrayList();
+        try {
+            while(resultSet.next()) {
+                for(int i = 0; i < columnSize; ++i)
+                    tuple.add(resultSet.getString(i));
+                dataList.add(new Data7(tuple));
+                table.setItems(dataList);
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
     }
 }

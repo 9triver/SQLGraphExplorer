@@ -16,14 +16,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.TokenSource;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,23 +25,23 @@ import java.util.Map;
 public class RootLayoutController {
     private Graph graph;
     private Map<String, VBox> hBoxHashMap = new HashMap<>();
-    private double xOffset = 0;
-    private double yOffset = 300;
     private List<String> insertSql = null, deleteSql = null, inverseSql = null;
     public static Logger logger = Logger.getLogger(RootLayoutController.class);
 
     @FXML
-    private ScrollPane ScrollPane;
+    private ScrollPane scrollPane;
     @FXML
-    private Button generateButton;
+    private VBox rootVBox;
     @FXML
-    private Group group;
+    private HBox inputHBox;
     @FXML
-    private HBox hbox;
+    private VBox tablesVBox;
+    @FXML
+    private TextArea inputSql;
     @FXML
     private TextField inputDstTable;
     @FXML
-    private TextArea inputSql;
+    private Button generateButton;
 
     public RootLayoutController() {}
     @FXML
@@ -62,18 +56,12 @@ public class RootLayoutController {
         for(Map.Entry<String, Graph.Table> entry : graph.getTableNameMapper().entrySet()) {
             Graph.Table table = entry.getValue();
             VBox vBox = new CustomVBox(table, dstTableName, this);
-            vBox.setLayoutX(xOffset);
-            vBox.setLayoutY(yOffset);
-            yOffset+=600;
             hBoxHashMap.put(table.tableName, vBox);
-            group.getChildren().addAll(vBox);
+            tablesVBox.getChildren().addAll(vBox);
         }
         insertSql = visitor.getInsertTranslation().toSql();
         deleteSql = visitor.getDeleteTranslation().toSql();
         inverseSql = visitor.getInverseSqls();
-        logger.info("Insert:\n"+ Joiner.on("\n").join(insertSql));
-        logger.info("Delete:\n"+Joiner.on("\n").join(deleteSql));
-        logger.info("Inverse:\n"+Joiner.on("\n").join(inverseSql));
     }
 
     public List<String> getInsertSql() {

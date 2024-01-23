@@ -9,6 +9,9 @@ public class Data1 extends Data{
     public Data1(List<String> data) {
         this.first = new SimpleStringProperty(data.get(0));
     }
+    public Data1(String... data) {
+        this.first = new SimpleStringProperty(data[0]);
+    }
 
     public String getFirst() {
         return first.get();

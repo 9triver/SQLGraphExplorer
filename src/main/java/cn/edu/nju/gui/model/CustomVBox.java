@@ -30,9 +30,11 @@ public class CustomVBox extends VBox {
             // 1. output
             TextArea output = new TextArea();
             output.setPromptText("Output");
-            output.setMaxWidth(400);
+            output.setMinWidth(400);
+            output.setMinHeight(600);
             // 2. insert
             Button insertUpdateButton = (new Button("Insert Update"));
+            insertUpdateButton.setMinWidth(100);
             insertUpdateButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
@@ -41,6 +43,7 @@ public class CustomVBox extends VBox {
             });
             // 3. delete
             Button deleteUpdateButton = new Button("Delete Update");
+            deleteUpdateButton.setMinWidth(100);
             deleteUpdateButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
@@ -50,6 +53,7 @@ public class CustomVBox extends VBox {
             });
             // 4. inverse
             Button inverseButton = new Button("Inverse");
+            inverseButton.setMinWidth(100);
             inverseButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e) {
@@ -80,6 +84,7 @@ public class CustomVBox extends VBox {
         HBox hb = new HBox();
         //        1. create table
         TableView<Data1> tableView = new TableView<>();
+        tableView.setMinHeight(600);
         ObservableList<Data1> data = FXCollections.observableArrayList();
 
         final Label label = new Label(table.tableName);
@@ -97,7 +102,7 @@ public class CustomVBox extends VBox {
 //       add button
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
-            addCol.setMaxWidth(col.getPrefWidth());
+            addCol.setMinWidth(col.getPrefWidth());
             hb.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
@@ -106,6 +111,7 @@ public class CustomVBox extends VBox {
 
 
         Button insertButton = new Button("Insert");
+        insertButton.setMinWidth(100);
         insertButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -132,6 +138,7 @@ public class CustomVBox extends VBox {
         HBox hb = new HBox();
         //        1. create table
         TableView<Data2> tableView = new TableView<>();
+        tableView.setMinHeight(600);
         ObservableList<Data2> data = FXCollections.observableArrayList();
 
         final Label label = new Label(table.tableName);
@@ -149,7 +156,7 @@ public class CustomVBox extends VBox {
 //       add button
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
-            addCol.setMaxWidth(col.getPrefWidth());
+            addCol.setMinWidth(col.getPrefWidth());
             hb.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
@@ -158,6 +165,7 @@ public class CustomVBox extends VBox {
 
 
         Button insertButton = new Button("Insert");
+        insertButton.setMinWidth(100);
         insertButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -185,6 +193,7 @@ public class CustomVBox extends VBox {
         HBox hb = new HBox();
         //        1. create table
         TableView<Data3> tableView = new TableView<>();
+        tableView.setMinHeight(600);
         ObservableList<Data3> data = FXCollections.observableArrayList();
 
         final Label label = new Label(table.tableName);
@@ -202,7 +211,7 @@ public class CustomVBox extends VBox {
 //       add button
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
-            addCol.setMaxWidth(col.getPrefWidth());
+            addCol.setMinWidth(col.getPrefWidth());
             hb.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
@@ -211,6 +220,7 @@ public class CustomVBox extends VBox {
 
 
         Button insertButton = new Button("Insert");
+        insertButton.setMinWidth(100);
         insertButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -239,6 +249,7 @@ public class CustomVBox extends VBox {
         HBox hb = new HBox();
         //        1. create table
         TableView<Data4> tableView = new TableView<>();
+        tableView.setMinHeight(600);
         ObservableList<Data4> data = FXCollections.observableArrayList();
 
         final Label label = new Label(table.tableName);
@@ -256,7 +267,7 @@ public class CustomVBox extends VBox {
 //       add button
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
-            addCol.setMaxWidth(col.getPrefWidth());
+            addCol.setMinWidth(col.getPrefWidth());
             hb.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
@@ -265,6 +276,7 @@ public class CustomVBox extends VBox {
 
 
         Button insertButton = new Button("Insert");
+        insertButton.setMinWidth(100);
         insertButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -293,6 +305,7 @@ public class CustomVBox extends VBox {
         HBox hb = new HBox();
         //        1. create table
         TableView<Data5> tableView = new TableView<>();
+        tableView.setMinHeight(600);
         ObservableList<Data5> data = FXCollections.observableArrayList();
 
         final Label label = new Label(table.tableName);
@@ -310,7 +323,7 @@ public class CustomVBox extends VBox {
 //       add button
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
-            addCol.setMaxWidth(col.getPrefWidth());
+            addCol.setMinWidth(col.getPrefWidth());
             hb.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
@@ -319,6 +332,7 @@ public class CustomVBox extends VBox {
 
 
         Button insertButton = new Button("Insert");
+        insertButton.setMinWidth(100);
         insertButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -346,6 +360,7 @@ public class CustomVBox extends VBox {
         HBox hb = new HBox();
         //        1. create table
         TableView<Data6> tableView = new TableView<>();
+        tableView.setMinHeight(600);
         ObservableList<Data6> data = FXCollections.observableArrayList();
 
         final Label label = new Label(table.tableName);
@@ -363,7 +378,7 @@ public class CustomVBox extends VBox {
 //       add button
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
-            addCol.setMaxWidth(col.getPrefWidth());
+            addCol.setMinWidth(col.getPrefWidth());
             hb.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
@@ -372,6 +387,7 @@ public class CustomVBox extends VBox {
 
 
         Button insertButton = new Button("Insert");
+        insertButton.setMinWidth(100);
         insertButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -400,6 +416,7 @@ public class CustomVBox extends VBox {
         HBox hb = new HBox();
         //        1. create table
         TableView<Data7> tableView = new TableView<>();
+        tableView.setMinHeight(600);
         ObservableList<Data7> data = FXCollections.observableArrayList();
 
         final Label label = new Label(table.tableName);
@@ -417,7 +434,7 @@ public class CustomVBox extends VBox {
 //       add button
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
-            addCol.setMaxWidth(col.getPrefWidth());
+            addCol.setMinWidth(col.getPrefWidth());
             hb.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
@@ -426,6 +443,7 @@ public class CustomVBox extends VBox {
 
 
         Button insertButton = new Button("Insert");
+        insertButton.setMinWidth(100);
         insertButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {

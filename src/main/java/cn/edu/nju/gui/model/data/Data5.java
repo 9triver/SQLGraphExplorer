@@ -10,6 +10,10 @@ public class Data5 extends Data4{
         super(data);
         this.fifth  = new SimpleStringProperty(data.get(4));
     }
+    public Data5(String... data) {
+        super(data);
+        this.first = new SimpleStringProperty(data[4]);
+    }
 
     public String getFifth() {
         return fifth.get();
