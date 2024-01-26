@@ -1,6 +1,5 @@
 package cn.edu.nju;
 
-import cn.edu.nju.gui.controller.RootLayoutController;
 import javafx.application.Application;
 import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;

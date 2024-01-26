@@ -30,7 +30,7 @@ public class Update {
         }
         buf.delete(buf.length() - ",\n".length(), buf.length());
         buf.append("\n) IS\nBEGIN\n").append(procedureBody).append("\nEND ").append(procedureName).append(";");
-        return buf.toString();
+        return buf.toString().replaceAll(updateTable.tableName+"\\.", "");
     }
 
     private Pair<List<String>,Map<String,String>> getProcedureBody() {

@@ -78,7 +78,7 @@ public class DataBaseTest {
         PlSqlVisitor visitor = Tools.parseSql(sql0,"C");
         DataBase dataBase = new DataBase("test", visitor.getGraph());
         Assert.assertNotNull(dataBase);
-        Assert.assertFalse(dataBase.execute(sql0));
+        Assert.assertEquals(3, dataBase.executeSql(sql0));
         Assert.assertEquals(1,
                 dataBase.executeUpdate("INSERT INTO A1 " +
                         "(A11, A12, A13, A14, A15, A16, B11) VALUES " +

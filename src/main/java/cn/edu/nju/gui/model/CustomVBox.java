@@ -15,25 +15,51 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
+import javax.swing.plaf.ButtonUI;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CustomVBox extends VBox {
     private static String[] property = {"first","second","third","fourth","fifth","sixth","seventh"};
+    private Graph.Table table = null;
+    private VBox vBox = null;
+    private Label label = null;
+    private TableView tableView = null;
+    private HBox hBox = null;
+    private List<TextField> insertTextFields = new ArrayList<>();
+    private Button insertButton = null;
+    private TextArea output = null;
+    private Button insertUpdateButton = null;
+    private Button deleteUpdateButton = null;
+    private Button inverseButton = null;
 
     public CustomVBox(Graph.Table table, String dstTableName, RootLayoutController controller) {
         super(CustomVBox.createVBox(table));
+        this.table = table;
+        vBox = (VBox) this.getChildren().get(0);
+        label = (Label) vBox.getChildren().get(0);
+        tableView = (TableView) vBox.getChildren().get(1);
+        // hBox
+        hBox = (HBox) vBox.getChildren().get(2);
+        int columnSize = hBox.getChildren().size()-1;
+        for(int i = 0; i < columnSize; ++i)
+            insertTextFields.add((TextField) hBox.getChildren().get(i));
+        insertButton = (Button) hBox.getChildren().get(columnSize);
+        CustomVBox customVBox = this;
+        insertButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                controller.getDataBase().insertData(customVBox);
+            }
+        });
         if(dstTableName.equals(table.tableName)) {
-            // 0. getHBox
-            VBox vBox = (VBox) this.getChildren().get(0);
-            HBox hBox = (HBox) vBox.getChildren().get(2);
             // 1. output
-            TextArea output = new TextArea();
+            output = new TextArea();
             output.setPromptText("Output");
             output.setMinWidth(400);
-            output.setMinHeight(600);
+            output.setMinHeight(300);
             // 2. insert
-            Button insertUpdateButton = (new Button("Insert Update"));
+            insertUpdateButton = (new Button("Insert Update"));
             insertUpdateButton.setMinWidth(100);
             insertUpdateButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -42,7 +68,7 @@ public class CustomVBox extends VBox {
                 }
             });
             // 3. delete
-            Button deleteUpdateButton = new Button("Delete Update");
+            deleteUpdateButton = new Button("Delete Update");
             deleteUpdateButton.setMinWidth(100);
             deleteUpdateButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -52,7 +78,7 @@ public class CustomVBox extends VBox {
                 }
             });
             // 4. inverse
-            Button inverseButton = new Button("Inverse");
+            inverseButton = new Button("Inverse");
             inverseButton.setMinWidth(100);
             inverseButton.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
@@ -64,6 +90,20 @@ public class CustomVBox extends VBox {
 
             hBox.getChildren().addAll(insertUpdateButton, deleteUpdateButton, inverseButton, output);
         }
+    }
+
+    public Graph.Table getTable() {
+        return table;
+    }
+    public String getTableName() {
+        return this.getTable().tableName;
+    }
+    public List<TextField> getInsertTextFields() {
+        return insertTextFields;
+    }
+
+    public TableView getTableView() {
+        return tableView;
     }
 
     public static VBox createVBox(Graph.Table table) {
@@ -81,7 +121,7 @@ public class CustomVBox extends VBox {
     }
     private static VBox createVBox1(Graph.Table table) {
         int size = table.allSchema().getColumns().size();
-        HBox hb = new HBox();
+        HBox hBox = new HBox();
         //        1. create table
         TableView<Data1> tableView = new TableView<>();
         tableView.setMinHeight(600);
@@ -103,12 +143,11 @@ public class CustomVBox extends VBox {
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
             addCol.setMinWidth(col.getPrefWidth());
-            hb.getChildren().addAll(addCol);
+            hBox.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
 
         tableView.setItems(data);
-
 
         Button insertButton = new Button("Insert");
         insertButton.setMinWidth(100);
@@ -120,22 +159,22 @@ public class CustomVBox extends VBox {
                     insertData.add(textField.getText());
                     textField.clear();
                 }
-                data.add(new Data1(insertData));
+                tableView.getItems().add(new Data1(insertData));
             }
         });
-        hb.getChildren().addAll(insertButton);
-        hb.setSpacing(3);
+        hBox.getChildren().addAll(insertButton);
+        hBox.setSpacing(3);
 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, tableView, hb);
+        vbox.getChildren().addAll(label, tableView, hBox);
 
         return vbox;
     }
     private static VBox createVBox2(Graph.Table table) {
         int size = table.allSchema().getColumns().size();
-        HBox hb = new HBox();
+        HBox hBox = new HBox();
         //        1. create table
         TableView<Data2> tableView = new TableView<>();
         tableView.setMinHeight(600);
@@ -157,12 +196,11 @@ public class CustomVBox extends VBox {
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
             addCol.setMinWidth(col.getPrefWidth());
-            hb.getChildren().addAll(addCol);
+            hBox.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
 
         tableView.setItems(data);
-
 
         Button insertButton = new Button("Insert");
         insertButton.setMinWidth(100);
@@ -174,23 +212,22 @@ public class CustomVBox extends VBox {
                     insertData.add(textField.getText());
                     textField.clear();
                 }
-                data.add(new Data2(insertData));
+                tableView.getItems().add(new Data2(insertData));
             }
         });
-        hb.getChildren().addAll(insertButton);
-        hb.setSpacing(3);
-
+        hBox.getChildren().addAll(insertButton);
+        hBox.setSpacing(3);
 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, tableView, hb);
+        vbox.getChildren().addAll(label, tableView, hBox);
 
         return vbox;
     }
     private static VBox createVBox3(Graph.Table table) {
         int size = table.allSchema().getColumns().size();
-        HBox hb = new HBox();
+        HBox hBox = new HBox();
         //        1. create table
         TableView<Data3> tableView = new TableView<>();
         tableView.setMinHeight(600);
@@ -212,12 +249,11 @@ public class CustomVBox extends VBox {
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
             addCol.setMinWidth(col.getPrefWidth());
-            hb.getChildren().addAll(addCol);
+            hBox.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
 
         tableView.setItems(data);
-
 
         Button insertButton = new Button("Insert");
         insertButton.setMinWidth(100);
@@ -229,24 +265,23 @@ public class CustomVBox extends VBox {
                     insertData.add(textField.getText());
                     textField.clear();
                 }
-                data.add(new Data3(insertData));
+                tableView.getItems().add(new Data3(insertData));
             }
         });
 
-        hb.getChildren().addAll(insertButton);
-        hb.setSpacing(3);
-
+        hBox.getChildren().addAll(insertButton);
+        hBox.setSpacing(3);
 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, tableView, hb);
+        vbox.getChildren().addAll(label, tableView, hBox);
 
         return vbox;
     }
     private static VBox createVBox4(Graph.Table table) {
         int size = table.allSchema().getColumns().size();
-        HBox hb = new HBox();
+        HBox hBox = new HBox();
         //        1. create table
         TableView<Data4> tableView = new TableView<>();
         tableView.setMinHeight(600);
@@ -268,12 +303,11 @@ public class CustomVBox extends VBox {
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
             addCol.setMinWidth(col.getPrefWidth());
-            hb.getChildren().addAll(addCol);
+            hBox.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
 
         tableView.setItems(data);
-
 
         Button insertButton = new Button("Insert");
         insertButton.setMinWidth(100);
@@ -285,24 +319,22 @@ public class CustomVBox extends VBox {
                     insertData.add(textField.getText());
                     textField.clear();
                 }
-
-                data.add(new Data4(insertData));
+                tableView.getItems().add(new Data4(insertData));
             }
         });
-        hb.getChildren().addAll(insertButton);
-        hb.setSpacing(3);
-
+        hBox.getChildren().addAll(insertButton);
+        hBox.setSpacing(3);
 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, tableView, hb);
+        vbox.getChildren().addAll(label, tableView, hBox);
 
         return vbox;
     }
     private static VBox createVBox5(Graph.Table table) {
         int size = table.allSchema().getColumns().size();
-        HBox hb = new HBox();
+        HBox hBox = new HBox();
         //        1. create table
         TableView<Data5> tableView = new TableView<>();
         tableView.setMinHeight(600);
@@ -324,12 +356,11 @@ public class CustomVBox extends VBox {
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
             addCol.setMinWidth(col.getPrefWidth());
-            hb.getChildren().addAll(addCol);
+            hBox.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
 
         tableView.setItems(data);
-
 
         Button insertButton = new Button("Insert");
         insertButton.setMinWidth(100);
@@ -341,23 +372,22 @@ public class CustomVBox extends VBox {
                     insertData.add(textField.getText());
                     textField.clear();
                 }
-                data.add(new Data5(insertData));
+                tableView.getItems().add(new Data5(insertData));
             }
         });
-        hb.getChildren().addAll(insertButton);
-        hb.setSpacing(3);
-
+        hBox.getChildren().addAll(insertButton);
+        hBox.setSpacing(3);
 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, tableView, hb);
+        vbox.getChildren().addAll(label, tableView, hBox);
 
         return vbox;
     }
     private static VBox createVBox6(Graph.Table table) {
         int size = table.allSchema().getColumns().size();
-        HBox hb = new HBox();
+        HBox hBox = new HBox();
         //        1. create table
         TableView<Data6> tableView = new TableView<>();
         tableView.setMinHeight(600);
@@ -379,7 +409,7 @@ public class CustomVBox extends VBox {
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
             addCol.setMinWidth(col.getPrefWidth());
-            hb.getChildren().addAll(addCol);
+            hBox.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
 
@@ -396,24 +426,22 @@ public class CustomVBox extends VBox {
                     insertData.add(textField.getText());
                     textField.clear();
                 }
-
-                data.add(new Data6(insertData));
+                tableView.getItems().add(new Data6(insertData));
             }
         });
-        hb.getChildren().addAll(insertButton);
-        hb.setSpacing(3);
-
+        hBox.getChildren().addAll(insertButton);
+        hBox.setSpacing(3);
 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, tableView, hb);
+        vbox.getChildren().addAll(label, tableView, hBox);
 
         return vbox;
     }
     private static VBox createVBox7(Graph.Table table) {
         int size = table.allSchema().getColumns().size();
-        HBox hb = new HBox();
+        HBox hBox = new HBox();
         //        1. create table
         TableView<Data7> tableView = new TableView<>();
         tableView.setMinHeight(600);
@@ -435,7 +463,7 @@ public class CustomVBox extends VBox {
             TextField addCol = new TextField();
             addCol.setPromptText(column.columnName);
             addCol.setMinWidth(col.getPrefWidth());
-            hb.getChildren().addAll(addCol);
+            hBox.getChildren().addAll(addCol);
             columnTextFields.add(addCol);
         }
 
@@ -452,17 +480,16 @@ public class CustomVBox extends VBox {
                     insertData.add(textField.getText());
                     textField.clear();
                 }
-                data.add(new Data7(insertData));
+                tableView.getItems().add(new Data7(insertData));
             }
         });
-        hb.getChildren().addAll(insertButton);
-        hb.setSpacing(3);
-
+        hBox.getChildren().addAll(insertButton);
+        hBox.setSpacing(3);
 
         VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, tableView, hb);
+        vbox.getChildren().addAll(label, tableView, hBox);
 
         return vbox;
     }

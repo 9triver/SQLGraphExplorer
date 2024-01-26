@@ -7,19 +7,18 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fx:id="scrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="824.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="cn.edu.nju.gui.controller.RootLayoutController">
-   <content>
-      <VBox fx:id="rootVBox" prefHeight="572.0" prefWidth="827.0">
-         <children>
-            <HBox fx:id="inputHBox" prefHeight="272.0" prefWidth="827.0">
-               <children>
-                  <TextArea fx:id="inputSql" prefHeight="299.0" prefWidth="370.0" promptText="input" />
-                  <TextField fx:id="inputDstTable" promptText="dst tablename" />
-                  <Button fx:id="generateButton" mnemonicParsing="false" onAction="#generateTables" text="generate" />
-               </children>
-            </HBox>
-            <VBox fx:id="tablesVBox" prefHeight="294.0" prefWidth="827.0" />
-         </children>
-      </VBox>
-   </content>
+<ScrollPane fx:id="scrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="927.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.edu.nju.gui.controller.RootLayoutController">
+   <VBox fx:id="rootVBox" prefHeight="670.0" prefWidth="917.0">
+      <HBox fx:id="inputHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="918.0">
+         <TextArea fx:id="inputSql" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="370.0" promptText="input" />
+         <TextField fx:id="inputDstTable" minHeight="-Infinity" minWidth="-Infinity" promptText="dst table name" />
+         <Button fx:id="generateButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#generateTables" text="generate" />
+      </HBox>
+      <VBox fx:id="tablesVBox" prefHeight="294.0" prefWidth="827.0" />
+      <HBox fx:id="controlHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="224.0" prefWidth="918.0">
+         <TextArea fx:id="execSqlTextArea" minHeight="-Infinity" minWidth="-Infinity" prefHeight="206.0" prefWidth="376.0" promptText="sql statement" />
+         <Button fx:id="executeButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#executeSql" text="execute" />
+         <Button fx:id="refreshButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#refreshData" text="refresh" />
+      </HBox>
+   </VBox>
 </ScrollPane>

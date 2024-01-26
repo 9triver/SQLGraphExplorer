@@ -169,6 +169,9 @@ public class Graph implements Serializable {
                 ret.add(this.tableName + "." + columnName);
             return ret;
         }
+        public int columnSize() {
+            return this.columnNameMapper.size();
+        }
 
         /**
          * toString
