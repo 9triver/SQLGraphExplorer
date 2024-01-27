@@ -2,13 +2,15 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane fx:id="scrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="927.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.edu.nju.gui.controller.RootLayoutController">
-   <VBox fx:id="rootVBox" prefHeight="670.0" prefWidth="917.0">
+<ScrollPane fx:id="scrollPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="756.0" prefWidth="1061.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.edu.nju.gui.controller.RootLayoutController">
+   <VBox fx:id="rootVBox" prefHeight="752.0" prefWidth="1054.0">
       <HBox fx:id="inputHBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="290.0" prefWidth="918.0">
          <TextArea fx:id="inputSql" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="370.0" promptText="input" />
          <TextField fx:id="inputDstTable" minHeight="-Infinity" minWidth="-Infinity" promptText="dst table name" />
@@ -19,6 +21,17 @@
          <TextArea fx:id="execSqlTextArea" minHeight="-Infinity" minWidth="-Infinity" prefHeight="206.0" prefWidth="376.0" promptText="sql statement" />
          <Button fx:id="executeButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#executeSql" text="execute" />
          <Button fx:id="refreshButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#refreshData" text="refresh" />
+         <TableView fx:id="resultTable" editable="true" prefHeight="224.0" prefWidth="561.0">
+           <columns>
+             <TableColumn minWidth="100.0" prefWidth="100.0" />
+               <TableColumn minWidth="100.0" prefWidth="100.0" />
+               <TableColumn minWidth="100.0" prefWidth="100.0" />
+               <TableColumn minWidth="100.0" prefWidth="100.0" />
+               <TableColumn minWidth="100.0" prefWidth="100.0" />
+               <TableColumn minWidth="100.0" prefWidth="100.0" />
+               <TableColumn minWidth="100.0" prefWidth="100.0" />
+           </columns>
+         </TableView>
       </HBox>
    </VBox>
 </ScrollPane>

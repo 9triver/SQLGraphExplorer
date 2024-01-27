@@ -4,14 +4,17 @@ import cn.edu.nju.core.PlSqlVisitor;
 import cn.edu.nju.core.graph.Graph;
 import cn.edu.nju.core.tools.Tools;
 import cn.edu.nju.gui.model.CustomVBox;
+import cn.edu.nju.gui.model.data.Data;
 import cn.edu.nju.gui.util.database.DataBase;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,9 @@ public class RootLayoutController {
     private List<CustomVBox> customVBoxes = new ArrayList<>();
     private DataBase dataBase = null;
 
+    public RootLayoutController() {}
+    @FXML
+    private void initialize() {}
     @FXML
     private HBox controlHBox;
     @FXML
@@ -45,16 +51,8 @@ public class RootLayoutController {
     private ScrollPane scrollPane;
     @FXML
     private VBox tablesVBox;
-
     @FXML
-    void executeSql(ActionEvent event) {
-        dataBase.executeSql(execSqlTextArea.getText());
-        refreshData(event);
-    }
-
-    public RootLayoutController() {}
-    @FXML
-    private void initialize() {}
+    private TableView<Data> resultTable;
 
     @FXML
     void generateTables(ActionEvent event) {
@@ -74,6 +72,13 @@ public class RootLayoutController {
         insertSql = visitor.getInsertTranslation().toSql();
         deleteSql = visitor.getDeleteTranslation().toSql();
         inverseSql = visitor.getInverseSqls();
+    }
+    @FXML
+    void executeSql(ActionEvent event) {
+        ResultSet resultSet = dataBase.executeSql(execSqlTextArea.getText()).getRight();
+        if(resultSet != null)
+            dataBase.loadData(resultTable, resultSet);
+        refreshData(event);
     }
 
     @FXML

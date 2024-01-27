@@ -6,8 +6,11 @@ import cn.edu.nju.gui.model.data.*;
 import com.google.common.base.Joiner;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import java.sql.*;
@@ -15,15 +18,15 @@ import java.util.*;
 
 public class DataBase {
     public static Logger logger = Logger.getLogger(DataBase.class);
-    private String jdbcURL = null;
+    private String jdbcURL;
     private Connection connection = null;
     private Statement statement = null;
-    private String name;
-    private Graph graph;
+    private final String name;
+    private final Graph graph;
     public DataBase(String name, Graph graph) {
         this.name = name;
         this.graph = graph;
-        this.jdbcURL = "jdbc:h2:mem:"+name;
+        jdbcURL = "jdbc:h2:mem:" + name;
         try {
             this.connection = DriverManager.getConnection(jdbcURL);
             this.statement = connection.createStatement();
@@ -33,18 +36,22 @@ public class DataBase {
         logger.info("Connected to H2 in-memory database.");
     }
 
-    public int executeSql(String sqlStatements) {
+    public Pair<Integer, ResultSet> executeSql(String sqlStatements) {
         String[] sqls = sqlStatements.split(";");
         int count = 0;
+        ResultSet resultSet = null;
         for(String sqlStatement : sqls) {
             if(this.executeUpdate(sqlStatement) > 0)
                 count++;
-            else if (this.executeQuery(sqlStatement) != null)
-                count++;
-            else if(this.execute(sqlStatement))
-                count++;
+            else{
+                resultSet = this.executeQuery(sqlStatement);
+                if (resultSet != null)
+                    count++;
+                else if(this.execute(sqlStatement))
+                    count++;
+            }
         }
-        return count;
+        return Pair.of(count, resultSet);
     }
 
     public boolean execute(String sql) {
@@ -61,7 +68,7 @@ public class DataBase {
         try {
             result = statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return result;
     }
@@ -70,7 +77,7 @@ public class DataBase {
         try {
             result = statement.executeQuery(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return result;
     }
@@ -99,20 +106,10 @@ public class DataBase {
     }
 
     public boolean refreshData(CustomVBox customVBox) {
-        TableView tableView = customVBox.getTableView();
+        TableView<Data> tableView = customVBox.getTableView();
         String tableName = customVBox.getTableName();
         tableView.getItems().clear();
-        int columnSize = graph.getTable(tableName).columnSize();
-        return switch (columnSize) {
-            case 1 -> loadData1((TableView<Data1>) tableView, tableName);
-            case 2 -> loadData2((TableView<Data2>) tableView, tableName);
-            case 3 -> loadData3((TableView<Data3>) tableView, tableName);
-            case 4 -> loadData4((TableView<Data4>) tableView, tableName);
-            case 5 -> loadData5((TableView<Data5>) tableView, tableName);
-            case 6 -> loadData6((TableView<Data6>) tableView, tableName);
-            case 7 -> loadData7((TableView<Data7>) tableView, tableName);
-            default -> false;
-        };
+        return loadData(tableView, tableName);
     }
     public Graph getGraph() {
         return graph;
@@ -134,122 +131,50 @@ public class DataBase {
         return resultSet;
     }
     private int insertData(String tableName, List<String> columnNames, List<String> data) {
-        /*INSERT INTO A1
-                (A11, A12, A13, A14, A15, A16, B11) VALUES
-                ('a11', 'a12', 'a13', 'a14', 'a15', 'a16', 'b11')*/
-        StringBuilder sql = new StringBuilder();
-        sql.append("INSERT INTO ").append(tableName);
-        sql.append("(").append(Joiner.on(", ").join(columnNames)).append(") VALUES ");
-        sql.append("('").append(Joiner.on("', '").join(data)).append("')");
-        return this.executeUpdate(sql.toString());
+        String sql = "INSERT INTO " + tableName +
+                "(" + Joiner.on(", ").join(columnNames) + ") VALUES " +
+                "('" + Joiner.on("', '").join(data) + "')";
+        return this.executeUpdate(sql);
     }
-    private boolean loadData1(TableView<Data1> tableView,String tableName) {
+    private boolean loadData(TableView<Data> tableView, String tableName) {
         int columnSize = graph.getAllColumns(tableName).size();
-        if(columnSize != 1) return false;
+        if(columnSize > 7) return false;
         ResultSet resultSet = this.getData(tableName);
-        ObservableList<Data1> dataList = FXCollections.observableArrayList();
+        ObservableList<Data> dataList = FXCollections.observableArrayList();
         try {
             while(resultSet.next()) {
                 List<String> tuple = new ArrayList<>();
-                for(int i = 1; i <= columnSize; ++i)
-                    tuple.add(resultSet.getString(i));
-                dataList.add(new Data1(tuple));
+                for(int i = 0; i < columnSize; ++i) {
+                    String columnName = tableView.getColumns().get(i).getText();
+                    tuple.add(resultSet.getString(columnName));
+                }
+                dataList.add(new Data(tuple));
                 tableView.setItems(dataList);
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return true;
     }
-    private boolean loadData2(TableView<Data2> tableView,String tableName) {
-        int columnSize = graph.getAllColumns(tableName).size();
-        if(columnSize != 2) return false;
-        ResultSet resultSet = this.getData(tableName);
-        ObservableList<Data2> dataList = FXCollections.observableArrayList();
+    public boolean loadData(TableView<Data> tableView, ResultSet resultSet) {
+        int columnSize = Integer.MAX_VALUE;
+        try {
+            columnSize = resultSet.getMetaData().getColumnCount();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if(columnSize > 7) return false;
+
+        ObservableList<Data> dataList = FXCollections.observableArrayList();
         try {
             while(resultSet.next()) {
                 List<String> tuple = new ArrayList<>();
-                for(int i = 1; i <= columnSize; ++i)
-                    tuple.add(resultSet.getString(i));
-                dataList.add(new Data2(tuple));
-                tableView.setItems(dataList);
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return true;
-    }
-    private boolean loadData3(TableView<Data3> tableView,String tableName) {
-        int columnSize = graph.getAllColumns(tableName).size();
-        if(columnSize != 3) return false;
-        ResultSet resultSet = this.getData(tableName);
-        ObservableList<Data3> dataList = FXCollections.observableArrayList();
-        try {
-            while(resultSet.next()) {
-                List<String> tuple = new ArrayList<>();
-                for(int i = 1; i <= columnSize; ++i)
-                    tuple.add(resultSet.getString(i));
-                dataList.add(new Data3(tuple));
-                tableView.setItems(dataList);
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return true;
-    }
-    private boolean loadData4(TableView<Data4> tableView,String tableName) {
-        int columnSize = graph.getAllColumns(tableName).size();
-        if(columnSize != 4) return false;
-        ResultSet resultSet = this.getData(tableName);
-        ObservableList<Data4> dataList = FXCollections.observableArrayList();
-        try {
-            while(resultSet.next()) {
-                List<String> tuple = new ArrayList<>();
-                for(int i = 1; i <= columnSize; ++i)
-                    tuple.add(resultSet.getString(i));
-                dataList.add(new Data4(tuple));
-                tableView.setItems(dataList);
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return true;
-    }
-    private boolean loadData5(TableView<Data5> tableView,String tableName) {
-        int columnSize = graph.getAllColumns(tableName).size();
-        if(columnSize != 5) return false;
-        ResultSet resultSet = this.getData(tableName);
-        ObservableList<Data5> dataList = FXCollections.observableArrayList();
-        try {
-            while(resultSet.next()) {
-                List<String> tuple = new ArrayList<>();
-                for(int i = 1; i <= columnSize; ++i)
-                    tuple.add(resultSet.getString(i));
-                dataList.add(new Data5(tuple));
-                tableView.setItems(dataList);
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return true;
-    }
-    private boolean loadData6(TableView<Data6> tableView,String tableName) {
-        int columnSize = graph.getAllColumns(tableName).size();
-        if(columnSize != 6) return false;
-        ResultSet resultSet = this.getData(tableName);
-        ObservableList<Data6> dataList = FXCollections.observableArrayList();
-        try {
-            while(resultSet.next()) {
-                List<String> tuple = new ArrayList<>();
-                for(int i = 1; i <= columnSize; ++i)
-                    tuple.add(resultSet.getString(i));
-                dataList.add(new Data6(tuple));
-                tableView.setItems(dataList);
-            }
-        } catch (SQLException e) { e.printStackTrace(); }
-        return true;
-    }
-    private boolean loadData7(TableView<Data7> tableView,String tableName) {
-        int columnSize = graph.getAllColumns(tableName).size();
-        if(columnSize != 7) return false;
-        ResultSet resultSet = this.getData(tableName);
-        ObservableList<Data7> dataList = FXCollections.observableArrayList();
-        try {
-            while(resultSet.next()) {
-                List<String> tuple = new ArrayList<>();
-                for(int i = 1; i <= columnSize; ++i)
-                    tuple.add(resultSet.getString(i));
-                dataList.add(new Data7(tuple));
+                for(int i = 1; i <= columnSize; ++i) {
+                    String columnName = resultSet.getMetaData().getColumnName(i);
+                    TableColumn col = tableView.getColumns().get(i-1);
+                    col.setText(columnName);
+                    col.setCellValueFactory(new PropertyValueFactory<Data, String>(CustomVBox.property[i-1]));
+                    tuple.add(resultSet.getString(columnName));
+                }
+                dataList.add(new Data(tuple));
                 tableView.setItems(dataList);
             }
         } catch (SQLException e) { e.printStackTrace(); }
