@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomVBox extends VBox {
-    public static final String[] property = {"first","second","third","fourth","fifth","sixth","seventh"};
     private Graph.Table table;
     private VBox vBox;
     private Label label;
@@ -104,7 +103,7 @@ public class CustomVBox extends VBox {
         for(int index = 0; index < size; ++index) {
             Graph.Column column = columns.get(index);
             TableColumn col = new TableColumn(column.columnName);
-            col.setCellValueFactory(new PropertyValueFactory<Data, String>(CustomVBox.property[index]));
+            col.setCellValueFactory(new PropertyValueFactory<Data, String>(Data.property[index]));
             tableView.getColumns().addAll(col);
 
             TextField addCol = new TextField();

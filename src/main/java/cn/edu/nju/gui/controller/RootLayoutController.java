@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -23,7 +22,7 @@ public class RootLayoutController {
     public static Logger logger = Logger.getLogger(RootLayoutController.class);
     private Graph graph = null;
     private List<String> insertSql = null, deleteSql = null, inverseSql = null;
-    private List<CustomVBox> customVBoxes = new ArrayList<>();
+    private final List<CustomVBox> customVBoxes = new ArrayList<>();
     private DataBase dataBase = null;
 
     public RootLayoutController() {}
@@ -46,14 +45,13 @@ public class RootLayoutController {
     @FXML
     private Button refreshButton;
     @FXML
+    private TableView<Data> resultTable;
+    @FXML
     private VBox rootVBox;
     @FXML
     private ScrollPane scrollPane;
     @FXML
     private VBox tablesVBox;
-    @FXML
-    private TableView<Data> resultTable;
-
     @FXML
     void generateTables(ActionEvent event) {
         if(dataBase != null) dataBase.close();

@@ -21,17 +21,30 @@
          <TextArea fx:id="execSqlTextArea" minHeight="-Infinity" minWidth="-Infinity" prefHeight="206.0" prefWidth="376.0" promptText="sql statement" />
          <Button fx:id="executeButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#executeSql" text="execute" />
          <Button fx:id="refreshButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#refreshData" text="refresh" />
-         <TableView fx:id="resultTable" editable="true" prefHeight="224.0" prefWidth="561.0">
-           <columns>
-             <TableColumn minWidth="100.0" prefWidth="100.0" />
-               <TableColumn minWidth="100.0" prefWidth="100.0" />
-               <TableColumn minWidth="100.0" prefWidth="100.0" />
-               <TableColumn minWidth="100.0" prefWidth="100.0" />
-               <TableColumn minWidth="100.0" prefWidth="100.0" />
-               <TableColumn minWidth="100.0" prefWidth="100.0" />
-               <TableColumn minWidth="100.0" prefWidth="100.0" />
-           </columns>
-         </TableView>
       </HBox>
+      <TableView fx:id="resultTable" editable="true" minHeight="-Infinity" minWidth="-Infinity" prefHeight="224.0" prefWidth="561.0">
+        <columns>
+          <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+            <TableColumn minWidth="100.0" prefWidth="100.0" />
+        </columns>
+      </TableView>
    </VBox>
 </ScrollPane>

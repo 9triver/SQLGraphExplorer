@@ -138,7 +138,7 @@ public class DataBase {
     }
     private boolean loadData(TableView<Data> tableView, String tableName) {
         int columnSize = graph.getAllColumns(tableName).size();
-        if(columnSize > 7) return false;
+        if(columnSize > 20) return false;
         ResultSet resultSet = this.getData(tableName);
         ObservableList<Data> dataList = FXCollections.observableArrayList();
         try {
@@ -161,7 +161,7 @@ public class DataBase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        if(columnSize > 7) return false;
+        if(columnSize > 20) return false;
 
         ObservableList<Data> dataList = FXCollections.observableArrayList();
         try {
@@ -171,7 +171,7 @@ public class DataBase {
                     String columnName = resultSet.getMetaData().getColumnName(i);
                     TableColumn col = tableView.getColumns().get(i-1);
                     col.setText(columnName);
-                    col.setCellValueFactory(new PropertyValueFactory<Data, String>(CustomVBox.property[i-1]));
+                    col.setCellValueFactory(new PropertyValueFactory<Data, String>(Data.property[i-1]));
                     tuple.add(resultSet.getString(columnName));
                 }
                 dataList.add(new Data(tuple));
