@@ -1,9 +1,10 @@
 package cn.edu.nju.core.expression;
 
 import cn.edu.nju.core.graph.Graph;
+import org.antlr.v4.runtime.misc.OrderedHashSet;
 
+import java.io.Serializable;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -14,9 +15,9 @@ import java.util.Set;
  * @author: Xin
  * @date: 2023-12-25 15:30:43
  */
-public class Schema {
-    Set<Graph.Column> columns;
-    Set<String> columnNames;
+public class Schema implements Serializable {
+    OrderedHashSet<Graph.Column> columns;
+    OrderedHashSet<String> columnNames;
 
     /**
      * Schema构造函数
@@ -26,12 +27,13 @@ public class Schema {
      * @date: 2023-12-25 15:30:48
      */
     public Schema(Set<Graph.Column> columns) {
-        this.columnNames = new HashSet<>();
+        this.columnNames = new OrderedHashSet<>();
         if (columns == null) {
-            this.columns = new HashSet<>();
+            this.columns = new OrderedHashSet<>();
             return;
         }
-        this.columns = columns;
+        this.columns = new OrderedHashSet<>();
+        this.columns.addAll(columns);
         for (Graph.Column col : columns)
             this.columnNames.add(col.columnName);
     }
@@ -43,8 +45,14 @@ public class Schema {
      * @date: 2023-12-25 15:30:58
      */
     public Schema() {
-        this.columnNames = new HashSet<>();
-        this.columns = new HashSet<>();
+        this.columnNames = new OrderedHashSet<>();
+        this.columns = new OrderedHashSet<>();
+    }
+    public Schema(Schema other) {
+        this.columnNames = new OrderedHashSet<>();
+        this.columns = new OrderedHashSet<>();
+        this.columnNames.addAll(other.columnNames);
+        this.columns.addAll(other.columns);
     }
 
 
@@ -71,6 +79,10 @@ public class Schema {
         Collections.addAll(this.columns, columns);
         for (Graph.Column col : columns)
             this.columnNames.add(col.columnName);
+    }
+
+    public Graph.Column getLastColumn() {
+        return this.columns.get(this.columns.size()-1);
     }
 
     /**

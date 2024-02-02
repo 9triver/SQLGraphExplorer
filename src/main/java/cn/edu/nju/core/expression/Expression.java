@@ -7,6 +7,7 @@ import cn.edu.nju.core.expression.cktuple.constraint.Constraint;
 import cn.edu.nju.core.graph.Graph.Table;
 import org.apache.log4j.Logger;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * @author: Xin
  * @date: 2023-12-25 15:18:31
  */
-public class Expression {
+public class Expression implements Serializable {
     private final OpType opType;
     private Expression expression1;
     private Expression expression2;
@@ -25,7 +26,7 @@ public class Expression {
     private Schema projectionSchema;
     private RenameMap renameMap;
     private Constraint selectionCondition;
-    static Logger logger = Logger.getLogger(Expression.class);
+    public static Logger logger = Logger.getLogger(Expression.class);
 
     /**
      * Expression构造函数

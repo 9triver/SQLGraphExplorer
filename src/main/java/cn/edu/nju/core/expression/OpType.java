@@ -1,5 +1,7 @@
 package cn.edu.nju.core.expression;
 
+import java.io.Serializable;
+
 /**
  * @className：OpType
  * @version: 1.0.0
@@ -7,7 +9,7 @@ package cn.edu.nju.core.expression;
  * @author: Xin
  * @date: 2023-12-25 15:25:48
  */
-public enum OpType {
+public enum OpType implements Serializable {
     SELECTION,
     PROJECTION,
     UNION,

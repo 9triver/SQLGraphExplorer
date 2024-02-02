@@ -4,6 +4,8 @@ import cn.edu.nju.core.graph.Graph;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import java.io.Serializable;
+
 /**
  * @className：RenameMap
  * @version: 1.0.0
@@ -11,9 +13,12 @@ import com.google.common.collect.HashBiMap;
  * @author: Xin
  * @date: 2023-12-25 15:26:02
  */
-public class RenameMap {
+public class RenameMap implements Serializable {
     private final BiMap<Graph.Column, Graph.Column> maps = HashBiMap.create();
-
+    public RenameMap() {}
+    public RenameMap(RenameMap other) {
+        maps.putAll(other.maps);
+    }
 
     /**
      * 添加 srcColumn -> dstColumn 的重命名映射

@@ -14,7 +14,8 @@ create table HRS_HRS_USRA01 (
     A01AH VARCHAR2(255),
     A0182 VARCHAR2(255),
     B0110 VARCHAR2(255),
-    HYREN_S_DATE VARCHAR2(255)
+    HYREN_S_DATE VARCHAR2(255),
+    HYREN_E_DATE VARCHAR2(255)
 ) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
     initial 64K next 1M minextents 1 maxextents unlimited
 );
@@ -32,14 +33,18 @@ create table HRS_HRS_RETA01 (
     A01AH VARCHAR2(255),
     A0182 VARCHAR2(255),
     B0110 VARCHAR2(255),
-    HYREN_S_DATE VARCHAR2(255)
+    HYREN_S_DATE VARCHAR2(255),
+    HYREN_E_DATE VARCHAR2(255)
 ) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
     initial 64K next 1M minextents 1 maxextents unlimited
 );
 
 create table HRS_HRS_B01 (
     B0110 VARCHAR2(255),
-    HYREN_S_DATE VARCHAR2(255)
+    B010A VARCHAR2(255),
+    B01AA VARCHAR2(255),
+    HYREN_S_DATE VARCHAR2(255),
+    HYREN_E_DATE VARCHAR2(255)
 ) tablespace USERS pctfree 10 initrans 1 maxtrans 255 storage (
     initial 64K next 1M minextents 1 maxextents unlimited
 );
@@ -63,6 +68,10 @@ create table EAST51_YGB (
 /*过滤人员状态为：'正常在岗'的人员信息*/
 --取人力资源系统中的在职人员的基本信息
 SELECT
+    CASE
+        WHEN A.B0110 = '0101' THEN B.B010A
+        ELSE B.B01AA
+    END AS NBJGH,
     A.A0144 AS GH,
     /*取A0144:员工编号作为工号*/
     A.A0101 AS XM,
@@ -101,6 +110,10 @@ WHERE
 UNION
 ALL --从减员人员基本信息表中获取除了状态为'非正常在岗'的人员信息
 SELECT
+    CASE
+        WHEN A.B0110 = '0101' THEN B.B010A
+        ELSE B.B01AA
+    END AS NBJGH,
     A.A0144 AS GH,
     /*取A0144:员工编号作为工号*/
     A.A0101 AS XM,

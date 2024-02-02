@@ -431,7 +431,7 @@ public class ExpressionTest {
     }
 
     public static void testExpression(String fileName) throws IOException, URISyntaxException {
-        String filePath = ExpressionTest.class.getClassLoader().getResource("data/modify/" + fileName + ".sql").toURI()
+        String filePath = ExpressionTest.class.getResource("/data/modify/" + fileName + ".sql").toURI()
                 .getPath();
         File file = new File(filePath);
         BufferedReader inputBuffer = new BufferedReader(
@@ -447,20 +447,13 @@ public class ExpressionTest {
         visitor.visitSql_script(rootContext);
         List<String> resultSqls = visitor.getInverseSqls();
 
-        System.out
-                .println("------------------------------------------------------------------------------------------");
-        System.out.println(fileName + ":");
-        for (String resultSql : resultSqls)
-            System.out.println(resultSql);
-
         ExpressionTest.writeIntoFile(resultSqls, fileName);
     }
 
     public static void writeIntoFile(List<String> context, String fileName) throws IOException, URISyntaxException {
-        String rootPath = ExpressionTest.class.getResource("/").toURI().getPath();
-        String dirPath = "../../src/main/resources/data/output/";
-        String fullFilePath = rootPath + dirPath + fileName + ".sql";
-        File file = new File(fullFilePath);
+        String filePath = ExpressionTest.class.getResource("/data/output/" + fileName + ".sql").toURI()
+                .getPath();
+        File file = new File(filePath);
 
         if (!file.exists() && !file.createNewFile())
             return;

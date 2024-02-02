@@ -107,7 +107,7 @@ public class Tools {
     public static String simplify(String context, Graph.Table targetTable) {
         Tools.targetTable = targetTable;
         String ret = simplify(context);
-        logger.debug(ret);
+//        logger.debug(ret);
         return ret;
     }
 
