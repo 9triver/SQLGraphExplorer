@@ -16,4 +16,6 @@ module cn.edu.nju {
 
     exports cn.edu.nju;
     exports cn.edu.nju.core;
+    exports cn.edu.nju.core.expression;
+    exports cn.edu.nju.core.graph;
 }

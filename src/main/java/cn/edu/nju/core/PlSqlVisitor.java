@@ -4,7 +4,7 @@ import cn.edu.nju.core.expression.Expression;
 import cn.edu.nju.core.expression.RenameMap;
 import cn.edu.nju.core.expression.Schema;
 import cn.edu.nju.core.expression.cktuple.CKTuples;
-import cn.edu.nju.core.expression.cktuple.constraint.Constraint;
+import cn.edu.nju.core.manager.Manager;
 import cn.edu.nju.core.tools.Tools;
 import cn.edu.nju.core.graph.Graph;
 import cn.edu.nju.core.graph.Node;
@@ -27,10 +27,12 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
     public PlSqlVisitor() {
         this.graph = new Graph();
+        this.manager = new Manager(graph);
     }
     public PlSqlVisitor(String curDstTableName) {
         this.curDstTableName = curDstTableName;
         this.graph = new Graph(curDstTableName);
+        this.manager = new Manager(graph);
     }
 
     List<String> inverseSqls = new ArrayList<>();
@@ -67,7 +69,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         String select_statement_context = visitChildren(ctx);
 
         // Expression Inverse
-        List<Expression> expressions = this.expressions.peek();
+        List<Expression> expressions = this.manager.getExpressionsManager().peek();
         Graph.Table targetTable = this.graph.getTable(this.curDstTableName);
         CKTuples pSet = targetTable.getCKTuples();
         for(Expression expression : expressions) {
@@ -108,21 +110,13 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitSubquery_operation_part(PlSqlParser.Subquery_operation_partContext ctx) {
         String ret = visitSubquery_basic_elements(ctx.subquery_basic_elements());
-        List<Expression> selectExpressions2 = this.expressions.pop();
-        List<Expression> selectExpressions1 = this.expressions.pop();
-        List<Expression> unionExpressions = new ArrayList<>();
-        for(Expression selectExpression1 : selectExpressions1)
-            for(Expression selectExpression2 : selectExpressions2)
-                unionExpressions.add(Expression.union(selectExpression1,selectExpression2));
-        this.expressions.push(unionExpressions);
+        this.manager.getExpressionsManager().union();
         return ret;
     }
 
+    private final Manager manager;
     private final Stack<String> tableRefs = new Stack<>();
     private final Stack<Node> columnSrc = new Stack<>();
-    private final Stack<List<Expression>> expressions = new Stack<>();
-    private final Stack<List<Schema>> projections = new Stack<>();
-    private final Stack<Map<Schema, RenameMap>> renames = new Stack<>();
     private final Map<PlSqlParser.Query_blockContext, Integer> tableRefsSize = new HashMap<>();
     @Override
     public String visitQuery_block(PlSqlParser.Query_blockContext ctx) {
@@ -152,11 +146,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         // Expression Generate
         if(ctx.where_clause() != null) {
             String whereCondition = visitWhere_clause(ctx.where_clause());
-            List<Expression> fromExpressions = this.expressions.pop();
-            List<Expression> whereExpressions = new ArrayList<>();
-            for(Expression fromExpression : fromExpressions)
-                whereExpressions.add(Expression.selection(new Constraint(whereCondition), fromExpression));
-            this.expressions.push(whereExpressions);
+            this.manager.getExpressionsManager().selection(whereCondition);
         }
 
         // reverse base
@@ -166,43 +156,26 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             this.curDstTableName = tableSrc.peek().name;
 
         if (ctx.selected_list() != null) {
-            List<Schema> schemas = new ArrayList<>();
-            schemas.add(new Schema());
-            this.projections.push(schemas);
-            Map<Schema, RenameMap> renameMaps = new HashMap<>();
-            renameMaps.put(schemas.get(0),new RenameMap());
-            this.renames.push(renameMaps);
+            List<Schema> schemas = this.manager.getProjectionsManager().push(new Schema());
+            this.manager.getRenamesManager().push(schemas.get(0));
             this.tableRefsSize.put(ctx, tableRefsOldSize);
 
             visitSelected_list(ctx.selected_list());
 
             this.tableRefsSize.remove(ctx);
-            Map<Schema, RenameMap> renames = this.renames.pop();
-            List<Schema> projections = this.projections.pop();
-            Map<Expression, Schema> map = new HashMap<>();
 
             // Expression Generate
             // projection
+            Map<Expression, Schema> map = new HashMap<>();
+
+            List<Schema> projections = this.manager.getProjectionsManager().pop();
             if(projections != null && !projections.isEmpty()) {
-                List<Expression> baseExpressions = this.expressions.pop();
-                List<Expression> projectExpressions =new ArrayList<>();
-                for(Schema projection : projections)
-                    for(Expression baseExpression : baseExpressions) {
-                        Expression e = Expression.projection(projection, baseExpression);
-                        projectExpressions.add(e);
-                        map.put(e, projection);
-                    }
-                this.expressions.push(projectExpressions);
+                this.manager.getExpressionsManager().projection(projections, map);
             }
             // rename
+            Map<Schema, RenameMap> renames = this.manager.getRenamesManager().pop();
             if(renames != null && !renames.isEmpty()) {
-                List<Expression> baseExpressions = this.expressions.pop();
-                List<Expression> renameExpressions = new ArrayList<>();
-                for(Expression baseExpression : baseExpressions) {
-                    RenameMap rename = renames.get(map.get(baseExpression));
-                    renameExpressions.add(Expression.rename(rename, baseExpression));
-                }
-                this.expressions.push(renameExpressions);
+                this.manager.getExpressionsManager().rename(renames, map);
             }
         }
 
@@ -221,8 +194,8 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
                 String srcTableName = this.tableRefs.pop();
                 List<String> allColNames = this.graph.getAllColumns(srcTableName);
                 for(String colName : allColNames) {
-                    columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + colName));
-                    columnSrc.add(new Node(NodeType.COLUMN, srcTableName + ":" + colName));
+                    columnSrc.push(new Node(NodeType.COLUMN, this.curDstTableName + ":" + colName));
+                    columnSrc.push(new Node(NodeType.COLUMN, srcTableName + ":" + colName));
                     columnSrcNormalPop();
                 }
             }
@@ -236,8 +209,8 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             String srcTableName = Tools.getRealTableName(ctx.tableview_name().getText());
             List<String> allColNames = this.graph.getAllColumns(srcTableName);
             for(String colName : allColNames) {
-                columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + colName));
-                columnSrc.add(new Node(NodeType.COLUMN, srcTableName + ":" + colName));
+                columnSrc.push(new Node(NodeType.COLUMN, this.curDstTableName + ":" + colName));
+                columnSrc.push(new Node(NodeType.COLUMN, srcTableName + ":" + colName));
                 columnSrcNormalPop();
             }
         }
@@ -246,41 +219,28 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             visitExpression(ctx.expression());
             Node srcColumn = columnSrc.pop();
 
-            Map<Schema, RenameMap> schemaRenameMapMap = this.renames.peek();
+            Map<Schema, RenameMap> schemaRenameMapMap = this.manager.getRenamesManager().peek();
             // Expression Generate : projection
             Graph.Table table = this.graph.getTable(this.curDstTableName);
-            List<Schema> oldProjections = this.projections.pop();
-            List<Schema> newProjections = new ArrayList<>();
-            for (Schema projection : oldProjections) {
-                RenameMap renameMap = schemaRenameMapMap.get(projection);
-                schemaRenameMapMap.remove(projection, renameMap);
-                for(String columnName : this.selectListElement) {
-                    Schema newProjection = new Schema(projection);
-                    Graph.Column sourceColumn = Graph.Column.parseColumnName(this.graph, columnName, table).getRight();
-                    newProjection.add(sourceColumn);
-                    schemaRenameMapMap.put(newProjection, new RenameMap(renameMap));
-                    newProjections.add(newProjection);
-                }
-            }
-            this.projections.push(newProjections);
+            this.manager.getProjectionsManager().caseGenerate(table, selectListElement, schemaRenameMapMap);
 
             if (ctx.column_alias() != null) {
                 String columnAliasName = visitColumn_alias(ctx.column_alias());
                 // Expression Generate : rename
                 table = this.graph.getTable(this.curDstTableName);
                 Graph.Column destinationColumn = Graph.Column.parseColumnName(this.graph, columnAliasName, table).getRight();
-                for(Schema projection : projections.peek()) {
+                for(Schema projection : this.manager.getProjectionsManager().peek()) {
                     RenameMap renameMap = schemaRenameMapMap.get(projection);
                     Graph.Column sourceColumn = projection.getLastColumn();
                     renameMap.add(sourceColumn, destinationColumn);
                 }
             }
             else if(srcColumn.nodeType == NodeType.COLUMN)
-                columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + srcColumn.name.split(":")[1]));
+                columnSrc.push(new Node(NodeType.COLUMN, this.curDstTableName + ":" + srcColumn.name.split(":")[1]));
             else
-                columnSrc.add(srcColumn);
+                columnSrc.push(srcColumn);
 
-            columnSrc.add(srcColumn);
+            columnSrc.push(srcColumn);
             columnSrcNormalPop();
         }
         return ctx.getText();
@@ -289,12 +249,12 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitSearched_case_statement(PlSqlParser.Searched_case_statementContext ctx) {
         if(ctx.ln2 != null)
-            columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + ctx.ln2.getText()));
+            columnSrc.push(new Node(NodeType.COLUMN, this.curDstTableName + ":" + ctx.ln2.getText()));
 
 
         String caseContext = Tools.getFullContext(ctx);
         Node caseNode = graph.addCase(caseContext);
-        columnSrc.add(caseNode);
+        columnSrc.push(caseNode);
 
         for (PlSqlParser.Searched_case_when_partContext caseWhenPartContext : ctx.searched_case_when_part())
             visitSearched_case_when_part(caseWhenPartContext);
@@ -335,11 +295,11 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitColumn_alias(PlSqlParser.Column_aliasContext ctx) {
         if (ctx.identifier() != null) {
-            columnSrc.add(new Node(NodeType.COLUMN, this.curDstTableName + ":" + ctx.identifier().getText()));
+            columnSrc.push(new Node(NodeType.COLUMN, this.curDstTableName + ":" + ctx.identifier().getText()));
             return ctx.identifier().getText();
         }
         if (ctx.quoted_string() != null) {
-            columnSrc.add(new Node(NodeType.QUOTED_STRING, ctx.quoted_string().getText()));
+            columnSrc.push(new Node(NodeType.QUOTED_STRING, ctx.quoted_string().getText()));
             return ctx.quoted_string().getText();
         }
 
@@ -348,7 +308,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
     @Override
     public String visitQuoted_string(PlSqlParser.Quoted_stringContext ctx) {
-        columnSrc.add(new Node(NodeType.QUOTED_STRING, ctx.getText()));
+        columnSrc.push(new Node(NodeType.QUOTED_STRING, ctx.getText()));
         return ctx.getText();
     }
 
@@ -392,7 +352,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             String tableName = ctx.general_element_part(0).getText();
             String columnName = ctx.general_element_part(1).getText();
             String fullColumnName =  Tools.getRealTableName(tableName) + ":" + columnName;
-            this.columnSrc.add(new Node(NodeType.COLUMN, fullColumnName));
+            this.columnSrc.push(new Node(NodeType.COLUMN, fullColumnName));
             fullColumnName = Tools.getRealTableName(tableName) + "." + columnName;
             return fullColumnName;
         }
@@ -401,10 +361,10 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             String text = visitGeneral_element_part(generalElementPartContext);
             if(generalElementPartContext.function_argument() == null) { // Column
                 text = this.findSrcTable(text) + ":" + text;
-                this.columnSrc.add(new Node(NodeType.COLUMN, text));
+                this.columnSrc.push(new Node(NodeType.COLUMN, text));
             }
             else // Function
-                this.columnSrc.add(this.graph.addFunction(text));
+                this.columnSrc.push(this.graph.addFunction(text));
 
             return text;
         }
@@ -418,7 +378,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         // Table.Column
         String tableName = ctx.identifier().getText();
         String columnName = ctx.id_expression(0).getText();
-        columnSrc.add(new Node(NodeType.COLUMN, tableName+":"+columnName));
+        columnSrc.push(new Node(NodeType.COLUMN, tableName+":"+columnName));
         return tableName+":"+columnName;
     }
 
@@ -502,10 +462,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         String tableName = ctx.getText();
 
         tableSrc.add(new Node(NodeType.TABLE, tableName));
-        graph.createTable(tableName);
-        List<Expression> tableExpressions = new ArrayList<>();
-        tableExpressions.add(Expression.table(graph.getTable(tableName)));
-        this.expressions.push(tableExpressions);
+        this.manager.getExpressionsManager().table(tableName);
 
         return tableName;
     }
@@ -520,13 +477,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
         visitTable_ref_aux(ctx.table_ref_aux());
 
         // Expression Generate : joinExpression
-        List<Expression> tables2 = this.expressions.pop();
-        List<Expression> tables1 = this.expressions.pop();
-        List<Expression> joinExpressions = new ArrayList<>();
-        for(Expression table1 : tables1)
-            for(Expression table2 : tables2)
-                joinExpressions.add(Expression.production(table1, table2));
-        this.expressions.push(joinExpressions);
+        this.manager.getExpressionsManager().join();
 
         String joinType = "";
         if (ctx.CROSS() != null)
@@ -547,11 +498,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
 
         // Expression Generate : joinOnExpression
         if(!condition.isEmpty()) {
-            joinExpressions = this.expressions.pop();
-            List<Expression> joinOnExpressions = new ArrayList<>();
-            for(Expression joinExpression : joinExpressions)
-                joinOnExpressions.add(Expression.selection(new Constraint(condition.toString()), joinExpression));
-            this.expressions.push(joinOnExpressions);
+            this.manager.getExpressionsManager().selection(condition.toString());
         }
         return joinType + "@" + condition;
     }
@@ -596,7 +543,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitSubstr_function(PlSqlParser.Substr_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
-        columnSrc.add(functionNode);
+        columnSrc.push(functionNode);
         // arg1
         visitExpression(ctx.expression(0));
         columnSrcNormalPop();
@@ -614,7 +561,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitTo_char_function(PlSqlParser.To_char_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
-        columnSrc.add(functionNode);
+        columnSrc.push(functionNode);
         // arg1
         if (ctx.table_element() != null) {
             visitTable_element(ctx.table_element());
@@ -641,7 +588,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitDecode_function(PlSqlParser.Decode_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
-        columnSrc.add(functionNode);
+        columnSrc.push(functionNode);
         // args...
         for (PlSqlParser.ExpressionContext expressionCtx : ctx.expressions().expression()) {
             visitExpression(expressionCtx);
@@ -653,7 +600,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitChr_function(PlSqlParser.Chr_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
-        columnSrc.add(functionNode);
+        columnSrc.push(functionNode);
         // arg1
         visitConcatenation(ctx.concatenation());
         columnSrcNormalPop();
@@ -663,7 +610,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitNvl_function(PlSqlParser.Nvl_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
-        columnSrc.add(functionNode);
+        columnSrc.push(functionNode);
         // arg1, arg2
         for (PlSqlParser.ExpressionContext expressionCtx : ctx.expression()) {
             visitExpression(expressionCtx);
@@ -675,7 +622,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitTrim_function(PlSqlParser.Trim_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
-        columnSrc.add(functionNode);
+        columnSrc.push(functionNode);
         // arg1
         if (ctx.expression() != null) {
             visitExpression(ctx.expression());
@@ -690,7 +637,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     public String visitTo_date_function(PlSqlParser.To_date_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
         Node functionNode = graph.addFunction(functionName);
-        columnSrc.add(functionNode);
+        columnSrc.push(functionNode);
         // arg1
         if (ctx.table_element() != null) {
             visitTable_element(ctx.table_element());
@@ -725,7 +672,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
                 !ctx.function_argument().argument().isEmpty()) {
             String functionName = Tools.getFullContext(ctx);
             Node functionNode = graph.addFunction(functionName);
-            columnSrc.add(functionNode);
+            columnSrc.push(functionNode);
         }
         return visitChildren(ctx);
     }
@@ -744,13 +691,13 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitOther_function(PlSqlParser.Other_functionContext ctx) {
         String ret = Tools.getFullContext(ctx);
-        columnSrc.add(this.graph.addFunction(ret));
+        columnSrc.push(this.graph.addFunction(ret));
         return ret;
     }
     @Override
     public String visitSum_function(PlSqlParser.Sum_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
-        columnSrc.add(this.graph.addFunction(functionName));
+        columnSrc.push(this.graph.addFunction(functionName));
         // arg1
         visitExpression(ctx.expression());
         columnSrcNormalPop();
@@ -759,7 +706,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitCount_function(PlSqlParser.Count_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
-        columnSrc.add(this.graph.addFunction(functionName));
+        columnSrc.push(this.graph.addFunction(functionName));
         // arg1?
         if(ctx.concatenation() != null) {
             visitConcatenation(ctx.concatenation());
@@ -770,7 +717,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitRound_function(PlSqlParser.Round_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
-        columnSrc.add(this.graph.addFunction(functionName));
+        columnSrc.push(this.graph.addFunction(functionName));
         // arg1
         visitExpression(ctx.expression());
         columnSrcNormalPop();
@@ -779,7 +726,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitAvg_function(PlSqlParser.Avg_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
-        columnSrc.add(this.graph.addFunction(functionName));
+        columnSrc.push(this.graph.addFunction(functionName));
         // arg1
         visitExpression(ctx.expression());
         columnSrcNormalPop();
@@ -788,7 +735,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitMax_function(PlSqlParser.Max_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
-        columnSrc.add(this.graph.addFunction(functionName));
+        columnSrc.push(this.graph.addFunction(functionName));
         // arg1
         visitExpression(ctx.expression());
         columnSrcNormalPop();
@@ -797,7 +744,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitLeast_function(PlSqlParser.Least_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
-        columnSrc.add(this.graph.addFunction(functionName));
+        columnSrc.push(this.graph.addFunction(functionName));
         // args...
         for (PlSqlParser.ExpressionContext expressionCtx : ctx.expressions().expression()) {
             visitExpression(expressionCtx);
@@ -808,7 +755,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
     @Override
     public String visitGreatest_function(PlSqlParser.Greatest_functionContext ctx) {
         String functionName = Tools.getFullContext(ctx);
-        columnSrc.add(this.graph.addFunction(functionName));
+        columnSrc.push(this.graph.addFunction(functionName));
         // args...
         for (PlSqlParser.ExpressionContext expressionCtx : ctx.expressions().expression()) {
             visitExpression(expressionCtx);
@@ -979,7 +926,7 @@ public class PlSqlVisitor extends PlSqlParserBaseVisitor<String> {
             return;
         Node src = columnSrc.pop();
         Node dst = columnSrc.pop();
-        columnSrc.add(dst);
+        columnSrc.push(dst);
         this.graph.addEdge(src, dst);
     }
 
